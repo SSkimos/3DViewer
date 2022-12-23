@@ -19,6 +19,15 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_xMove_sldr_valueChanged(int value);
+    void on_zMove_sldr_valueChanged(int value);
+    void on_yMove_sldr_valueChanged(int value);
+
+    void on_xRotate_sldr_valueChanged(int value);
+    void on_zRotate_sldr_valueChanged(int value);
+    void on_yRotate_sldr_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
 };

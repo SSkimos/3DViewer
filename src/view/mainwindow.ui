@@ -137,7 +137,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QSlider" name="horizontalSlider">
+             <widget class="QSlider" name="xMove_sldr">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -150,13 +150,19 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="maximum">
+               <number>360</number>
+              </property>
+              <property name="singleStep">
+               <number>5</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit">
+             <widget class="QLineEdit" name="xMove_lbl">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -203,7 +209,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QSlider" name="horizontalSlider_3">
+             <widget class="QSlider" name="zMove_sldr">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -216,13 +222,16 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="maximum">
+               <number>360</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_3">
+             <widget class="QLineEdit" name="zMove_lbl">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -269,7 +278,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QSlider" name="horizontalSlider_2">
+             <widget class="QSlider" name="yMove_sldr">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -282,13 +291,16 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="maximum">
+               <number>360</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_2">
+             <widget class="QLineEdit" name="yMove_lbl">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -379,7 +391,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QSlider" name="horizontalSlider_4">
+             <widget class="QSlider" name="xRotate_sldr">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -392,13 +404,16 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="maximum">
+               <number>360</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_4">
+             <widget class="QLineEdit" name="xRotate_lbl">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -445,7 +460,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QSlider" name="horizontalSlider_5">
+             <widget class="QSlider" name="zRotate_sldr">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -458,13 +473,16 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="maximum">
+               <number>360</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_5">
+             <widget class="QLineEdit" name="zRotate_lbl">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -511,7 +529,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QSlider" name="horizontalSlider_6">
+             <widget class="QSlider" name="yRotate_sldr">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -524,13 +542,16 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="maximum">
+               <number>360</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_6">
+             <widget class="QLineEdit" name="yRotate_lbl">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>

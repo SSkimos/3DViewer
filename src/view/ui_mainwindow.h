@@ -41,31 +41,31 @@ public:
     QVBoxLayout *verticalLayout_5;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_3;
-    QSlider *horizontalSlider;
-    QLineEdit *lineEdit;
+    QSlider *xMove_sldr;
+    QLineEdit *xMove_lbl;
     QHBoxLayout *horizontalLayout_4;
     QLabel *label_5;
-    QSlider *horizontalSlider_3;
-    QLineEdit *lineEdit_3;
+    QSlider *zMove_sldr;
+    QLineEdit *zMove_lbl;
     QHBoxLayout *horizontalLayout_3;
     QLabel *label_4;
-    QSlider *horizontalSlider_2;
-    QLineEdit *lineEdit_2;
+    QSlider *yMove_sldr;
+    QLineEdit *yMove_lbl;
     QSpacerItem *horizontalSpacer_2;
     QLabel *label_6;
     QVBoxLayout *verticalLayout_6;
     QHBoxLayout *horizontalLayout_5;
     QLabel *label_7;
-    QSlider *horizontalSlider_4;
-    QLineEdit *lineEdit_4;
+    QSlider *xRotate_sldr;
+    QLineEdit *xRotate_lbl;
     QHBoxLayout *horizontalLayout_6;
     QLabel *label_8;
-    QSlider *horizontalSlider_5;
-    QLineEdit *lineEdit_5;
+    QSlider *zRotate_sldr;
+    QLineEdit *zRotate_lbl;
     QHBoxLayout *horizontalLayout_7;
     QLabel *label_9;
-    QSlider *horizontalSlider_6;
-    QLineEdit *lineEdit_6;
+    QSlider *yRotate_sldr;
+    QLineEdit *yRotate_lbl;
     QSpacerItem *horizontalSpacer;
     QLabel *label_10;
     QHBoxLayout *horizontalLayout_8;
@@ -176,22 +176,24 @@ public:
 
         horizontalLayout_2->addWidget(label_3);
 
-        horizontalSlider = new QSlider(centralwidget);
-        horizontalSlider->setObjectName("horizontalSlider");
-        sizePolicy.setHeightForWidth(horizontalSlider->sizePolicy().hasHeightForWidth());
-        horizontalSlider->setSizePolicy(sizePolicy);
-        horizontalSlider->setMinimumSize(QSize(200, 0));
-        horizontalSlider->setOrientation(Qt::Horizontal);
+        xMove_sldr = new QSlider(centralwidget);
+        xMove_sldr->setObjectName("xMove_sldr");
+        sizePolicy.setHeightForWidth(xMove_sldr->sizePolicy().hasHeightForWidth());
+        xMove_sldr->setSizePolicy(sizePolicy);
+        xMove_sldr->setMinimumSize(QSize(200, 0));
+        xMove_sldr->setMaximum(360);
+        xMove_sldr->setSingleStep(5);
+        xMove_sldr->setOrientation(Qt::Horizontal);
 
-        horizontalLayout_2->addWidget(horizontalSlider);
+        horizontalLayout_2->addWidget(xMove_sldr);
 
-        lineEdit = new QLineEdit(centralwidget);
-        lineEdit->setObjectName("lineEdit");
-        sizePolicy.setHeightForWidth(lineEdit->sizePolicy().hasHeightForWidth());
-        lineEdit->setSizePolicy(sizePolicy);
-        lineEdit->setMinimumSize(QSize(150, 25));
+        xMove_lbl = new QLineEdit(centralwidget);
+        xMove_lbl->setObjectName("xMove_lbl");
+        sizePolicy.setHeightForWidth(xMove_lbl->sizePolicy().hasHeightForWidth());
+        xMove_lbl->setSizePolicy(sizePolicy);
+        xMove_lbl->setMinimumSize(QSize(150, 25));
 
-        horizontalLayout_2->addWidget(lineEdit);
+        horizontalLayout_2->addWidget(xMove_lbl);
 
 
         verticalLayout_5->addLayout(horizontalLayout_2);
@@ -207,22 +209,23 @@ public:
 
         horizontalLayout_4->addWidget(label_5);
 
-        horizontalSlider_3 = new QSlider(centralwidget);
-        horizontalSlider_3->setObjectName("horizontalSlider_3");
-        sizePolicy.setHeightForWidth(horizontalSlider_3->sizePolicy().hasHeightForWidth());
-        horizontalSlider_3->setSizePolicy(sizePolicy);
-        horizontalSlider_3->setMinimumSize(QSize(200, 0));
-        horizontalSlider_3->setOrientation(Qt::Horizontal);
+        zMove_sldr = new QSlider(centralwidget);
+        zMove_sldr->setObjectName("zMove_sldr");
+        sizePolicy.setHeightForWidth(zMove_sldr->sizePolicy().hasHeightForWidth());
+        zMove_sldr->setSizePolicy(sizePolicy);
+        zMove_sldr->setMinimumSize(QSize(200, 0));
+        zMove_sldr->setMaximum(360);
+        zMove_sldr->setOrientation(Qt::Horizontal);
 
-        horizontalLayout_4->addWidget(horizontalSlider_3);
+        horizontalLayout_4->addWidget(zMove_sldr);
 
-        lineEdit_3 = new QLineEdit(centralwidget);
-        lineEdit_3->setObjectName("lineEdit_3");
-        sizePolicy.setHeightForWidth(lineEdit_3->sizePolicy().hasHeightForWidth());
-        lineEdit_3->setSizePolicy(sizePolicy);
-        lineEdit_3->setMinimumSize(QSize(150, 25));
+        zMove_lbl = new QLineEdit(centralwidget);
+        zMove_lbl->setObjectName("zMove_lbl");
+        sizePolicy.setHeightForWidth(zMove_lbl->sizePolicy().hasHeightForWidth());
+        zMove_lbl->setSizePolicy(sizePolicy);
+        zMove_lbl->setMinimumSize(QSize(150, 25));
 
-        horizontalLayout_4->addWidget(lineEdit_3);
+        horizontalLayout_4->addWidget(zMove_lbl);
 
 
         verticalLayout_5->addLayout(horizontalLayout_4);
@@ -238,22 +241,23 @@ public:
 
         horizontalLayout_3->addWidget(label_4);
 
-        horizontalSlider_2 = new QSlider(centralwidget);
-        horizontalSlider_2->setObjectName("horizontalSlider_2");
-        sizePolicy.setHeightForWidth(horizontalSlider_2->sizePolicy().hasHeightForWidth());
-        horizontalSlider_2->setSizePolicy(sizePolicy);
-        horizontalSlider_2->setMinimumSize(QSize(200, 0));
-        horizontalSlider_2->setOrientation(Qt::Horizontal);
+        yMove_sldr = new QSlider(centralwidget);
+        yMove_sldr->setObjectName("yMove_sldr");
+        sizePolicy.setHeightForWidth(yMove_sldr->sizePolicy().hasHeightForWidth());
+        yMove_sldr->setSizePolicy(sizePolicy);
+        yMove_sldr->setMinimumSize(QSize(200, 0));
+        yMove_sldr->setMaximum(360);
+        yMove_sldr->setOrientation(Qt::Horizontal);
 
-        horizontalLayout_3->addWidget(horizontalSlider_2);
+        horizontalLayout_3->addWidget(yMove_sldr);
 
-        lineEdit_2 = new QLineEdit(centralwidget);
-        lineEdit_2->setObjectName("lineEdit_2");
-        sizePolicy.setHeightForWidth(lineEdit_2->sizePolicy().hasHeightForWidth());
-        lineEdit_2->setSizePolicy(sizePolicy);
-        lineEdit_2->setMinimumSize(QSize(150, 25));
+        yMove_lbl = new QLineEdit(centralwidget);
+        yMove_lbl->setObjectName("yMove_lbl");
+        sizePolicy.setHeightForWidth(yMove_lbl->sizePolicy().hasHeightForWidth());
+        yMove_lbl->setSizePolicy(sizePolicy);
+        yMove_lbl->setMinimumSize(QSize(150, 25));
 
-        horizontalLayout_3->addWidget(lineEdit_2);
+        horizontalLayout_3->addWidget(yMove_lbl);
 
 
         verticalLayout_5->addLayout(horizontalLayout_3);
@@ -288,22 +292,23 @@ public:
 
         horizontalLayout_5->addWidget(label_7);
 
-        horizontalSlider_4 = new QSlider(centralwidget);
-        horizontalSlider_4->setObjectName("horizontalSlider_4");
-        sizePolicy.setHeightForWidth(horizontalSlider_4->sizePolicy().hasHeightForWidth());
-        horizontalSlider_4->setSizePolicy(sizePolicy);
-        horizontalSlider_4->setMinimumSize(QSize(200, 0));
-        horizontalSlider_4->setOrientation(Qt::Horizontal);
+        xRotate_sldr = new QSlider(centralwidget);
+        xRotate_sldr->setObjectName("xRotate_sldr");
+        sizePolicy.setHeightForWidth(xRotate_sldr->sizePolicy().hasHeightForWidth());
+        xRotate_sldr->setSizePolicy(sizePolicy);
+        xRotate_sldr->setMinimumSize(QSize(200, 0));
+        xRotate_sldr->setMaximum(360);
+        xRotate_sldr->setOrientation(Qt::Horizontal);
 
-        horizontalLayout_5->addWidget(horizontalSlider_4);
+        horizontalLayout_5->addWidget(xRotate_sldr);
 
-        lineEdit_4 = new QLineEdit(centralwidget);
-        lineEdit_4->setObjectName("lineEdit_4");
-        sizePolicy.setHeightForWidth(lineEdit_4->sizePolicy().hasHeightForWidth());
-        lineEdit_4->setSizePolicy(sizePolicy);
-        lineEdit_4->setMinimumSize(QSize(150, 25));
+        xRotate_lbl = new QLineEdit(centralwidget);
+        xRotate_lbl->setObjectName("xRotate_lbl");
+        sizePolicy.setHeightForWidth(xRotate_lbl->sizePolicy().hasHeightForWidth());
+        xRotate_lbl->setSizePolicy(sizePolicy);
+        xRotate_lbl->setMinimumSize(QSize(150, 25));
 
-        horizontalLayout_5->addWidget(lineEdit_4);
+        horizontalLayout_5->addWidget(xRotate_lbl);
 
 
         verticalLayout_6->addLayout(horizontalLayout_5);
@@ -319,22 +324,23 @@ public:
 
         horizontalLayout_6->addWidget(label_8);
 
-        horizontalSlider_5 = new QSlider(centralwidget);
-        horizontalSlider_5->setObjectName("horizontalSlider_5");
-        sizePolicy.setHeightForWidth(horizontalSlider_5->sizePolicy().hasHeightForWidth());
-        horizontalSlider_5->setSizePolicy(sizePolicy);
-        horizontalSlider_5->setMinimumSize(QSize(200, 0));
-        horizontalSlider_5->setOrientation(Qt::Horizontal);
+        zRotate_sldr = new QSlider(centralwidget);
+        zRotate_sldr->setObjectName("zRotate_sldr");
+        sizePolicy.setHeightForWidth(zRotate_sldr->sizePolicy().hasHeightForWidth());
+        zRotate_sldr->setSizePolicy(sizePolicy);
+        zRotate_sldr->setMinimumSize(QSize(200, 0));
+        zRotate_sldr->setMaximum(360);
+        zRotate_sldr->setOrientation(Qt::Horizontal);
 
-        horizontalLayout_6->addWidget(horizontalSlider_5);
+        horizontalLayout_6->addWidget(zRotate_sldr);
 
-        lineEdit_5 = new QLineEdit(centralwidget);
-        lineEdit_5->setObjectName("lineEdit_5");
-        sizePolicy.setHeightForWidth(lineEdit_5->sizePolicy().hasHeightForWidth());
-        lineEdit_5->setSizePolicy(sizePolicy);
-        lineEdit_5->setMinimumSize(QSize(150, 25));
+        zRotate_lbl = new QLineEdit(centralwidget);
+        zRotate_lbl->setObjectName("zRotate_lbl");
+        sizePolicy.setHeightForWidth(zRotate_lbl->sizePolicy().hasHeightForWidth());
+        zRotate_lbl->setSizePolicy(sizePolicy);
+        zRotate_lbl->setMinimumSize(QSize(150, 25));
 
-        horizontalLayout_6->addWidget(lineEdit_5);
+        horizontalLayout_6->addWidget(zRotate_lbl);
 
 
         verticalLayout_6->addLayout(horizontalLayout_6);
@@ -350,22 +356,23 @@ public:
 
         horizontalLayout_7->addWidget(label_9);
 
-        horizontalSlider_6 = new QSlider(centralwidget);
-        horizontalSlider_6->setObjectName("horizontalSlider_6");
-        sizePolicy.setHeightForWidth(horizontalSlider_6->sizePolicy().hasHeightForWidth());
-        horizontalSlider_6->setSizePolicy(sizePolicy);
-        horizontalSlider_6->setMinimumSize(QSize(200, 0));
-        horizontalSlider_6->setOrientation(Qt::Horizontal);
+        yRotate_sldr = new QSlider(centralwidget);
+        yRotate_sldr->setObjectName("yRotate_sldr");
+        sizePolicy.setHeightForWidth(yRotate_sldr->sizePolicy().hasHeightForWidth());
+        yRotate_sldr->setSizePolicy(sizePolicy);
+        yRotate_sldr->setMinimumSize(QSize(200, 0));
+        yRotate_sldr->setMaximum(360);
+        yRotate_sldr->setOrientation(Qt::Horizontal);
 
-        horizontalLayout_7->addWidget(horizontalSlider_6);
+        horizontalLayout_7->addWidget(yRotate_sldr);
 
-        lineEdit_6 = new QLineEdit(centralwidget);
-        lineEdit_6->setObjectName("lineEdit_6");
-        sizePolicy.setHeightForWidth(lineEdit_6->sizePolicy().hasHeightForWidth());
-        lineEdit_6->setSizePolicy(sizePolicy);
-        lineEdit_6->setMinimumSize(QSize(150, 25));
+        yRotate_lbl = new QLineEdit(centralwidget);
+        yRotate_lbl->setObjectName("yRotate_lbl");
+        sizePolicy.setHeightForWidth(yRotate_lbl->sizePolicy().hasHeightForWidth());
+        yRotate_lbl->setSizePolicy(sizePolicy);
+        yRotate_lbl->setMinimumSize(QSize(150, 25));
 
-        horizontalLayout_7->addWidget(lineEdit_6);
+        horizontalLayout_7->addWidget(yRotate_lbl);
 
 
         verticalLayout_6->addLayout(horizontalLayout_7);
@@ -658,18 +665,18 @@ public:
         label->setText(QCoreApplication::translate("MainWindow", "./src/app/test.py", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "move", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "X", nullptr));
-        lineEdit->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
+        xMove_lbl->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         label_5->setText(QCoreApplication::translate("MainWindow", "Z", nullptr));
-        lineEdit_3->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
+        zMove_lbl->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         label_4->setText(QCoreApplication::translate("MainWindow", "Y", nullptr));
-        lineEdit_2->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
+        yMove_lbl->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         label_6->setText(QCoreApplication::translate("MainWindow", "rotate", nullptr));
         label_7->setText(QCoreApplication::translate("MainWindow", "X", nullptr));
-        lineEdit_4->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
+        xRotate_lbl->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         label_8->setText(QCoreApplication::translate("MainWindow", "Z", nullptr));
-        lineEdit_5->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
+        zRotate_lbl->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         label_9->setText(QCoreApplication::translate("MainWindow", "Y", nullptr));
-        lineEdit_6->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
+        yRotate_lbl->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         label_10->setText(QCoreApplication::translate("MainWindow", "scale", nullptr));
         lineEdit_7->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
         label_12->setText(QCoreApplication::translate("MainWindow", "projection", nullptr));
