@@ -28,6 +28,16 @@ private slots:
     void on_zRotate_sldr_valueChanged(int value);
     void on_yRotate_sldr_valueChanged(int value);
 
+    void on_xMove_lbl_textChanged(const QString &arg1);
+    void on_yMove_lbl_textChanged(const QString &arg1);
+    void on_zMove_lbl_textChanged(const QString &arg1);
+
+    void on_xRotate_lbl_textChanged(const QString &arg1);
+    void on_yRotate_lbl_textChanged(const QString &arg1);
+    void on_zRotate_lbl_textChanged(const QString &arg1);
+
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
