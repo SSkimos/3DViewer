@@ -15,8 +15,8 @@ int ParseCountObj(const char* file_path) {
   data_t* data = calloc(1, sizeof(*data));
   CountObj(file_path, data);
   ParseObj(file_path, &data);
-  printf("FILE = %s\n", file_path);
-  DebugObj(data);
+  DebugObj(file_path, data);
+  printf("%zu\n", sizeof(*data));
   return 0;
 }
 
@@ -122,23 +122,24 @@ int ArrayFacetFactory(const char* line, long double* facet_row) {
   return ret;
 }
 
-int DebugObj(data_t *data) {
+int DebugObj(const char* file_path, data_t *data) {
+  printf("%s = FILE\n", file_path);
   printf("%d = vertices_count\n", data->vertices_count);
   printf("%d = facets_count \n", data->facets_count);
   printf("VERTICES_MATRIX \n");
-  for (int i = 0; i < data->matrix_3d.rows; i++) {
-    for (int j = 0; j < data->matrix_3d.columns; j++) {
-      printf(" %Lf", data->matrix_3d.matrix[i][j]);
-    }
-    printf("\n");
-  }
-  printf("FACET_DATA \n");
-  for (int i = 0; i < data->facets_count; i++) {
-    for (int j = 0; j < data->polygons[i].v_in_facets; j++) {
-      printf(" %Lf", data->polygons[i].vertexes[j]);
-    }
-    printf("\n");
-  }
+  // for (int i = 0; i < data->matrix_3d.rows; i++) {
+  //   for (int j = 0; j < data->matrix_3d.columns; j++) {
+  //     printf(" %Lf", data->matrix_3d.matrix[i][j]);
+  //   }
+  //   printf("\n");
+  // }
+  // printf("FACET_DATA \n");
+  // for (int i = 0; i < data->facets_count; i++) {
+  //   for (int j = 0; j < data->polygons[i].v_in_facets; j++) {
+  //     printf(" %Lf", data->polygons[i].vertexes[j]);
+  //   }
+  //   printf("\n");
+  // }
   return 0;
 }
 int DataAllocate(data_t** data) {

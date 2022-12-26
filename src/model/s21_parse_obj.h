@@ -9,7 +9,7 @@ int ParseObj(const char* file_path, data_t** data);
 int CountObj(const char* file_path, data_t* data);
 
 int DataAllocate(data_t** data);
-int DebugObj(data_t* data);
+int DebugObj(const char* file_path, data_t* data);
 
 FILE* OpenFile(const char* filename);
 
