@@ -3,8 +3,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int s21_parse_obj(const char* file_path);
-FILE* s21_open_file(const char* filename);
-
+int ParseObj(const char* file_path);
+FILE* OpenFile(const char* filename);
+int FormatCheck(const char* line);
+int FacetsAnalyzer(const char* line);
 
 #endif  // MODEL_S21_PARSE_OBJ_H_
