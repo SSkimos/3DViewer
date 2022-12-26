@@ -1,4 +1,5 @@
 #include "s21_parse_obj.h"
+#include "matrix_t/s21_matrix.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,48 +7,25 @@
 
 #define VERTICE 1
 #define FACET 2 
+#define MATRIX data->matrix_3d->matrix
 
-int CountObj(const char* file_path, data_t* data) {
+int ParseTEMPObj(const char* file_path, data_t** data) {
   FILE* obj = OpenFile(file_path);
   size_t max_size = 128;
   char* line = calloc(max_size, sizeof(*line));;
   char* fmt_vert = "v %Lf %Lf %Lf";
-  char* fmt_facet = calloc(64, sizeof(*fmt_facet));
-  long double* facet_row = calloc(64, sizeof(*facet_row));
-  int f_analysis = 0;
-  long double tmp1 = 0, tmp2 = 0, tmp3 = 0;
-  while ((getline(&line, &max_size, obj) != -1) && (!feof(obj))) {
-    if (FormatCheck(line) == VERTICE) {
-      data->vertices_count += sscanf(line, fmt_vert, &tmp1, &tmp2, &tmp3);
-    } else if (FormatCheck(line) == FACET) {
-      if (!f_analysis) {
-        data->polygons->v_in_facets = FacetsAnalyzer(line);
-        f_analysis = 1;
-      }  
-      ArrayFacetFactory(line, facet_row);
-    }
-  }
-  free(line);
-  free(fmt_facet);
-  free(facet_row);
-  fclose(obj);
-  return 0;
-}
-
-int ParseObj(const char* file_path) {
-  FILE* obj = OpenFile(file_path);
-  size_t max_size = 128;
-  char* line = calloc(max_size, sizeof(*line));;
-  char* fmt_vert = "v %Lf %Lf %Lf";
-  char* fmt_facet = calloc(64, sizeof(*fmt_facet));
   char* num_pointer = NULL;
   long double* facet_row = calloc(64, sizeof(*facet_row));
   int d = 0;
   int f_analysis = 0;
+  int i = 0;
   long double tmp1 = 0, tmp2 = 0, tmp3 = 0;
+   s21_create_matrix((*data)->vertices_count+1, 3, &((*data)->matrix_3d));
+  (*data)->matrix_3d.matrix[0][0]=1;
+  printf("\n%f", (*data)->matrix_3d.matrix[0][0]);
   while ((getline(&line, &max_size, obj) != -1) && (!feof(obj))) {
     if (FormatCheck(line) == 1) {
-      sscanf(line, fmt_vert, &tmp1, &tmp2, &tmp3);
+      //sscanf(line, fmt_vert, MATRIX[i+1][0], MATRIX[i+1][1], MATRIX[i+1][2]);
     } else if (FormatCheck(line) == 2) {
       if (!f_analysis) {
         d += FacetsAnalyzer(line);
@@ -58,7 +36,77 @@ int ParseObj(const char* file_path) {
   }
   for (int i = 0; i < d-1; i++) printf("%Lf ", facet_row[i]);
   free(line);
-  free(fmt_facet);
+  free(facet_row);
+  fclose(obj);
+  return 0;
+}
+
+int ParseCountObj(const char* file_path) {
+  data_t* data = calloc(1, sizeof(*data));
+  CountObj(file_path, data);
+  // DataAllocate(&data);
+  DebugObj(data);
+  ParseTEMPObj(file_path, &data);
+  printf("\n%f", (data)->matrix_3d.matrix[0][0]);
+  // ParseObj(file_path, data);
+  return 0;
+}
+
+int CountObj(const char* file_path, data_t* data) {
+  FILE* obj = OpenFile(file_path);
+
+  size_t max_size = 128;
+  char* line = calloc(max_size, sizeof(*line));;
+
+  long double* facet_row = calloc(64, sizeof(*facet_row));
+  int f_analysis = 0;
+  long double tmp1 = 0, tmp2 = 0, tmp3 = 0;
+  data->vertices_count = 0;
+  data->facets_count = 0;
+  while ((getline(&line, &max_size, obj) != -1) && (!feof(obj))) {
+    if (FormatCheck(line) == VERTICE) {
+      data->vertices_count += sscanf(line, "v %Lf %Lf %Lf", &tmp1, &tmp2, &tmp3);
+    } else if (FormatCheck(line) == FACET) {
+      if (!f_analysis) {
+        f_analysis = 1;
+      }  
+      ArrayFacetFactory(line, facet_row);
+      (data->facets_count)++;
+    }
+  }
+  free(line);
+  free(facet_row);
+  fclose(obj);
+  return 0;
+}
+
+
+int ParseObj(const char* file_path, data_t* data) {
+  FILE* obj = OpenFile(file_path);
+  size_t max_size = 128;
+  char* line = calloc(max_size, sizeof(*line));;
+  char* fmt_vert = "v %Lf %Lf %Lf";
+  char* num_pointer = NULL;
+  long double* facet_row = calloc(64, sizeof(*facet_row));
+  int d = 0;
+  int f_analysis = 0;
+  int i = 0;
+  long double tmp1 = 0, tmp2 = 0, tmp3 = 0;
+  // s21_create_matrix(data->vertices_count+1, 3, data->matrix_3d);
+ //  printf("\n%f", data->matrix_3d->matrix[0][0]);
+  while ((getline(&line, &max_size, obj) != -1) && (!feof(obj))) {
+    if (FormatCheck(line) == 1) {
+      //sscanf(line, fmt_vert, MATRIX[i+1][0], MATRIX[i+1][1], MATRIX[i+1][2]);
+    } else if (FormatCheck(line) == 2) {
+      if (!f_analysis) {
+        d += FacetsAnalyzer(line);
+        f_analysis = 1;
+      }  
+      ArrayFacetFactory(line, facet_row);
+    }
+  }
+  for (int i = 0; i < d-1; i++) printf("%Lf ", facet_row[i]);
+  free(line);
   free(facet_row);
   fclose(obj);
   return 0;
@@ -138,4 +186,14 @@ int ArrayFacetFactory(const char* line, long double* facet_row) {
     }
   }
   return ret;
+}
+
+int DebugObj(data_t *data) {
+  printf("%d = vertices_count\n", data->vertices_count);
+  printf("%d = facets_count \n", data->facets_count);
+  return 0;
+}
+int DataAllocate(data_t** data) {
+
+  return 0;
 }

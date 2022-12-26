@@ -4,8 +4,12 @@
 #include "s21_data_structure.h"
 #include <stdio.h>
 
-int ParseObj(const char* file_path);
+int ParseCountObj(const char* file_path);
+int ParseObj(const char* file_path, data_t* data);
 int CountObj(const char* file_path, data_t* data);
+
+int DataAllocate(data_t** data);
+int DebugObj(data_t* data);
 
 FILE* OpenFile(const char* filename);
 
