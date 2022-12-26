@@ -8,6 +8,7 @@
 #define VERTICE 1
 #define FACET 2 
 #define MATRIX &(*data)->matrix_3d.matrix
+#define POLYGON (*data)->polygons
 
 
 int ParseCountObj(const char* file_path) {
@@ -51,17 +52,20 @@ int ParseObj(const char* file_path, data_t** data) {
   char* num_pointer = NULL;
   long double* facet_row = calloc(64, sizeof(*facet_row));
   int d = 0;
-  int f_analysis = 0;
+
   int i = 0;
+  int j = 0;
+
   s21_create_matrix(((*data)->vertices_count)/3+1, 3, &((*data)->matrix_3d));
+  (*data)->polygons = calloc(1, sizeof(*(*data)->polygons));
   while ((getline(&line, &max_size, obj) != -1) && (!feof(obj))) {
     if (FormatCheck(line) == 1) {
       sscanf(line, "v %Lf %Lf %Lf", MATRIX[i+1][0], MATRIX[i+1][1], MATRIX[i+1][2]);
       i++;
     } else if (FormatCheck(line) == 2) {
-        d += FacetsAnalyzer(line);
-        printf("\n%d\n", d);
-      ArrayFacetFactory(line, facet_row);
+      POLYGON[j].v_in_facets = FacetsAnalyzer(line);
+      POLYGON[j].vertexes = calloc(POLYGON[j].v_in_facets, sizeof(*POLYGON[j].vertexes));
+      ArrayFacetFactory(line, POLYGON[j].vertexes);
     }
   }
   free(line);
@@ -127,6 +131,12 @@ int DebugObj(data_t *data) {
   for (int i = 0; i < data->matrix_3d.rows; i++) {
     for (int j = 0; j < data->matrix_3d.columns; j++) {
       printf(" %Lf", data->matrix_3d.matrix[i][j]);
+    }
+    printf("\n");
+  }
+  for (int i = 0; i < data->vertices_count; i++) {
+    for (int j = 0; j < data->polygons[i].v_in_facets; j++) {
+      printf(" %Lf", data->polygons[i].vertexes[j]);
     }
     printf("\n");
   }

@@ -3,7 +3,7 @@
 #include "matrix_t/s21_matrix.h"
 
 typedef struct facets {
-	int *vertexes; // f 2 3 4 51 2 31 .. array
+	long double *vertexes; // f 2 3 4 51 2 31 .. array
 	int v_in_facets; // size data
 } polygon_t;
 
@@ -13,8 +13,6 @@ typedef struct data {
   matrix_t matrix_3d; // 1 big matrix
   polygon_t* polygons; // all polygon data
 } data_t;
-
-
 
 
 
