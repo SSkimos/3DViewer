@@ -5,7 +5,7 @@
 #include <stdio.h>
 
 int ParseCountObj(const char* file_path);
-int ParseObj(const char* file_path, data_t* data);
+int ParseObj(const char* file_path, data_t** data);
 int CountObj(const char* file_path, data_t* data);
 
 int DataAllocate(data_t** data);

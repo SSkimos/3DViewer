@@ -8,7 +8,7 @@ typedef enum {
 } kOperationStatus;
 
 typedef struct matrix_struct {
-  double **matrix;
+  long double **matrix;
   int rows;
   int columns;
 } matrix_t;
