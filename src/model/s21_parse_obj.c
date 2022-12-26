@@ -93,18 +93,23 @@ int FormatCheck(const char* line) {
 }
 
 int FacetsAnalyzer(const char* line) {
-  char* number_char = calloc(strlen(line), sizeof(*number_char));
-  strcpy(number_char, line);
-  int num_count = 0;
-  char *num_pointer = strtok(number_char, " ");
-  int i = 0;
   int ret = 0;
-  while (num_pointer != NULL) {
-    if (*num_pointer != 'f') 
-      i++; 
-    num_pointer = strtok(NULL, " ");
+  char* number_char = calloc(strlen(line), sizeof(*number_char));
+  if (number_char) {
+    strcpy(number_char, line);
+    int num_count = 0;
+    char *num_pointer = strtok(number_char, " ");
+    int i = 0;
+    while (num_pointer != NULL) {
+      if (*num_pointer != 'f') 
+        i++; 
+      num_pointer = strtok(NULL, " ");
+    }
+    ret = i;
+  } else {
+    ret = 1;
   }
-  ret = i;
+  free(number_char);
   return ret;
 }
 
