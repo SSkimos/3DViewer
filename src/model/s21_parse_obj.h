@@ -8,5 +8,6 @@ FILE* OpenFile(const char* filename);
 int FormatCheck(const char* line);
 int FacetsAnalyzer(const char* line);
 int FormatFacet(char* line, int facet_count);
+int ArrayFacetFactory(const char* line, long double* facet_row);
 
 #endif  // MODEL_S21_PARSE_OBJ_H_

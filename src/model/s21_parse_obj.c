@@ -1,4 +1,5 @@
 #include "s21_parse_obj.h"
+#include "s21_data_structure.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,37 +12,28 @@ int ParseObj(const char* file_path) {
   char* fmt_vert = "v %Lf %Lf %Lf";
   char* fmt_facet = calloc(64, sizeof(*fmt_facet));
   char* num_pointer = NULL;
+  long double* facet_row = calloc(64, sizeof(*facet_row));
   int d = 0;
   int f_analysis = 0;
   long double tmp1 = 0, tmp2 = 0, tmp3 = 0;
   while ((getline(&line, &max_size, obj) != -1) && (!feof(obj))) {
     if (FormatCheck(line) == 1) {
-      printf("%s", line);
+      // printf("%s", line);
       sscanf(line, fmt_vert, &tmp1, &tmp2, &tmp3);
-      printf("%Lf %Lf %Lf\n", tmp1, tmp2, tmp3);
+      // printf("%Lf %Lf %Lf\n", tmp1, tmp2, tmp3);
     } else if (FormatCheck(line) == 2) {
       if (!f_analysis) {
         d += FacetsAnalyzer(line);
-        // FormatFacet(fmt_facet, d);
         f_analysis = 1;
       }  
-      num_pointer = strtok(line, " ");
-      while (num_pointer != NULL) {
-        if (*num_pointer == 'f') {
-          num_pointer = strtok(NULL, " ");
-          continue;
-        } else {
-          printf("%Lf \n", strtold(num_pointer, NULL));
-          num_pointer = strtok(NULL, " ");
-        }
-      }
-
+      ArrayFacetFactory(line, facet_row);
     }
   }
+  for (int i = 0; i < d-1; i++) printf("%Lf ", facet_row[i]);
   free(line);
   free(fmt_facet);
+  free(facet_row);
   fclose(obj);
-  printf("\n\n%d\n\n", d);
   return 0;
 }
 
@@ -100,4 +92,21 @@ int FormatFacet(char* line, int facet_count) {
   line[i+1] ='\0';
   printf("\n\n%s\n\n", line);
   return 0;
+}
+
+int ArrayFacetFactory(const char* line, long double* facet_row) {
+  char* number_char = (char*) line;
+  char *num_pointer = strtok(number_char, " ");
+  int i = 0;
+  int ret = 0;
+  while (num_pointer != NULL) {
+    if (*num_pointer != 'f') 
+      facet_row[i++] = strtold(num_pointer, NULL);
+    num_pointer = strtok(NULL, " ");
+    if (i > 512) {
+      ret = 1;
+      break;
+    }
+  }
+  return ret;
 }
