@@ -117,7 +117,6 @@ int ArrayFacetFactory(const char* line, long double* facet_row) {
   while (num_pointer != NULL) {
     if (*num_pointer != 'f') 
       facet_row[i++] = strtold(num_pointer, NULL);
-    printf("%d", i);
     num_pointer = strtok(NULL, " ");
   }
   return ret;
