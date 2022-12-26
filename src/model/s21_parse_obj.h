@@ -1,10 +1,14 @@
 #ifndef MODEL_S21_PARSE_OBJ_H_
 #define MODEL_S21_PARSE_OBJ_H_
 #include <stdlib.h>
+#include "s21_data_structure.h"
 #include <stdio.h>
 
 int ParseObj(const char* file_path);
+int CountObj(const char* file_path, data_t* data);
+
 FILE* OpenFile(const char* filename);
+
 int FormatCheck(const char* line);
 int FacetsAnalyzer(const char* line);
 int FormatFacet(char* line, int facet_count);

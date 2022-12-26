@@ -1,9 +1,38 @@
 #include "s21_parse_obj.h"
-#include "s21_data_structure.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+
+#define VERTICE 1
+#define FACET 2 
+
+int CountObj(const char* file_path, data_t* data) {
+  FILE* obj = OpenFile(file_path);
+  size_t max_size = 128;
+  char* line = calloc(max_size, sizeof(*line));;
+  char* fmt_vert = "v %Lf %Lf %Lf";
+  char* fmt_facet = calloc(64, sizeof(*fmt_facet));
+  long double* facet_row = calloc(64, sizeof(*facet_row));
+  int f_analysis = 0;
+  long double tmp1 = 0, tmp2 = 0, tmp3 = 0;
+  while ((getline(&line, &max_size, obj) != -1) && (!feof(obj))) {
+    if (FormatCheck(line) == VERTICE) {
+      data->vertices_count += sscanf(line, fmt_vert, &tmp1, &tmp2, &tmp3);
+    } else if (FormatCheck(line) == FACET) {
+      if (!f_analysis) {
+        data->polygons->v_in_facets = FacetsAnalyzer(line);
+        f_analysis = 1;
+      }  
+      ArrayFacetFactory(line, facet_row);
+    }
+  }
+  free(line);
+  free(fmt_facet);
+  free(facet_row);
+  fclose(obj);
+  return 0;
+}
 
 int ParseObj(const char* file_path) {
   FILE* obj = OpenFile(file_path);
@@ -18,9 +47,7 @@ int ParseObj(const char* file_path) {
   long double tmp1 = 0, tmp2 = 0, tmp3 = 0;
   while ((getline(&line, &max_size, obj) != -1) && (!feof(obj))) {
     if (FormatCheck(line) == 1) {
-      // printf("%s", line);
       sscanf(line, fmt_vert, &tmp1, &tmp2, &tmp3);
-      // printf("%Lf %Lf %Lf\n", tmp1, tmp2, tmp3);
     } else if (FormatCheck(line) == 2) {
       if (!f_analysis) {
         d += FacetsAnalyzer(line);
@@ -106,6 +133,8 @@ int ArrayFacetFactory(const char* line, long double* facet_row) {
     if (i > 512) {
       ret = 1;
       break;
+    } else {
+      ret = i;
     }
   }
   return ret;

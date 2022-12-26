@@ -5,11 +5,18 @@ SRC_T=#back/tests/s21_calc_tests.c
 OBJ_T=#back/tests/s21_calc_tests.o
 CFLAGS=--coverage $(shell pkg-config --cflags --libs check)
 
-all: tests install
+all: #tests install
 
 gcov_report: tests
 	lcov -t "otchet" -o otchet.info -c -d ./back
 	genhtml -o report otchet.info
+
+.PHONY:matrix_t
+matrix_t:
+	$(MAKE) -C model/matrix_t
+
+matrix_t_clean:
+	$(MAKE) -C model/matrix_t clean
 
 tests: lib.a $(OBJ_T) $(OBJ)
 	$(CC) $(CFLAGS) lib.a $(OBJ_T) $(OBJ) $(TESTFLAGS) -o test
