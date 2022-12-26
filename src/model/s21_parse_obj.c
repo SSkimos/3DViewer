@@ -57,7 +57,8 @@ int ParseObj(const char* file_path, data_t** data) {
   int j = 0;
 
   s21_create_matrix(((*data)->vertices_count)/3+1, 3, &((*data)->matrix_3d));
-  (*data)->polygons = calloc(1, sizeof(*(*data)->polygons));
+
+  (*data)->polygons = calloc((*data)->facets_count, sizeof(*(*data)->polygons));
   while ((getline(&line, &max_size, obj) != -1) && (!feof(obj))) {
     if (FormatCheck(line) == 1) {
       sscanf(line, "v %Lf %Lf %Lf", MATRIX[i+1][0], MATRIX[i+1][1], MATRIX[i+1][2]);
@@ -66,6 +67,7 @@ int ParseObj(const char* file_path, data_t** data) {
       POLYGON[j].v_in_facets = FacetsAnalyzer(line);
       POLYGON[j].vertexes = calloc(POLYGON[j].v_in_facets, sizeof(*POLYGON[j].vertexes));
       ArrayFacetFactory(line, POLYGON[j].vertexes);
+      j++;
     }
   }
   free(line);
@@ -91,7 +93,8 @@ int FormatCheck(const char* line) {
 }
 
 int FacetsAnalyzer(const char* line) {
-  char* number_char = (char*) line;
+  char* number_char = calloc(strlen(line), sizeof(*number_char));
+  strcpy(number_char, line);
   int num_count = 0;
   char *num_pointer = strtok(number_char, " ");
   int i = 0;
@@ -114,13 +117,8 @@ int ArrayFacetFactory(const char* line, long double* facet_row) {
   while (num_pointer != NULL) {
     if (*num_pointer != 'f') 
       facet_row[i++] = strtold(num_pointer, NULL);
+    printf("%d", i);
     num_pointer = strtok(NULL, " ");
-    if (i > 512) {
-      ret = 1;
-      break;
-    } else {
-      ret = i;
-    }
   }
   return ret;
 }
@@ -128,13 +126,15 @@ int ArrayFacetFactory(const char* line, long double* facet_row) {
 int DebugObj(data_t *data) {
   printf("%d = vertices_count\n", data->vertices_count);
   printf("%d = facets_count \n", data->facets_count);
+  printf("VERTICES_MATRIX \n");
   for (int i = 0; i < data->matrix_3d.rows; i++) {
     for (int j = 0; j < data->matrix_3d.columns; j++) {
       printf(" %Lf", data->matrix_3d.matrix[i][j]);
     }
     printf("\n");
   }
-  for (int i = 0; i < data->vertices_count; i++) {
+  printf("FACET_DATA \n");
+  for (int i = 0; i < data->facets_count; i++) {
     for (int j = 0; j < data->polygons[i].v_in_facets; j++) {
       printf(" %Lf", data->polygons[i].vertexes[j]);
     }
