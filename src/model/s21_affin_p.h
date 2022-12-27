@@ -16,9 +16,9 @@ int MatrixRotateX();
 int MatrixRotateY(); 
 int MatrixRotateZ(); 
 
-int MatrixMoveX(); 
-int MatrixMoveY(); 
-int MatrixMoveZ(); 
+int MatrixMoveX(matrix_t *A, double a); 
+int MatrixMoveY(matrix_t *A, double a); 
+int MatrixMoveZ(matrix_t *A, double a); 
 
 int MatrixScale(matrix_t *A, double zoom);
 

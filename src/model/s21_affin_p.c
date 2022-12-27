@@ -21,15 +21,15 @@ int MatrixMove(matrix_t *A, double a, int cord) {
   return 0;
 }
 
-int MatrixMoveX(matrix_t *A, double a, int cord) {
+int MatrixMoveX(matrix_t *A, double a) {
   return MatrixMove(A, a, kX);
 }
 
-int MatrixMoveY(matrix_t *A, double a, int cord) {
+int MatrixMoveY(matrix_t *A, double a) {
   return MatrixMove(A, a, kY);
 }
 
-int MatrixMoveZ(matrix_t *A, double a, int cord) {
+int MatrixMoveZ(matrix_t *A, double a) {
   return MatrixMove(A, a, kZ);
 }
 
