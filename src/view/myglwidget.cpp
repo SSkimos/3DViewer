@@ -46,13 +46,11 @@ void MyGLWidget::paintGL(void) {
     //printf("\n\n\n%d",s->matrix_3d.rows);
     glEnableClientState(GL_VERTEX_ARRAY);
     for (int i = 1; i < s->matrix_3d.rows; i++) {
-        for (int j = 0; j < s->matrix_3d.columns; j++) {
-            glVertexPointer(3, GL_FLOAT, 0, s->matrix_3d.matrix[i]);
-            // glVertex3f(s->matrix_3d.matrix[i][0], s->matrix_3d.matrix[i][1], s->matrix_3d.matrix[i][2]);
-            std::string a = std::to_string(s->matrix_3d.matrix[i][0]) + " " + std::to_string(s->matrix_3d.matrix[i][1]) + " " + std::to_string(s->matrix_3d.matrix[i][2]);
-            std::cout << a  << "cycle" << std::endl;
-            glColor3ub(255,0,0);
-        }
+        glVertexPointer(3, GL_FLOAT, 0, s->matrix_3d.matrix[i]);
+        // glVertex3f(s->matrix_3d.matrix[i][0], s->matrix_3d.matrix[i][1], s->matrix_3d.matrix[i][2]);
+        std::string a = std::to_string(s->matrix_3d.matrix[0][i]) + " " + std::to_string(s->matrix_3d.matrix[1][i]) + " " + std::to_string(s->matrix_3d.matrix[2][i]);
+        std::cout << a  << "cycle" << std::endl;
+        glColor3ub(255,0,0);
     }
     glDrawArrays(GL_TRIANGLES,0,3);
     //QTextStream(stdout) << "\n\n\nSSASDASdasddsfdfsdaf";
