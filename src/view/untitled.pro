@@ -10,12 +10,14 @@ CONFIG += c++17
 LIBS += -L ../model/matrix_t -ls21_matrix
 
 SOURCES += \
+../model/s21_affin_p.c \
 ../model/s21_parse_obj.c \
     myglwidget.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
+../model/s21_affin_p.h \
     myglwidget.h \
     mainwindow.h \
     ../model/s21_parse_obj.h
