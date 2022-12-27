@@ -48,7 +48,7 @@ void MyGLWidget::paintGL(void) {
     for (int i = 1; i < s->matrix_3d.rows; i++) {
         glVertexPointer(3, GL_FLOAT, 0, s->matrix_3d.matrix[i]);
         // glVertex3f(s->matrix_3d.matrix[i][0], s->matrix_3d.matrix[i][1], s->matrix_3d.matrix[i][2]);
-        std::string a = std::to_string(s->matrix_3d.matrix[i][0]) + " " + std::to_string(s->matrix_3d.matrix[i][1]) + " " + std::to_string(s->matrix_3d.matrix[i][2]);
+        std::string a = std::to_string(s->matrix_3d.matrix[0][i]) + " " + std::to_string(s->matrix_3d.matrix[1][i]) + " " + std::to_string(s->matrix_3d.matrix[2][i]);
         std::cout << a  << "cycle" << std::endl;
         glColor3ub(255,0,0);
     }

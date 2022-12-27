@@ -90,7 +90,7 @@ FILE* OpenFile(const char* filename) {
 
 int FormatCheck(const char* line) {
   int ret = 0;
-  if (line[0] == 'v') ret = 1; 
+  if ((line[0] == 'v') && (line[1] == ' ' || isdigit(line[1]))) ret = 1; 
   if (line[0] == 'f') ret = 2;
   return ret;
 }
