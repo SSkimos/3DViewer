@@ -23,6 +23,40 @@ data_t* ParseCountObj(const char* file_path) {
   return data;
 }
 
+long double* RemakeMatrix(data_t* data) {
+  long double *res = NULL;
+  int f = 0;
+  if (data) {
+    res = calloc(data->matrix_3d.columns*data->matrix_3d.rows, sizeof(*res));
+    for (int i = 1; i < data->matrix_3d.rows; i++) {
+      for (int j = 0; j < data->matrix_3d.columns; j++) {
+        res[f++] = data->matrix_3d.matrix[i][j];
+      }
+    }
+  }
+  return res;
+}
+
+long double* RemakeFacets(data_t* data, int*s) {
+  long double *res = NULL;
+  int f = 0;
+  if (data) {
+    long double old = data->polygons[0].vertexes[0];
+    res = calloc(1024, sizeof(*res));
+    res[f++] = old;
+    for (int i = 0; i < data->facets_count; i++) {
+      // res = realloc(res, (f+data->polygons[i].v_in_facets) * sizeof(long double));
+      for (int j = 1; j < data->polygons[i].v_in_facets; j++) {
+        res[f++] = (data->polygons->vertexes[j]);
+        res[f++] = (data->polygons->vertexes[j]);
+      }
+    }
+  }
+  s = calloc(1, sizeof(*s));
+  s[0] = f;
+  return res;
+}
+
 int CountObj(const char* file_path, data_t* data) {
   FILE* obj = OpenFile(file_path);
 
@@ -124,7 +158,7 @@ int ArrayFacetFactory(const char* line, long double* facet_row) {
   int ret = 0;
   while (num_pointer != NULL) {
     if (*num_pointer != 'f') 
-      facet_row[i++] = strtold(num_pointer, NULL);
+      facet_row[i++] = strtold(num_pointer, NULL) - 1;
     num_pointer = strtok(NULL, " ");
   }
   return ret;

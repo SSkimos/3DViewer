@@ -9,7 +9,8 @@ extern "C" {
   data_t* ParseCountObj(const char* file_path);
   int ParseObj(const char* file_path, data_t** data);
   int CountObj(const char* file_path, data_t* data);
-
+  long double* RemakeMatrix(data_t* data);
+  long double* RemakeFacets(data_t* data, int*s);
   int DataAllocate(data_t** data);
   int DebugObj(const char* file_path, data_t* data);
 
