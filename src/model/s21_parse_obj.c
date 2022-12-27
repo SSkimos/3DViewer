@@ -11,13 +11,15 @@
 #define POLYGON (*data)->polygons
 
 
-int ParseCountObj(const char* file_path) {
+data_t* ParseCountObj(const char* file_path) {
   data_t* data = calloc(1, sizeof(*data));
-  CountObj(file_path, data);
-  ParseObj(file_path, &data);
-  DebugObj(file_path, data);
-  printf("%zu\n", sizeof(*data));
-  return 0;
+  if(data) {
+    CountObj(file_path, data);
+    ParseObj(file_path, &data);
+    DebugObj(file_path, data);
+    printf("%zu\n", sizeof(*data));
+  }
+  return data;
 }
 
 int CountObj(const char* file_path, data_t* data) {
