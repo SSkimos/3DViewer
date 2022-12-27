@@ -22,7 +22,7 @@ TEST_OBJS := $(TEST:%.c=$(BUILD_TEST_DIR)/%.o)
 GCOV_OBJS := $(SRC:%.c=$(GCOV_OBJ_DIR)/%.o)
 
 DEC_TEST := matrix_test.c
-LIB      := s21_matrix.a
+LIB      := libs21_matrix.a
 
 
 all: $(LIB)
