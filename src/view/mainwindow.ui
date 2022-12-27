@@ -126,11 +126,14 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="minimum">
+               <number>-180</number>
+              </property>
               <property name="maximum">
-               <number>360</number>
+               <number>180</number>
               </property>
               <property name="singleStep">
-               <number>5</number>
+               <number>1</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -198,8 +201,11 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="minimum">
+               <number>-180</number>
+              </property>
               <property name="maximum">
-               <number>360</number>
+               <number>180</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -267,8 +273,11 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="minimum">
+               <number>-180</number>
+              </property>
               <property name="maximum">
-               <number>360</number>
+               <number>180</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -383,8 +392,11 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="minimum">
+               <number>-180</number>
+              </property>
               <property name="maximum">
-               <number>360</number>
+               <number>180</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -452,8 +464,11 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="minimum">
+               <number>-180</number>
+              </property>
               <property name="maximum">
-               <number>360</number>
+               <number>180</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -521,8 +536,11 @@
                 <height>0</height>
                </size>
               </property>
+              <property name="minimum">
+               <number>-180</number>
+              </property>
               <property name="maximum">
-               <number>360</number>
+               <number>180</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
