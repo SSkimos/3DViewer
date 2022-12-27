@@ -28,7 +28,7 @@ void MyGLWidget::paintGL(void) {
     // MatrixMove(&(s->matrix_3d), 10, kX);
 //    MatrixScale(&(s->matrix_3d), 0.1);
     glEnableClientState(GL_VERTEX_ARRAY);
-    RotationX(&(s->matrix_3d), 2);
+//    RotationX(&(s->matrix_3d), 2);
     for (int i = 1; i < s->matrix_3d.rows; i++) {
         glVertexPointer(3, GL_FLOAT, 0, s->matrix_3d.matrix[i]);
         // glVertex3f(s->matrix_3d.matrix[i][0], s->matrix_3d.matrix[i][1], s->matrix_3d.matrix[i][2]);
