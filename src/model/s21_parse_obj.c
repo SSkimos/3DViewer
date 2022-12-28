@@ -138,8 +138,9 @@ int FacetsAnalyzer(const char* line) {
     char *num_pointer = strtok(number_char, " ");
     int i = 0;
     while (num_pointer != NULL) {
-      if (*num_pointer != 'f') 
+      if (isdigit(*num_pointer)) {
         i++; 
+      }
       num_pointer = strtok(NULL, " ");
     }
     ret = i;
@@ -157,8 +158,9 @@ int ArrayFacetFactory(const char* line, long double* facet_row) {
   int i = 0;
   int ret = 0;
   while (num_pointer != NULL) {
-    if (*num_pointer != 'f') 
+    if (isdigit(*num_pointer)) {
       facet_row[i++] = strtold(num_pointer, NULL) - 1;
+    }
     num_pointer = strtok(NULL, " ");
   }
   return ret;
@@ -169,19 +171,19 @@ int DebugObj(const char* file_path, data_t *data) {
   printf("%d = vertices_count\n", data->vertices_count);
   printf("%d = facets_count \n", data->facets_count);
   printf("VERTICES_MATRIX \n");
-  // for (int i = 0; i < data->matrix_3d.rows; i++) {
-  //   for (int j = 0; j < data->matrix_3d.columns; j++) {
-  //     printf(" %Lf", data->matrix_3d.matrix[i][j]);
-  //   }
-  //   printf("\n");
-  // }
-  // printf("FACET_DATA \n");
-  // for (int i = 0; i < data->facets_count; i++) {
-  //   for (int j = 0; j < data->polygons[i].v_in_facets; j++) {
-  //     printf(" %Lf", data->polygons[i].vertexes[j]);
-  //   }
-  //   printf("\n");
-  // }
+  for (int i = 0; i < data->matrix_3d.rows; i++) {
+    for (int j = 0; j < data->matrix_3d.columns; j++) {
+      printf(" %1.2Lf", data->matrix_3d.matrix[i][j]);
+    }
+    printf("\n");
+  }
+  printf("FACET_DATA \n");
+  for (int i = 0; i < data->facets_count; i++) {
+    for (int j = 0; j < data->polygons[i].v_in_facets; j++) {
+      printf(" %1.2Lf", data->polygons[i].vertexes[j]);
+    }
+    printf("\n");
+  }
   return 0;
 }
 int DataAllocate(data_t** data) {
