@@ -6,64 +6,90 @@
 
 MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
-
+    setGeometry(400, 200, 800, 600);
 }
 
 void MyGLWidget::initializeGL(void) {
-    float r, g, b, a = 1.0f;
-    initializeOpenGLFunctions();
-    qColorToRGB(Qt::white, r, g, b);
-    glClearColor(r, g, b, a);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_LIGHTING);
-    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_DEPTH_TEST); // включаю буффер глубины (хранит в себе расстояние от камеры до отрисовки)
 }
 
 void MyGLWidget::paintGL(void) {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    data_t* s = ParseCountObj("../../../../model/obj/cube.obj");
-    glLoadIdentity();
-    // MatrixMove(&(s->matrix_3d), 10, kX);
-//    MatrixScale(&(s->matrix_3d), 0.1);
-    glEnableClientState(GL_VERTEX_ARRAY);
-//    RotationX(&(s->matrix_3d), 2);
-    for (int i = 1; i < s->matrix_3d.rows; i++) {
-        glVertexPointer(3, GL_FLOAT, 0, s->matrix_3d.matrix[i]);
-        // glVertex3f(s->matrix_3d.matrix[i][0], s->matrix_3d.matrix[i][1], s->matrix_3d.matrix[i][2]);
-        std::string a = std::to_string(s->matrix_3d.matrix[0][i]) + " " + std::to_string(s->matrix_3d.matrix[1][i]) + " " + std::to_string(s->matrix_3d.matrix[2][i]);
-        std::cout << a  << "cycle" << std::endl;
-        glColor3ub(255,0,0);
-    }
-    glDrawArrays(GL_TRIANGLES,0,3);
-    //QTextStream(stdout) << "\n\n\nSSASDASdasddsfdfsdaf";
+
+    glClearColor(0, 1, 0, 0); // настраиваю цвет окна
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_TEST); // очищаю буффер цвета и буффер глубины (каждый тик)
+
+    glMatrixMode(GL_MODELVIEW); // указываю тип матрицы
+    glLoadIdentity(); // загружаю матрицу в стек
 
 
+    //glRotatef(90, 0, 0, 1); // вращаю матрицу 90 - угол, остльное это оси
+    glTranslatef(0, 0, -2);
+    glRotatef(xRot, 1, 0, 0);
+    glRotatef(yRot, 0, 1, 0);
+    drawCube(0.5);
+    // блок, где я рисую треугольник
+//    glVertexPointer(3, GL_FLOAT, 0, &arr);
+//    glEnableClientState(GL_VERTEX_ARRAY);
+//    glColor3d(1, 0, 0); // изменяю цвет треугольника
+//    glDrawArrays(GL_TRIANGLES, 0, 3);
+//    glDisableClientState(GL_VERTEX_ARRAY);
 
-    // Сначала расставляем точки на нашей поверхности. Для этого идём по matrix_3d  и выставляем точки в значениях x и y.
-    // Данная отрисовка точек будет иметь параллельную проекцию (вы можете данный пункт пропустить, но он необходим для бонусной части).
+//    glBegin(GL_TRIANGLES); // устаревшая форма записи для старперов
+//    // 3 - пространство, d - double
+//    glVertex3d(0, 0, -1.5);
+//    glVertex3d(0, 1, -1.5);
+//    glVertex3d(1, 0, -1.5);
+//    glEnd();
 }
 
 void MyGLWidget::resizeGL(int width, int height) {
-//    glViewport(0, 0, width, height);
-//    glMatrixMode(GL_PROJECTION);
-//    glLoadIdentity();
-//    glMatrixMode(GL_MODELVIEW);
-//    glLoadIdentity();
+
+    glViewport(0, 0, width, height); // задаю размер окна
+
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity(); // загружаю едининчную матрицу
+
+    // (-1 1 по x) (-1 1 по y) (1 расстояние от камеры до передней плоскости) (2 растоняние от камеры до задней плоскости)
+    // glOrtho(-1, 1, -1, 1, 1, 2); // преобразую матрицу в ортогональную проекцию
+    glFrustum(-1, 1, -1, 1, 1, 3); // преобразую матрицу в перспективную проекцию (область видимости объема)
 }
 
-void MyGLWidget::qColorToRGB(const QColor &C, float &r, float &g, float &b) const
-{
-    r = normaliza_0_1(C.red(), 1.0f, 255.0f);
-    g = normaliza_0_1(C.green(), 1.0f, 255.0f);
-    b = normaliza_0_1(C.blue(), 1.0f, 255.0f);
+void MyGLWidget::drawCube(float a) {
+    float ver_cub[] = {
+        -a, -a, a,     a, -a, a,        a, a, a,     -a, a, a, // передняя
+        a, -a, -a,    -a, -a, -a,     -a, a, -a,     a, a, -a, // задняя
+        -a, -a, -a,    -a, -a, a,     -a, a, a,     -a, a, -a, // левая
+        a, -a, a,    a, -a, -a,     a, a, -a,     a, a, a, // правая
+        -a, -a, a,    a, -a, a,     a, -a, -a,     -a, -a, -a, // нижняя
+        -a, a, a,    a, a, a,     a, a, -a,     -a, a, -a, // верхняя
+    };
+    float color_arr[] {
+        1, 0, 0,    1, 0, 0,    1, 0, 0,    1, 0, 0,
+        0, 0, 1,    0, 0, 1,    0, 0, 1,    0, 0, 1,
+        1, 1, 0,    1, 1, 0,    1, 1, 0,    1, 1, 0,
+        0, 1, 1,    0, 1, 1,    0, 1, 1,    0, 1, 1,
+        1, 0, 1,    1, 0, 1,    1, 0, 1,    1, 0, 1,
+        1, 0.5, 0.5,    1, 0.5, 0.5,    1, 0.5, 0.5,    1, 0.5, 0.5
+    };
+    glVertexPointer(3, GL_FLOAT, 0, &ver_cub);
+    glEnableClientState(GL_VERTEX_ARRAY);
+
+    glColorPointer(3, GL_FLOAT, 0, &color_arr);
+    glEnableClientState(GL_COLOR_ARRAY);
+
+    glDrawArrays(GL_QUADS, 0, 24);
+
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
 }
 
-float MyGLWidget::normaliza_0_1(float val, float min, float max) const
-{
-    return (val - min) / (max - min);
+void MyGLWidget::mousePressEvent(QMouseEvent * mo) {
+    mPos = mo->pos();
 }
 
-
-
+void MyGLWidget::mouseMoveEvent(QMouseEvent * mo) {
+    xRot = 1 / M_PI * (mo->pos().y() - mPos.y());
+    yRot = 1 / M_PI * (mo->pos().x() - mPos.x());
+    update();
+}
