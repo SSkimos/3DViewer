@@ -18,6 +18,8 @@ void MyGLWidget::paintGL(void) {
     glClearColor(0, 1, 0, 0); // настраиваю цвет окна
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_TEST); // очищаю буффер цвета и буффер глубины (каждый тик)
+//    data_t* s = ParseCountObj("../../../../model/obj/cube.obj");
+//    long double *f = RemakeMatrix(s);
 
     glMatrixMode(GL_MODELVIEW); // указываю тип матрицы
     glLoadIdentity(); // загружаю матрицу в стек
@@ -28,19 +30,16 @@ void MyGLWidget::paintGL(void) {
     glRotatef(xRot, 1, 0, 0);
     glRotatef(yRot, 0, 1, 0);
     drawCube(0.5);
-    // блок, где я рисую треугольник
-//    glVertexPointer(3, GL_FLOAT, 0, &arr);
-//    glEnableClientState(GL_VERTEX_ARRAY);
-//    glColor3d(1, 0, 0); // изменяю цвет треугольника
-//    glDrawArrays(GL_TRIANGLES, 0, 3);
-//    glDisableClientState(GL_VERTEX_ARRAY);
 
-//    glBegin(GL_TRIANGLES); // устаревшая форма записи для старперов
-//    // 3 - пространство, d - double
-//    glVertex3d(0, 0, -1.5);
-//    glVertex3d(0, 1, -1.5);
-//    glVertex3d(1, 0, -1.5);
-//    glEnd();
+    // ===
+//    glVertexPointer(3, GL_FLOAT, 0, &f);
+//    glEnableClientState(GL_VERTEX_ARRAY);
+
+//    glDrawArrays(GL_QUADS, 0, 24);
+
+//    glDisableClientState(GL_COLOR_ARRAY);
+//    glDisableClientState(GL_VERTEX_ARRAY);
+    // ===
 }
 
 void MyGLWidget::resizeGL(int width, int height) {
