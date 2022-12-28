@@ -28,7 +28,7 @@ long double* RemakeMatrix(data_t* data) {
   int f = 0;
   if (data) {
     res = calloc(data->matrix_3d.columns*data->matrix_3d.rows, sizeof(*res));
-    for (int i = 1; i < data->matrix_3d.rows; i++) {
+    for (int i = 0; i < data->matrix_3d.rows; i++) {
       for (int j = 0; j < data->matrix_3d.columns; j++) {
         res[f++] = data->matrix_3d.matrix[i][j];
       }
@@ -87,28 +87,28 @@ int ParseObj(const char* file_path, data_t** data) {
   size_t max_size = 128;
   char* line = calloc(max_size, sizeof(*line));;
   char* num_pointer = NULL;
-  long double* facet_row = calloc(64, sizeof(*facet_row));
   int d = 0;
 
   int i = 0;
   int j = 0;
 
-  s21_create_matrix(((*data)->vertices_count)/3+1, 3, &((*data)->matrix_3d));
+  s21_create_matrix(((*data)->vertices_count)/3, 3, &((*data)->matrix_3d));
 
   (*data)->polygons = calloc((*data)->facets_count, sizeof(*(*data)->polygons));
   while ((getline(&line, &max_size, obj) != -1) && (!feof(obj))) {
     if (FormatCheck(line) == 1) {
-      sscanf(line, "v %Lf %Lf %Lf", MATRIX[i+1][0], MATRIX[i+1][1], MATRIX[i+1][2]);
+      sscanf(line, "v %Lf %Lf %Lf", MATRIX[i][0], MATRIX[i][1], MATRIX[i][2]);
       i++;
     } else if (FormatCheck(line) == 2) {
       POLYGON[j].v_in_facets = FacetsAnalyzer(line);
+      long double* facet_row = calloc(POLYGON[j].v_in_facets * 3, sizeof(*facet_row));
       POLYGON[j].vertexes = calloc(POLYGON[j].v_in_facets, sizeof(*POLYGON[j].vertexes));
-      ArrayFacetFactory(line, POLYGON[j].vertexes);
+      ArrayFacetFactory(line, POLYGON[j].vertexes, &(*data)->matrix_3d);
       j++;
     }
   }
   free(line);
-  free(facet_row);
+  // free(facet_row);
   fclose(obj);
   return 0;
 }
@@ -152,14 +152,17 @@ int FacetsAnalyzer(const char* line) {
 }
 
 
-int ArrayFacetFactory(const char* line, long double* facet_row) {
+int ArrayFacetFactory(const char* line, long double* facet_row, matrix_t* s) {
   char* number_char = (char*) line;
   char *num_pointer = strtok(number_char, " ");
   int i = 0;
   int ret = 0;
   while (num_pointer != NULL) {
     if (isdigit(*num_pointer)) {
-      facet_row[i++] = strtold(num_pointer, NULL) - 1;
+      int ind = strtold(num_pointer, NULL) - 1;
+      facet_row[i++] = s->matrix[ind][0];
+      facet_row[i++] = s->matrix[ind][1];
+      facet_row[i++] = s->matrix[ind++][2];
     }
     num_pointer = strtok(NULL, " ");
   }
@@ -172,6 +175,7 @@ int DebugObj(const char* file_path, data_t *data) {
   printf("%d = facets_count \n", data->facets_count);
   printf("VERTICES_MATRIX \n");
   for (int i = 0; i < data->matrix_3d.rows; i++) {
+    printf("%d: ", i+1);
     for (int j = 0; j < data->matrix_3d.columns; j++) {
       printf(" %1.2Lf", data->matrix_3d.matrix[i][j]);
     }
@@ -179,7 +183,8 @@ int DebugObj(const char* file_path, data_t *data) {
   }
   printf("FACET_DATA \n");
   for (int i = 0; i < data->facets_count; i++) {
-    for (int j = 0; j < data->polygons[i].v_in_facets; j++) {
+    printf("%d: ", i+1);
+    for (int j = 0; j < data->polygons[i].v_in_facets * 3; j++) {
       printf(" %1.2Lf", data->polygons[i].vertexes[j]);
     }
     printf("\n");

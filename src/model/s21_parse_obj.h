@@ -14,12 +14,12 @@ extern "C" {
   int DataAllocate(data_t** data);
   int DebugObj(const char* file_path, data_t* data);
 
+  int ArrayFacetFactory(const char* line, long double* facet_row, matrix_t* s);
   FILE* OpenFile(const char* filename);
 
   int FormatCheck(const char* line);
   int FacetsAnalyzer(const char* line);
   int FormatFacet(char* line, int facet_count);
-  int ArrayFacetFactory(const char* line, long double* facet_row);
 
 #ifdef __cplusplus
 }
