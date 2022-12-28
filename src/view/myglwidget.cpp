@@ -15,7 +15,7 @@ void MyGLWidget::initializeGL(void) {
 
 void MyGLWidget::paintGL(void) {
 
-    glClearColor(0, 1, 0, 0); // настраиваю цвет окна
+    glClearColor(0, 0, 0, 0); // настраиваю цвет окна
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_TEST); // очищаю буффер цвета и буффер глубины (каждый тик)
 //    long double *f = RemakeMatrix(s);
@@ -25,7 +25,7 @@ void MyGLWidget::paintGL(void) {
 
 
     //glRotatef(90, 0, 0, 1); // вращаю матрицу 90 - угол, остльное это оси
-    glTranslatef(0, 0, -2);
+    glTranslatef(0, 0, -5);
     glRotatef(xRot, 1, 0, 0);
     glRotatef(yRot, 0, 1, 0);
    drawCube(0.5);
@@ -51,7 +51,7 @@ void MyGLWidget::resizeGL(int width, int height) {
 
     // (-1 1 по x) (-1 1 по y) (1 расстояние от камеры до передней плоскости) (2 растоняние от камеры до задней плоскости)
     // glOrtho(-1, 1, -1, 1, 1, 2); // преобразую матрицу в ортогональную проекцию
-    glFrustum(-1, 1, -1, 1, 1, 3); // преобразую матрицу в перспективную проекцию (область видимости объема)
+    glFrustum(-1, 1, -1, 1, 1, 10); // преобразую матрицу в перспективную проекцию (область видимости объема)
 }
 
 void MyGLWidget::drawCube(float a) {
@@ -71,15 +71,16 @@ void MyGLWidget::drawCube(float a) {
         1, 0, 1,    1, 0, 1,    1, 0, 1,    1, 0, 1,
         1, 0.5, 0.5,    1, 0.5, 0.5,    1, 0.5, 0.5,    1, 0.5, 0.5
     };
-    data_t* s = ParseCountObj("../../../../model/obj/cube.obj");
+    data_t* s = ParseCountObj("../../../../model/obj/diamond.obj");
 
-    glVertexPointer(3, GL_FLOAT, 0, &(s->polygons[0].vertexes));
+    glVertexPointer(3, GL_FLOAT, 0, s->polygons->vertexes);
     glEnableClientState(GL_VERTEX_ARRAY);
 
    // glColorPointer(3, GL_FLOAT, 0, &color_arr);
    //glEnableClientState(GL_COLOR_ARRAY);
 
-    glDrawArrays(GL_QUADS, 0, 24);
+    glDrawArrays(GL_LINES, 0, 32);
+//    glDrawArrays(GL_PATCHES, 0, 24);
 
    // glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
