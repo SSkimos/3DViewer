@@ -18,7 +18,9 @@ void MyGLWidget::paintGL(void) {
     glClearColor(0, 1, 0, 0); // настраиваю цвет окна
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_TEST); // очищаю буффер цвета и буффер глубины (каждый тик)
-
+    data_t* s = ParseCountObj("../../../../model/obj/box.obj");
+    long double *f = RemakeMatrix(s);
+    free(f):
     glMatrixMode(GL_MODELVIEW); // указываю тип матрицы
     glLoadIdentity(); // загружаю матрицу в стек
 
