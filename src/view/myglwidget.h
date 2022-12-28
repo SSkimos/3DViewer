@@ -1,25 +1,46 @@
 #ifndef MYGLWIDGET_H_
 #define MYGLWIDGET_H_
 
+#include <QColorDialog>
+#include <QMouseEvent>
 #include <QOpenGLWidget>
-#include <QOpenGLFunctions>
-#include <QOpenGLContext>
-#include <QColor>
+#include <QTimer>
+#include <QtOpenGL>
 
-class MyGLWidget: public QOpenGLWidget, public QOpenGLFunctions
+
+#include <QGraphicsSceneMouseEvent>
+
+#include <iostream>
+#include <fstream>
+
+#include <QMessageBox>
+#include <QMouseEvent>
+#include <QOpenGLBuffer>
+#include <QOpenGLFunctions>
+#include <QOpenGLShaderProgram>
+#include <QOpenGLVertexArrayObject>
+#include <glu.h>
+
+class MyGLWidget: public QOpenGLWidget
 {
     Q_OBJECT
 public :
     MyGLWidget(QWidget *parent = nullptr);
 
 protected:
-    void initializeGL() override;
-    void paintGL() override;
-    void resizeGL(int width, int height) override;
+    void initializeGL();
+    void paintGL();
+    void resizeGL(int width, int height);
+
+    void mousePressEvent(QMouseEvent *) override; // вызывается при нажатии мышки
+    void mouseMoveEvent(QMouseEvent *) override; // вызывается при движении мышки
 
 private:
-    void qColorToRGB(const QColor &c, float &r, float &g, float &b) const;
-    float normaliza_0_1(float val, float min, float max) const;
+    float xRot, yRot, zRot;
+    QPoint mPos;
+    QTimer tmr;
+    void drawCube(float a);
+
 };
 
 
