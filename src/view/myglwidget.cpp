@@ -15,12 +15,12 @@ void MyGLWidget::initializeGL(void) {
 
 void MyGLWidget::paintGL(void) {
 
-    glClearColor(0, 1, 0, 0); // настраиваю цвет окна
+    glClearColor(0, 0, 0, 0); // настраиваю цвет окна
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_TEST); // очищаю буффер цвета и буффер глубины (каждый тик)
-    data_t* s = ParseCountObj("../../../../model/obj/box.obj");
+    data_t* s = ParseCountObj("../../../../model/obj/cube.obj");
     long double *f = RemakeMatrix(s);
-    free(f):
+
     glMatrixMode(GL_MODELVIEW); // указываю тип матрицы
     glLoadIdentity(); // загружаю матрицу в стек
 
@@ -29,7 +29,18 @@ void MyGLWidget::paintGL(void) {
     glTranslatef(0, 0, -2);
     glRotatef(xRot, 1, 0, 0);
     glRotatef(yRot, 0, 1, 0);
-    drawCube(0.5);
+//    drawCube(0.5);
+
+    // = = = = =
+    glVertexPointer(3, GL_FLOAT, 0, f);
+    glEnableClientState(GL_VERTEX_ARRAY);
+
+
+    glDrawArrays(GL_LINES, 0, 24);
+
+    glDisableClientState(GL_COLOR_ARRAY);
+    glDisableClientState(GL_VERTEX_ARRAY);
+    // = = = = =
     // блок, где я рисую треугольник
 //    glVertexPointer(3, GL_FLOAT, 0, &arr);
 //    glEnableClientState(GL_VERTEX_ARRAY);
