@@ -28,9 +28,9 @@ public :
     MyGLWidget(QWidget *parent = nullptr);
 
 protected:
-    void initializeGL();
-    void paintGL();
-    void resizeGL(int width, int height);
+    void initializeGL() override;
+    void paintGL() override;
+    void resizeGL(int width, int height) override;
 
     void mousePressEvent(QMouseEvent *) override; // вызывается при нажатии мышки
     void mouseMoveEvent(QMouseEvent *) override; // вызывается при движении мышки

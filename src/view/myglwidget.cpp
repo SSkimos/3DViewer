@@ -18,7 +18,6 @@ void MyGLWidget::paintGL(void) {
     glClearColor(0, 1, 0, 0); // настраиваю цвет окна
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_TEST); // очищаю буффер цвета и буффер глубины (каждый тик)
-//    data_t* s = ParseCountObj("../../../../model/obj/cube.obj");
 //    long double *f = RemakeMatrix(s);
 
     glMatrixMode(GL_MODELVIEW); // указываю тип матрицы
@@ -29,7 +28,8 @@ void MyGLWidget::paintGL(void) {
     glTranslatef(0, 0, -2);
     glRotatef(xRot, 1, 0, 0);
     glRotatef(yRot, 0, 1, 0);
-    drawCube(0.5);
+   drawCube(0.5);
+  //  data_t* s = ParseCountObj("../../../../../model/obj/cube.obj");
 
     // ===
 //    glVertexPointer(3, GL_FLOAT, 0, &f);
@@ -71,15 +71,17 @@ void MyGLWidget::drawCube(float a) {
         1, 0, 1,    1, 0, 1,    1, 0, 1,    1, 0, 1,
         1, 0.5, 0.5,    1, 0.5, 0.5,    1, 0.5, 0.5,    1, 0.5, 0.5
     };
-    glVertexPointer(3, GL_FLOAT, 0, &ver_cub);
+    data_t* s = ParseCountObj("../../../../model/obj/cube.obj");
+
+    glVertexPointer(3, GL_FLOAT, 0, &(s->polygons[0].vertexes));
     glEnableClientState(GL_VERTEX_ARRAY);
 
-    glColorPointer(3, GL_FLOAT, 0, &color_arr);
-    glEnableClientState(GL_COLOR_ARRAY);
+   // glColorPointer(3, GL_FLOAT, 0, &color_arr);
+   //glEnableClientState(GL_COLOR_ARRAY);
 
     glDrawArrays(GL_QUADS, 0, 24);
 
-    glDisableClientState(GL_COLOR_ARRAY);
+   // glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
 }
 

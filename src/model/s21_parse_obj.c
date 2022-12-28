@@ -16,9 +16,10 @@ data_t* ParseCountObj(const char* file_path) {
   if (data) {
     CountObj(file_path, data);
     ParseObj(file_path, &data);
-    DebugObj(file_path, data);
-    printf("%zu\n", sizeof(*data));
+    // DebugObj(file_path, data);
+    // printf("%zu\n", sizeof(*data));
     // FREE DATA !!!
+    // USE FGETS
   }
   return data;
 }
@@ -101,14 +102,12 @@ int ParseObj(const char* file_path, data_t** data) {
       i++;
     } else if (FormatCheck(line) == 2) {
       POLYGON[j].v_in_facets = FacetsAnalyzer(line);
-      long double* facet_row = calloc(POLYGON[j].v_in_facets * 3, sizeof(*facet_row));
-      POLYGON[j].vertexes = calloc(POLYGON[j].v_in_facets, sizeof(*POLYGON[j].vertexes));
+      POLYGON[j].vertexes = calloc(POLYGON[j].v_in_facets * 3, sizeof(*POLYGON[j].vertexes));
       ArrayFacetFactory(line, POLYGON[j].vertexes, &(*data)->matrix_3d);
       j++;
     }
   }
   free(line);
-  // free(facet_row);
   fclose(obj);
   return 0;
 }
