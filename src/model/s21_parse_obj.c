@@ -24,39 +24,6 @@ data_t* ParseCountObj(const char* file_path) {
   return data;
 }
 
-long double* RemakeMatrix(data_t* data) {
-  long double *res = NULL;
-  int f = 0;
-  if (data) {
-    res = calloc(data->matrix_3d.columns*data->matrix_3d.rows, sizeof(*res));
-    for (int i = 0; i < data->matrix_3d.rows; i++) {
-      for (int j = 0; j < data->matrix_3d.columns; j++) {
-        res[f++] = data->matrix_3d.matrix[i][j];
-      }
-    }
-  }
-  return res;
-}
-
-long double* RemakeFacets(data_t* data, int*s) {
-  long double *res = NULL;
-  int f = 0;
-  if (data) {
-    long double old = data->polygons[0].vertexes[0];
-    res = calloc(1024, sizeof(*res));
-    res[f++] = old;
-    for (int i = 0; i < data->facets_count; i++) {
-      // res = realloc(res, (f+data->polygons[i].v_in_facets) * sizeof(long double));
-      for (int j = 1; j < data->polygons[i].v_in_facets; j++) {
-        res[f++] = (data->polygons->vertexes[j]);
-        res[f++] = (data->polygons->vertexes[j]);
-      }
-    }
-  }
-  s = calloc(1, sizeof(*s));
-  s[0] = f;
-  return res;
-}
 
 int CountObj(const char* file_path, data_t* data) {
   FILE* obj = OpenFile(file_path);
@@ -64,7 +31,6 @@ int CountObj(const char* file_path, data_t* data) {
   size_t max_size = 128;
   char* line = calloc(max_size, sizeof(*line));;
 
-  long double* facet_row = calloc(64, sizeof(*facet_row));
   int f_analysis = 0;
   data->vertices_count = 0;
   data->facets_count = 0;
@@ -77,7 +43,6 @@ int CountObj(const char* file_path, data_t* data) {
     }
   }
   free(line);
-  free(facet_row);
   fclose(obj);
   return 0;
 }
@@ -97,17 +62,52 @@ int ParseObj(const char* file_path, data_t** data) {
 
   (*data)->polygons = calloc((*data)->facets_count, sizeof(*(*data)->polygons));
   while ((getline(&line, &max_size, obj) != -1) && (!feof(obj))) {
-    if (FormatCheck(line) == 1) {
+    if (FormatCheck(line) == VERTICE) {
       sscanf(line, "v %Lf %Lf %Lf", MATRIX[i][0], MATRIX[i][1], MATRIX[i][2]);
       i++;
-    } else if (FormatCheck(line) == 2) {
+    } else if (FormatCheck(line) == FACET) {
       POLYGON[j].v_in_facets = FacetsAnalyzer(line);
-      POLYGON[j].vertexes = calloc(POLYGON[j].v_in_facets * 3, sizeof(*POLYGON[j].vertexes));
+      d += POLYGON[j].v_in_facets;
+      POLYGON[j].vertexes = calloc(POLYGON[j].v_in_facets, sizeof(*POLYGON[j].vertexes));
       ArrayFacetFactory(line, POLYGON[j].vertexes, &(*data)->matrix_3d);
       j++;
     }
   }
+  double* v_array = calloc(d * 7, sizeof(*v_array));
+  int size = 0;
+  int start = 0;
+  for (int i = 0; i < (*data)->facets_count; i++) {
+    for (int j = 0; j < POLYGON[i].v_in_facets; j++) {
+      int ind = POLYGON[i].vertexes[j];
+      v_array[size++] = *MATRIX[ind][0];
+      v_array[size++] = *MATRIX[ind][1];
+      v_array[size++] = *MATRIX[ind][2];
+      if (start) v_array[size++] = *MATRIX[ind][0];
+      if (start) v_array[size++] = *MATRIX[ind][1];
+      if (start) v_array[size++] = *MATRIX[ind][2];
+      start = 1;
+      // if (v_array) v_array = realloc(v_array, size * sizeof(*v_array));
+    }
+  }
+  // for (int i = 2; i < size; i+=3) {
+  //   printf("ind = %f %f %f\n", v_array[i-2], v_array[i-1], v_array[i]);
+  // }
+  long double *mat_1d = calloc((*data)->vertices_count + 1, sizeof(*mat_1d));
+  unsigned int t = 0;
+  for (int i = 0; i < (*data)->matrix_3d.rows; i++) {
+    for (int j = 0; j < (*data)->matrix_3d.columns; j++) {
+      mat_1d[t++] = (*data)->matrix_3d.matrix[i][j];
+    }
+  }
+  // for (int i = 2; i < t; i+=3) {
+  //   printf("ver = %Lf %Lf %Lf\n", mat_1d[i-2], mat_1d[i-1], mat_1d[i]);
+  // }
   free(line);
+  (*data)->v_array = v_array;
+  (*data)->mat_1d = mat_1d;
+  (*data)->size_v = t;
+  (*data)->size = size;
+  // free(v_array);
   fclose(obj);
   return 0;
 }
@@ -159,9 +159,7 @@ int ArrayFacetFactory(const char* line, long double* facet_row, matrix_t* s) {
   while (num_pointer != NULL) {
     if (isdigit(*num_pointer)) {
       int ind = strtold(num_pointer, NULL) - 1;
-      facet_row[i++] = s->matrix[ind][0];
-      facet_row[i++] = s->matrix[ind][1];
-      facet_row[i++] = s->matrix[ind++][2];
+      facet_row[i++] = ind;
     }
     num_pointer = strtok(NULL, " ");
   }
@@ -183,14 +181,48 @@ int DebugObj(const char* file_path, data_t *data) {
   printf("FACET_DATA \n");
   for (int i = 0; i < data->facets_count; i++) {
     printf("%d: ", i+1);
-    for (int j = 0; j < data->polygons[i].v_in_facets * 3; j++) {
+    for (int j = 0; j < data->polygons[i].v_in_facets; j++) {
       printf(" %1.2Lf", data->polygons[i].vertexes[j]);
     }
     printf("\n");
   }
   return 0;
 }
-int DataAllocate(data_t** data) {
 
+int DataAllocate(data_t** data) {
   return 0;
+}
+
+long double* RemakeMatrix(data_t* data) {
+  long double *res = NULL;
+  int f = 0;
+  if (data) {
+    res = calloc(data->matrix_3d.columns*data->matrix_3d.rows, sizeof(*res));
+    for (int i = 0; i < data->matrix_3d.rows; i++) {
+      for (int j = 0; j < data->matrix_3d.columns; j++) {
+        res[f++] = data->matrix_3d.matrix[i][j];
+      }
+    }
+  }
+  return res;
+}
+
+long double* RemakeFacets(data_t* data, int*s) {
+  long double *res = NULL;
+  int f = 0;
+  if (data) {
+    long double old = data->polygons[0].vertexes[0];
+    res = calloc(1024, sizeof(*res));
+    res[f++] = old;
+    for (int i = 0; i < data->facets_count; i++) {
+      // res = realloc(res, (f+data->polygons[i].v_in_facets) * sizeof(long double));
+      for (int j = 1; j < data->polygons[i].v_in_facets; j++) {
+        res[f++] = (data->polygons->vertexes[j]);
+        res[f++] = (data->polygons->vertexes[j]);
+      }
+    }
+  }
+  s = calloc(1, sizeof(*s));
+  s[0] = f;
+  return res;
 }
