@@ -94,3 +94,10 @@ void MainWindow::on_pushButton_clicked()
 // ==================================================
 
 
+
+void MainWindow::on_lineEdit_7_textChanged(const QString &arg1)
+{
+    ui->widget->scale = arg1.toDouble();
+    ui->widget->update();
+}
+
