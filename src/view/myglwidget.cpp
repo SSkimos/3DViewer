@@ -25,11 +25,11 @@ void MyGLWidget::paintGL(void) {
 
 
     //glRotatef(90, 0, 0, 1); // вращаю матрицу 90 - угол, остльное это оси
-    glTranslatef(0, 0, -5);
+    glTranslatef(0, 0, -3);
     glRotatef(xRot, 1, 0, 0);
     glRotatef(yRot, 0, 1, 0);
-   drawCube(0.5);
-  //  data_t* s = ParseCountObj("../../../../../model/obj/cube.obj");
+    drawCube(0.5);
+   // data_t* s = ParseCountObj("../../../../model/obj/cube.obj");
 
     // ===
 //    glVertexPointer(3, GL_FLOAT, 0, &f);
@@ -71,16 +71,19 @@ void MyGLWidget::drawCube(float a) {
         1, 0, 1,    1, 0, 1,    1, 0, 1,    1, 0, 1,
         1, 0.5, 0.5,    1, 0.5, 0.5,    1, 0.5, 0.5,    1, 0.5, 0.5
     };
-    data_t* s = ParseCountObj("../../../../model/obj/diamond.obj");
-
-    glVertexPointer(3, GL_FLOAT, 0, s->polygons->vertexes);
+    data_t* s = ParseCountObj("../../../../model/obj/cube.obj");
+    int *size = NULL;
+   // long double* f = RemakeFacets(s, size);
+   // std::cout << f[0] << " SSSS" << std::endl;
+    glVertexPointer(3, GL_DOUBLE, 0, s->v_array);
     glEnableClientState(GL_VERTEX_ARRAY);
 
-   // glColorPointer(3, GL_FLOAT, 0, &color_arr);
+   //glColorPointer(3, GL_FLOAT, 0, &color_arr);
    //glEnableClientState(GL_COLOR_ARRAY);
 
-    glDrawArrays(GL_LINES, 0, 32);
-//    glDrawArrays(GL_PATCHES, 0, 24);
+  // glDrawElements(GL_LINES, 0, s->size_v, s->v_array);
+    glDrawArrays(GL_LINES, 0, s->size);
+    // glDrawArrays(GL_PATCHES, 0, 24);
 
    // glDisableClientState(GL_COLOR_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
