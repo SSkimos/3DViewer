@@ -38,7 +38,12 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_lineEdit_7_textChanged(const QString &arg1);
+
+    
+
 private:
     Ui::MainWindow *ui;
+//    double scale;
 };
 #endif // MAINWINDOW_H

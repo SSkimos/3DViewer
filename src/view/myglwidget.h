@@ -41,6 +41,19 @@ private:
     QTimer tmr;
     void drawCube(float a);
 
+ public:
+    double scale;
+    QOpenGLShaderProgram *prog = nullptr;
+    QOpenGLShaderProgram *initialize_shaders();
+    void add_example();
+    int vertex_count;
+    int lines_count;
+    float *vertex_array;
+    unsigned int *lines_array;
+    QVector3D lineColorV = {1, 1, 1};
+    QVector3D verticleColorV = {1, 0, 0};
+    int m_coeffMatrixLoc = 0;
+
 };
 
 
