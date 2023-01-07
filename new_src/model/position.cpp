@@ -1,4 +1,4 @@
-#include "Position.h"
+#include "position.h"
 
 Position::Position() {
     //TODO: конструктор должен принимать параметры и вызывать сеттеры

@@ -367,7 +367,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QSlider" name="horizontalSlider_4">
+             <widget class="QSlider" name="xRotSldr">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                 <horstretch>0</horstretch>

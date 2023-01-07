@@ -4,6 +4,9 @@
 class Position
 {
 public:
+    Position();
+    ~Position();
+
     void setRotateX(int newValue);
     void setRotateY(int newValue);
     void setRotateZ(int newValue);

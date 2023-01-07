@@ -1,5 +1,6 @@
 #ifndef WINDOW_H
 #define WINDOW_H
+#include "../controller/controller.h"
 
 #include <QMainWindow>
 
@@ -15,7 +16,11 @@ public:
     Window(QWidget *parent = nullptr);
     ~Window();
 
+private slots:
+    void on_xRotSldr_valueChanged(int value);
+
 private:
     Ui::Window *ui;
+    Controller *controller;
 };
 #endif // WINDOW_H
