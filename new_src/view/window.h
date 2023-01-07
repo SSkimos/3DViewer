@@ -1,6 +1,9 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include <QOpenGLWidget>
+#include <QtOpenGL>
+#include <QTimer>
 #include <QMainWindow>
 
 QT_BEGIN_NAMESPACE

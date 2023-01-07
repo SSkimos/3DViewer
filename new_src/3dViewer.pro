@@ -16,7 +16,7 @@ SOURCES += \
 HEADERS += \
     view/window.h \
     data/position.h \
-    view/myglwidget.h 
+    view/myglwidget.h
 
 FORMS += \
     view/window.ui
