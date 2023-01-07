@@ -10,11 +10,13 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    view/window.cpp
+    view/window.cpp \
+    view/myglwidget.cpp
 
 HEADERS += \
     view/window.h \
-    model/position.h
+    data/position.h \
+    view/myglwidget.h 
 
 FORMS += \
     view/window.ui
