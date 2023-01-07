@@ -1,6 +1,5 @@
 #ifndef WINDOW_H
 #define WINDOW_H
-#include "../controller/controller.h"
 
 #include <QMainWindow>
 
@@ -21,6 +20,5 @@ private slots:
 
 private:
     Ui::Window *ui;
-    Controller *controller;
 };
 #endif // WINDOW_H

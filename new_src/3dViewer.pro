@@ -10,14 +10,11 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    view/window.cpp \
-    model/position.cpp \
-    controller/controller.cpp
+    view/window.cpp
 
 HEADERS += \
     view/window.h \
-    model/position.h \
-    controller/controller.h
+    model/position.h
 
 FORMS += \
     view/window.ui
