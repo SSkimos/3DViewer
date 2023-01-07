@@ -19,7 +19,7 @@ public:
     ~Window();
 
 private slots:
-    void on_xRotSldr_valueChanged(int value);
+    
 
 private:
     Ui::Window *ui;

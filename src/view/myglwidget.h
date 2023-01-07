@@ -54,6 +54,14 @@ private:
    QVector3D verticleColorV = {1, 0, 0};
    int m_coeffMatrixLoc = 0;
 
+  int rotateX;
+  int rotateY;
+  int rotateZ;
+
+  int moveX;
+  int moveY;
+  int moveZ;
+
 };
 
 

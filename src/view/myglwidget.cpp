@@ -38,7 +38,6 @@ QOpenGLShaderProgram *MyGLWidget::initialize_shaders() {
 
 void MyGLWidget::initializeGL(void) {
     glEnable(GL_DEPTH_TEST); // включаю буффер глубины (хранит в себе расстояние от камеры до отрисовки)
-
     prog =  initialize_shaders();
     add_example() ;
 }
