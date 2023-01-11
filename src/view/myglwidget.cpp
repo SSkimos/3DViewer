@@ -11,12 +11,10 @@ MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 
 void MyGLWidget::initializeGL(void) {
   glEnable(GL_DEPTH_TEST);
-  prog = initShaders();
-
-  initBuffers();
+  prog = compileShaders();
 }
 
-QOpenGLShaderProgram *MyGLWidget::initShaders() {
+QOpenGLShaderProgram *MyGLWidget::compileShaders() {
     const char *vertexShaderSource =
         "attribute vec3 position;\n"
         "void main()\n"
@@ -39,15 +37,6 @@ QOpenGLShaderProgram *MyGLWidget::initShaders() {
                                   fragmentShaderSource);
     prog->bindAttributeLocation("position", 0);
     prog->link();
-    int nrAttributes;
-    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
-    std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
-    return prog;
-}
-
-QOpenGLShaderProgram *MyGLWidget::compileShaders(QOpenGLShaderProgram *prog) {
-    
-
     return prog;
 }
 
@@ -77,44 +66,7 @@ void MyGLWidget::paintGL(void) {
   // набор функций, в результате выполнения которых мы получаем буффер матрицу, которую загрузим в файл
   add_example();
 
-  // НЕ ТРОГАТЬ, КРЫШУЮ!!!
-  // if (vao->isCreated()) {
-  //   vao->destroy();
-  // }
-
-  // vao->create();
-  // vao->bind();
-
-
-  // clearBuffers();
   initBuffers();
-
-  // QOpenGLBuffer vbo(QOpenGLBuffer::VertexBuffer);
-  // vbo.create();
-  // vbo.bind();
-  // vbo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
-  // vbo.allocate(vertex_array, vertex_count * 3 * sizeof(float));
-
-  // prog->setAttributeBuffer(0, GL_FLOAT, 0, 3, 0);
-  // prog->enableAttributeArray(0);
-
-  // QOpenGLBuffer ibo(QOpenGLBuffer::IndexBuffer);
-  // ibo.create();
-  // ibo.bind();
-  // ibo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
-  // ibo.allocate(lines_array, sizeof(unsigned int) * 2 * lines_count);
-
-  // vao->release();
-
-  // glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_TEST);
-
-  // lineColorV = {1, 0, 0};
-
-  // prog->setUniformValue(prog->uniformLocation("color"), lineColorV);
-
-  // glLineWidth(0.5);
-  // glDrawElementsBaseVertex(GL_LINES, 2 * lines_count, GL_UNSIGNED_INT, 0, 0);
-  // vao->release();
 }
 
 void MyGLWidget::initBuffers() {
@@ -153,16 +105,16 @@ void MyGLWidget::initBuffers() {
 }
 
 void MyGLWidget::clearBuffers() {
-  // clearVAO();
-  clearVBO();
-  clearIBO();
+  clearVAO();
+  // clearVBO();
+  // clearIBO();
 }
 
-// void MyGLWidget::clearVAO() {
-//   if (vao->isCreated()) {
-//     vao->destroy();
-//   }
-// }
+void MyGLWidget::clearVAO() {
+  if (vao.isCreated()) {
+    vao.destroy();
+  }
+}
 
 void MyGLWidget::clearVBO() {
   // if (vbo->isCreated()) {

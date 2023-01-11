@@ -40,8 +40,7 @@ private:
    QPoint mPos;
    QTimer tmr;
    void drawCube(float a);
-   QOpenGLShaderProgram *initShaders();
-   QOpenGLShaderProgram *compileShaders(QOpenGLShaderProgram *prog);
+   QOpenGLShaderProgram *compileShaders();
    QOpenGLVertexArrayObject vao;
   //  QOpenGLVertexArrayObject *ibo;
   //  QOpenGLVertexArrayObject *vbo;
