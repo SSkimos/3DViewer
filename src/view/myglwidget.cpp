@@ -139,41 +139,6 @@ void MyGLWidget::resizeGL(int width, int height) {
 
 }
 
-void MyGLWidget::drawCube(float a) {
-  //     float ver_cub[] = {
-  //         -a, -a, a,     a, -a, a,        a, a, a,     -a, a, a, // передняя
-  //         a, -a, -a,    -a, -a, -a,     -a, a, -a,     a, a, -a, // задняя
-  //         -a, -a, -a,    -a, -a, a,     -a, a, a,     -a, a, -a, // левая
-  //         a, -a, a,    a, -a, -a,     a, a, -a,     a, a, a, // правая
-  //         -a, -a, a,    a, -a, a,     a, -a, -a,     -a, -a, -a, // нижняя
-  //         -a, a, a,    a, a, a,     a, a, -a,     -a, a, -a, // верхняя
-  //     };
-  //     float color_arr[] {
-  //         1, 0, 0,    1, 0, 0,    1, 0, 0,    1, 0, 0,
-  //         0, 0, 1,    0, 0, 1,    0, 0, 1,    0, 0, 1,
-  //         1, 1, 0,    1, 1, 0,    1, 1, 0,    1, 1, 0,
-  //         0, 1, 1,    0, 1, 1,    0, 1, 1,    0, 1, 1,
-  //         1, 0, 1,    1, 0, 1,    1, 0, 1,    1, 0, 1,
-  //         1, 0.5, 0.5,    1, 0.5, 0.5,    1, 0.5, 0.5,    1, 0.5, 0.5
-  //     };
-  //     data_t* s = ParseCountObj("../../../../model/obj/cube.obj");
-  //     int *size = NULL;
-  //    // long double* f = RemakeFacets(s, size);
-  //    // std::cout << f[0] << " SSSS" << std::endl;
-  //     glVertexPointer(3, GL_DOUBLE, 0, s->v_array);
-  //     glEnableClientState(GL_VERTEX_ARRAY);
-
-  //    //glColorPointer(3, GL_FLOAT, 0, &color_arr);
-  //    //glEnableClientState(GL_COLOR_ARRAY);
-
-  //   // glDrawElements(GL_LINES, 0, s->size_v, s->v_array);
-  //     glDrawArrays(GL_LINES, 0, s->size);
-  //     // glDrawArrays(GL_PATCHES, 0, 24);
-
-  //    // glDisableClientState(GL_COLOR_ARRAY);
-  //     glDisableClientState(GL_VERTEX_ARRAY);
-}
-
 void MyGLWidget::mousePressEvent(QMouseEvent * mo) {
   mPos = mo->pos();
 }
