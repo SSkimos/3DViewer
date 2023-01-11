@@ -9,8 +9,12 @@ MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
     setGeometry(400, 200, 800, 600);
 }
 
-QOpenGLShaderProgram *MyGLWidget::initialize_shaders() {
-  // Delete all this
+void MyGLWidget::initializeGL(void) {
+  glEnable(GL_DEPTH_TEST);
+  prog = initShaders();
+}
+
+QOpenGLShaderProgram *MyGLWidget::initShaders() {
     const char *vertexShaderSource =
         "attribute vec3 position;\n"
         "void main()\n"
@@ -36,15 +40,13 @@ QOpenGLShaderProgram *MyGLWidget::initialize_shaders() {
     int nrAttributes;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
     std::cout << "Maximum nr of vertex attributes supported: " << nrAttributes << std::endl;
-
     return prog;
 }
 
-void MyGLWidget::initializeGL(void) {
-  glEnable(GL_DEPTH_TEST); // включаю буффер глубины (хранит в себе расстояние от камеры до отрисовки)
-  // Delete all this
-  prog =  initialize_shaders();
-  add_example() ;
+QOpenGLShaderProgram *MyGLWidget::compileShaders(QOpenGLShaderProgram *prog) {
+    
+
+    return prog;
 }
 
 void MyGLWidget::add_example() {
@@ -66,10 +68,21 @@ void MyGLWidget::add_example() {
 }
 
 void MyGLWidget::paintGL(void) {
-
   glClearColor(0, 0, 0, 1); // настраиваю цвет окна
   prog->bind();
-  // DELETE 
+  
+  // функция, для получения массива из файла
+  // набор функций, в результате выполнения которых мы получаем буффер матрицу, которую загрузим в файл
+  add_example();
+
+  // НЕ ТРОГАТЬ, КРЫШУЮ!!!
+  // if (vao->isCreated()) {
+  //   vao->destroy();
+  // }
+
+  // vao->create();
+  // vao->bind();
+
   QOpenGLBuffer vbo(QOpenGLBuffer::VertexBuffer);
   vbo.create();
   vbo.bind();
@@ -85,6 +98,8 @@ void MyGLWidget::paintGL(void) {
   ibo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
   ibo.allocate(lines_array, sizeof(unsigned int) * 2 * lines_count);
 
+  // vao->release();
+
   glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_TEST);
 
   lineColorV = {1, 0, 0};
@@ -93,21 +108,34 @@ void MyGLWidget::paintGL(void) {
 
   glLineWidth(0.5);
   glDrawElements(GL_LINES, 2 * lines_count, GL_UNSIGNED_INT, 0);
-  
-  // DELETE !!
+}
 
-  //    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_TEST); // очищаю буффер цвета и буффер глубины (каждый тик)
-  ////    long double *f = RemakeMatrix(s);
+// void MyGLWidget::initBuffers() {
 
-  //    glMatrixMode(GL_MODELVIEW); // указываю тип матрицы
-  //    glLoadIdentity(); // загружаю матрицу в стек
-  //    glFrustum(-1, 1, -1, 1, 1, 10);
+// }
 
-  //    //glRotatef(90, 0, 0, 1); // вращаю матрицу 90 - угол, остльное это оси
-  //    glTranslatef(0, 0, -3);
-  //    glRotatef(xRot, 1, 0, 0);
-  //    glRotatef(yRot, 0, 1, 0);
-  //    drawCube(0.5);
+void MyGLWidget::clearBuffers() {
+  clearVAO();
+  clearVBO();
+  clearIBO();
+}
+
+void MyGLWidget::clearVAO() {
+  if (vao->isCreated()) {
+    vao->destroy();
+  }
+}
+
+void MyGLWidget::clearVBO() {
+  if (vbo->isCreated()) {
+    vbo->destroy();
+  }
+}
+
+void MyGLWidget::clearIBO() {
+  if (ibo->isCreated()) {
+    ibo->destroy();
+  }
 }
 
 void MyGLWidget::resizeGL(int width, int height) {

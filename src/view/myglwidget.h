@@ -40,11 +40,19 @@ private:
    QPoint mPos;
    QTimer tmr;
    void drawCube(float a);
+   QOpenGLShaderProgram *initShaders();
+   QOpenGLShaderProgram *compileShaders(QOpenGLShaderProgram *prog);
+   QOpenGLVertexArrayObject *vao;
+   QOpenGLVertexArrayObject *ibo;
+   QOpenGLVertexArrayObject *vbo;
+   void clearVAO();
+   void clearVBO();
+   void clearIBO();
 
  public:
+  void clearBuffers();
    double scale;
    QOpenGLShaderProgram *prog = nullptr;
-   QOpenGLShaderProgram *initialize_shaders();
    void add_example();
    int vertex_count;
    int lines_count;
