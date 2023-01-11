@@ -16,7 +16,7 @@ data_t* ParseCountObj(const char* file_path) {
   if (data) {
     CountObj(file_path, data);
     ParseObj(file_path, &data);
-    // DebugObj(file_path, data);
+    DebugObj(file_path, data);
     // printf("%zu\n", sizeof(*data));
     // FREE DATA !!!
     // USE FGETS

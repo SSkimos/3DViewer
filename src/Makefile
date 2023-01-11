@@ -19,11 +19,11 @@ matrix_t_clean:
 # 	$(CC) $(CFLAGS) lib.a $(OBJ_T) $(OBJ) $(TESTFLAGS) -o test
 # 	./test
 
-libmodel.a: $(OBJ)
-	ar rcs libmodel.a $(OBJ) model/libs21_matrix.a
+libmodel.a: $(OBJ) matrix_t
+	ar rcs libmodel.a $(OBJ)
 	ranlib libmodel.a
 
-install: matrix_t libmodel.a
+install: libmodel.a
 	cmake -S . -B build
 	make -C build/
 	./build/3DViewer.app/Contents/MacOS/3DViewer
