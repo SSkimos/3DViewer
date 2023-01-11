@@ -11,19 +11,35 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_library (
+    HELLO_LIB
+    NAMES libmodel.a model # what to look for
+    HINTS "${CMAKE_SOURCE_DIR}" # where to look
+    NO_DEFAULT_PATH # do not search system default paths
+)
+find_library (
+  MATRIX_T
+    NAMES libs21_matrix.a matrix # what to look for
+    HINTS "${CMAKE_SOURCE_DIR}/model/matrix_t" # where to look
+    NO_DEFAULT_PATH # do not search system default paths
+)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS OpenGLWidgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+message(STATUS "HELLO_LIB: [${HELLO_LIB}]")
+#if (NOT HELLO_LIB)
+#  #message(SEND_ERROR "Did not find lib hello")
+#endif
 
 
 set(PROJECT_SOURCES
-        main.cpp
         view/myglwidget.cpp
         view/myglwidget.h
         view/window.cpp
         view/window.ui
         data/position.h
         view/window.h
+        main.cpp
 )
 
 
@@ -50,6 +66,9 @@ else()
     endif()
 endif()
 
+
+target_link_libraries(3DViewer PRIVATE ${MATRIX_T})
+target_link_libraries(3DViewer PRIVATE ${HELLO_LIB})
 target_link_libraries(3DViewer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(3DViewer PRIVATE Qt6::OpenGLWidgets)
 

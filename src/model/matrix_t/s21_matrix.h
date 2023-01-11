@@ -1,5 +1,8 @@
 #ifndef SRC_S21_MATRIX_H_
 #define SRC_S21_MATRIX_H_
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef enum {
   kOk,
@@ -28,5 +31,8 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result);
 
 double s21_easy_determ(matrix_t *A);
 int s21_crop(matrix_t *A, int n, int b, matrix_t *result);
+#ifdef __cplusplus
+}
+#endif
 
 #endif  //  SRC_S21_MATRIX_H_

@@ -1,16 +1,12 @@
 CC=gcc 
 SRC=#back/stack.c back/polish.c back/parser.c back/credit.c
-OBJ=#back/stack.o back/polish.o back/parser.o back/credit.o
+OBJ= model/s21_affin_p.o model/s21_parse_obj.o
 SRC_T=#back/tests/s21_calc_tests.c
 OBJ_T=#back/tests/s21_calc_tests.o
-CFLAGS=--coverage $(shell pkg-config --cflags --libs check)
+CFLAGS=
 
 all: install
 
-
-gcov_report: tests
-	lcov -t "otchet" -o otchet.info -c -d ./back
-	genhtml -o report otchet.info
 
 .PHONY:matrix_t
 matrix_t:
@@ -19,14 +15,15 @@ matrix_t:
 matrix_t_clean:
 	$(MAKE) -C model/matrix_t clean
 
-tests: lib.a $(OBJ_T) $(OBJ)
-	$(CC) $(CFLAGS) lib.a $(OBJ_T) $(OBJ) $(TESTFLAGS) -o test
-	./test
+# tests: lib.a $(OBJ_T) $(OBJ)
+# 	$(CC) $(CFLAGS) lib.a $(OBJ_T) $(OBJ) $(TESTFLAGS) -o test
+# 	./test
 
-lib.a: $(OBJ)
-	ar rcs lib.a $(OBJ)
+libmodel.a: $(OBJ)
+	ar rcs libmodel.a $(OBJ) model/libs21_matrix.a
+	ranlib libmodel.a
 
-install:
+install: matrix_t libmodel.a
 	cmake -S . -B build
 	make -C build/
 	./build/3DViewer.app/Contents/MacOS/3DViewer

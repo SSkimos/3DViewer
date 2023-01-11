@@ -1,7 +1,8 @@
 #include "myglwidget.h"
-// #include "../model/s21_data_structure.h"
-// #include "../model/s21_parse_obj.h"
-// #include "../model/s21_affin_p.h"
+#include <string>
+#include "../model/s21_data_structure.h"
+#include "../model/s21_parse_obj.h"
+#include "../model/s21_affin_p.h"
 #include <iostream>
 
 MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
@@ -43,7 +44,7 @@ QOpenGLShaderProgram *MyGLWidget::compileShaders() {
 void MyGLWidget::paintGL(void) {
   glClearColor(0, 0, 0, 1); // настраиваю цвет окна
   prog->bind();
-  
+  std::cout << moveX << std::endl;
   // TODO: функция, для получения массива из файла
   // TODO: набор функций, в результате выполнения которых мы получаем буффер матрицу, которую загрузим в файл
   // TODO: удалить add_example()
@@ -53,7 +54,14 @@ void MyGLWidget::paintGL(void) {
 
 void MyGLWidget::add_example() {
   vertex_count = 4;
-  vertex_array = new float[3 * vertex_count];
+  vertex_array = new float[3 * vertex_count]; // CALLOC
+  // matrix_t* m = {0};
+  // s21_create_matrix(1, 1, m);
+  // data_t* s = ParseCountObj("../../../../../model/obj/cube.obj");
+  // std::string t;
+  // t = "true";
+  // if (s) 
+  //   std::cout << t << std::endl;
   float buff_vertex[] = {-0.5, 0,   -0.5, 0.5, 0,    -0.5,
     0,    0.5, -0.5, 0,   -0.5, -1};
   for (int i = 0; i < vertex_count * 3; i++) {
@@ -62,7 +70,7 @@ void MyGLWidget::add_example() {
 
   lines_count = 6;
   unsigned int buff_lines[] = {0, 1, 1, 2, 2, 0, 0, 3, 1, 3, 2, 3};
-  lines_array = new unsigned int[2 * lines_count];
+  lines_array = new unsigned int[2 * lines_count]; // CALLOC 
   for (int i = 0; i < 2 * lines_count; i++) {
     lines_array[i] = buff_lines[i];
   }
