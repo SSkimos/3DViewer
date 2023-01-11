@@ -12,6 +12,8 @@ MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 void MyGLWidget::initializeGL(void) {
   glEnable(GL_DEPTH_TEST);
   prog = initShaders();
+
+  initBuffers();
 }
 
 QOpenGLShaderProgram *MyGLWidget::initShaders() {
@@ -83,6 +85,46 @@ void MyGLWidget::paintGL(void) {
   // vao->create();
   // vao->bind();
 
+
+  // clearBuffers();
+  initBuffers();
+
+  // QOpenGLBuffer vbo(QOpenGLBuffer::VertexBuffer);
+  // vbo.create();
+  // vbo.bind();
+  // vbo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
+  // vbo.allocate(vertex_array, vertex_count * 3 * sizeof(float));
+
+  // prog->setAttributeBuffer(0, GL_FLOAT, 0, 3, 0);
+  // prog->enableAttributeArray(0);
+
+  // QOpenGLBuffer ibo(QOpenGLBuffer::IndexBuffer);
+  // ibo.create();
+  // ibo.bind();
+  // ibo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
+  // ibo.allocate(lines_array, sizeof(unsigned int) * 2 * lines_count);
+
+  // vao->release();
+
+  // glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_TEST);
+
+  // lineColorV = {1, 0, 0};
+
+  // prog->setUniformValue(prog->uniformLocation("color"), lineColorV);
+
+  // glLineWidth(0.5);
+  // glDrawElementsBaseVertex(GL_LINES, 2 * lines_count, GL_UNSIGNED_INT, 0, 0);
+  // vao->release();
+}
+
+void MyGLWidget::initBuffers() {
+  if (vao.isCreated()) {
+    vao.destroy();
+  }
+
+  vao.create();
+  vao.bind();
+
   QOpenGLBuffer vbo(QOpenGLBuffer::VertexBuffer);
   vbo.create();
   vbo.bind();
@@ -98,8 +140,6 @@ void MyGLWidget::paintGL(void) {
   ibo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
   ibo.allocate(lines_array, sizeof(unsigned int) * 2 * lines_count);
 
-  // vao->release();
-
   glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_TEST);
 
   lineColorV = {1, 0, 0};
@@ -107,35 +147,33 @@ void MyGLWidget::paintGL(void) {
   prog->setUniformValue(prog->uniformLocation("color"), lineColorV);
 
   glLineWidth(0.5);
-  glDrawElements(GL_LINES, 2 * lines_count, GL_UNSIGNED_INT, 0);
+  glDrawElementsBaseVertex(GL_LINES, 2 * lines_count, GL_UNSIGNED_INT, 0, 0);
+
+  vao.release();
 }
 
-// void MyGLWidget::initBuffers() {
-
-// }
-
 void MyGLWidget::clearBuffers() {
-  clearVAO();
+  // clearVAO();
   clearVBO();
   clearIBO();
 }
 
-void MyGLWidget::clearVAO() {
-  if (vao->isCreated()) {
-    vao->destroy();
-  }
-}
+// void MyGLWidget::clearVAO() {
+//   if (vao->isCreated()) {
+//     vao->destroy();
+//   }
+// }
 
 void MyGLWidget::clearVBO() {
-  if (vbo->isCreated()) {
-    vbo->destroy();
-  }
+  // if (vbo->isCreated()) {
+  //   vbo->destroy();
+  // }
 }
 
 void MyGLWidget::clearIBO() {
-  if (ibo->isCreated()) {
-    ibo->destroy();
-  }
+  // if (ibo->isCreated()) {
+  //   ibo->destroy();
+  // }
 }
 
 void MyGLWidget::resizeGL(int width, int height) {

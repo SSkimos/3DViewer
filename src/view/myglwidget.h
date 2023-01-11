@@ -42,15 +42,16 @@ private:
    void drawCube(float a);
    QOpenGLShaderProgram *initShaders();
    QOpenGLShaderProgram *compileShaders(QOpenGLShaderProgram *prog);
-   QOpenGLVertexArrayObject *vao;
-   QOpenGLVertexArrayObject *ibo;
-   QOpenGLVertexArrayObject *vbo;
+   QOpenGLVertexArrayObject vao;
+  //  QOpenGLVertexArrayObject *ibo;
+  //  QOpenGLVertexArrayObject *vbo;
    void clearVAO();
    void clearVBO();
    void clearIBO();
 
  public:
   void clearBuffers();
+  void initBuffers();
    double scale;
    QOpenGLShaderProgram *prog = nullptr;
    void add_example();
