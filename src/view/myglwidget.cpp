@@ -40,8 +40,18 @@ QOpenGLShaderProgram *MyGLWidget::compileShaders() {
     return prog;
 }
 
+void MyGLWidget::paintGL(void) {
+  glClearColor(0, 0, 0, 1); // настраиваю цвет окна
+  prog->bind();
+  
+  // TODO: функция, для получения массива из файла
+  // TODO: набор функций, в результате выполнения которых мы получаем буффер матрицу, которую загрузим в файл
+  // TODO: удалить add_example()
+  add_example();
+  initBuffers();
+}
+
 void MyGLWidget::add_example() {
-  // Delete all this
   vertex_count = 4;
   vertex_array = new float[3 * vertex_count];
   float buff_vertex[] = {-0.5, 0,   -0.5, 0.5, 0,    -0.5,
@@ -58,25 +68,14 @@ void MyGLWidget::add_example() {
   }
 }
 
-void MyGLWidget::paintGL(void) {
-  glClearColor(0, 0, 0, 1); // настраиваю цвет окна
-  prog->bind();
-  
-  // функция, для получения массива из файла
-  // набор функций, в результате выполнения которых мы получаем буффер матрицу, которую загрузим в файл
-  add_example();
-
-  initBuffers();
-}
-
 void MyGLWidget::initBuffers() {
-  if (vao.isCreated()) {
-    vao.destroy();
-  }
+  clearBuffers();
 
+  // TODO: попробовать вынести VAO 
   vao.create();
   vao.bind();
 
+  // TODO: вынести? createVBO()
   QOpenGLBuffer vbo(QOpenGLBuffer::VertexBuffer);
   vbo.create();
   vbo.bind();
@@ -86,6 +85,7 @@ void MyGLWidget::initBuffers() {
   prog->setAttributeBuffer(0, GL_FLOAT, 0, 3, 0);
   prog->enableAttributeArray(0);
 
+  // TODO: вынести? createIBO()
   QOpenGLBuffer ibo(QOpenGLBuffer::IndexBuffer);
   ibo.create();
   ibo.bind();
@@ -129,13 +129,6 @@ void MyGLWidget::clearIBO() {
 }
 
 void MyGLWidget::resizeGL(int width, int height) {
-
-  /*    glViewport(0, 0, width, height); // задаю размер окна
-
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity(); */// загружаю едининчную матрицу
-                           // (-1 1 по x) (-1 1 по y) (1 расстояние от камеры до передней плоскости) (2 растоняние от камеры до задней плоскости)
-                           // glOrtho(-1, 1, -1, 1, 1, 2); // преобразую матрицу в ортогональную проекцию
 
 }
 
