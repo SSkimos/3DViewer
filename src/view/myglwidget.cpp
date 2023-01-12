@@ -70,7 +70,10 @@ void MyGLWidget::add_example() {
   vertex_array = new float[3 * vertex_count]; // CALLOC
   // matrix_t* m = {0};
   // s21_create_matrix(1, 1, m);
-  // data_t* s = ParseCountObj("model/obj/cube.obj");
+
+  
+  const char *c_str2 =  qPrintable(filename);
+  if (c_str2 && strlen(c_str2) > 1) data_t* s = ParseCountObj(c_str2);
   // std::string t;
   // t = "true";
   // if (s) 

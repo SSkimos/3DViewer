@@ -14,7 +14,7 @@ extern "C" {
   int DataAllocate(data_t** data);
   int DebugObj(const char* file_path, data_t* data);
 
-  int ArrayFacetFactory(const char* line, long double* facet_row, matrix_t* s);
+  int ArrayFacetFactory(const char* line, unsigned int* facet_row, int* ind);
   FILE* OpenFile(const char* filename);
 
   int FormatCheck(const char* line);

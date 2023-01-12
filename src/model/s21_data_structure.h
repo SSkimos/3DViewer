@@ -11,7 +11,7 @@ typedef struct data {
   unsigned int vertices_count; // size data
   unsigned int facets_count; // size data
   matrix_t matrix_3d; // 1 big matrix
-  double* vertex_array;
+  long double* vertex_array;
   unsigned int* lines_array;
   unsigned int size;
   unsigned int size_v;
