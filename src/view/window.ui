@@ -308,7 +308,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_4">
+             <widget class="QPushButton" name="chooseFileButton">
               <property name="text">
                <string>choose file</string>
               </property>

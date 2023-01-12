@@ -5,6 +5,7 @@
 #include <QtOpenGL>
 #include <QTimer>
 #include <QMainWindow>
+#include <QFileDialog>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Window; }
@@ -19,6 +20,7 @@ public:
     ~Window();
 
 private slots:
+    void on_chooseFileButton_clicked();
     
 
 private:

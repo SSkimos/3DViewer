@@ -70,6 +70,8 @@ private:
   int moveY;
   int moveZ;
 
+  QString filename;
+
 };
 
 

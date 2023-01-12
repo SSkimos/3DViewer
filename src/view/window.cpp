@@ -20,6 +20,16 @@ Window::Window(QWidget *parent)
         [this](const int& val)->void{ui->zMoveEdit->setText(locale().toString(val)); ui->widget->moveZ = val; ui->widget->update();});
 }
 
+void Window::on_chooseFileButton_clicked()
+{
+    ui->widget->filename = QFileDialog::getOpenFileName(
+                this, tr("Choose File"),
+                "Desktop",
+                "All files (*.*)"
+    );
+    if (ui->widget->filename.size() > 0) ui->statusbar->showMessage(ui->widget->filename);
+}
+
 Window::~Window()
 {
     delete ui;
