@@ -53,7 +53,7 @@ void MyGLWidget::paintGL(void) {
 }
 
 void MyGLWidget::add_example() {
-  vertex_count = 4;
+  vertex_count = 8;
   // char buffer[500];
   // FILE *output;
 
@@ -70,13 +70,23 @@ void MyGLWidget::add_example() {
   vertex_array = new float[3 * vertex_count]; // CALLOC
   // matrix_t* m = {0};
   // s21_create_matrix(1, 1, m);
-  // data_t* s = ParseCountObj("model/obj/cube.obj");
+  data_t* s = ParseCountObj("model/obj/cube.obj");
   // std::string t;
   // t = "true";
   // if (s) 
   //   std::cout << t << std::endl;
-  float buff_vertex[] = {-0.5, 0,   -0.5, 0.5, 0,    -0.5,
-    0,    0.5, -0.5, 0,   -0.5, -1};
+  // float buff_vertex[] = {-0.5, 0,   -0.5, 0.5, 0,    -0.5,
+  //   0,    0.5, -0.5, 0,   -0.5, -1};
+  float buff_vertex[] = {
+    0.0, 0.0, 0.0,
+    0.0, 0.0, 1.0,
+    0.0, 1.0, 0.0,
+    0.0, 1.0, 1.0,
+    1.0, 0.0, 0.0,
+    1.0, 0.0, 1.0,
+    1.0, 1.0, 0.0,
+    1.0, 1.0, 1.0,
+  };
   for (int i = 0; i < vertex_count * 3; i++) {
     vertex_array[i] = buff_vertex[i];
   }

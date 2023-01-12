@@ -11,13 +11,10 @@ typedef struct data {
   unsigned int vertices_count; // size data
   unsigned int facets_count; // size data
   matrix_t matrix_3d; // 1 big matrix
-  long double* mat_1d;
-  polygon_t* polygons; // all polygon data
-  double* v_array;
+  double* vertex_array;
+  unsigned int* lines_array;
   unsigned int size;
   unsigned int size_v;
 } data_t;
-
-
 
 #endif // MODEL_DATA_STRUCTURE_H_
