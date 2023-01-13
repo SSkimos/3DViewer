@@ -17,4 +17,8 @@ typedef struct data {
   unsigned int size_v;
 } data_t;
 
+typedef struct vertices {
+  long double xyz[3];
+} vertices_t;
+
 #endif // MODEL_DATA_STRUCTURE_H_

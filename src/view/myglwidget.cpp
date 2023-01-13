@@ -54,32 +54,12 @@ void MyGLWidget::paintGL(void) {
 
 void MyGLWidget::add_example() {
   vertex_count = 8;
-  // char buffer[500];
-  // FILE *output;
-
-  // // read output of a command
-  // output = popen("/bin/pwd", "r");
-  // char *pwd = fgets(buffer, sizeof(buffer), output);
-
-  // // strip '\n' on ending of a line
-  // pwd = strtok(pwd, "\n");
-
-  // puts("Path info by execute shell command 'pwd':");
-  // printf("\tWorkdir: %s\n", pwd);
-  // printf("\tFilepath: %s/%s\n", pwd, __FILE__);
   vertex_array = new float[3 * vertex_count]; // CALLOC
-  // matrix_t* m = {0};
-  // s21_create_matrix(1, 1, m);
 
+  data_t* s = ParseCountObj("model/obj/diamond.obj");
   
-  const char *c_str2 =  qPrintable(filename);
-  if (c_str2 && strlen(c_str2) > 1) data_t* s = ParseCountObj(c_str2);
-  // std::string t;
-  // t = "true";
-  // if (s) 
-  //   std::cout << t << std::endl;
-  // float buff_vertex[] = {-0.5, 0,   -0.5, 0.5, 0,    -0.5,
-  //   0,    0.5, -0.5, 0,   -0.5, -1};
+  /* const char *c_str2 =  qPrintable(filename);
+  if (c_str2 && strlen(c_str2) > 1) data_t* s = ParseCountObj(c_str2); */
   float buff_vertex[] = {
     0.0, 0.0, 0.0,
     0.0, 0.0, 1.0,

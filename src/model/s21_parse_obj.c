@@ -1,10 +1,13 @@
 #include "s21_parse_obj.h"
 #include "matrix_t/s21_matrix.h"
+#include "s21_data_structure.h"
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
+
+#define MAX_SIZE 512
 #define VERTICE 1
 #define FACET 2 
 #define MATRIX &(*data)->matrix_3d.matrix
@@ -16,7 +19,7 @@ data_t* ParseCountObj(const char* file_path) {
   if (data) {
     CountObj(file_path, data);
     ParseObj(file_path, &data);
-    DebugObj(file_path, data);
+    // DebugObj(file_path, data);
     // printf("%zu\n", sizeof(*data));
     // FREE DATA !!!
     // USE FGETS
@@ -51,7 +54,7 @@ int CountObj(const char* file_path, data_t* data) {
 int ParseObj(const char* file_path, data_t** data) {
   FILE* obj = OpenFile(file_path);
 
-  size_t max_size = 128;
+  size_t max_size = MAX_SIZE;
   char* line = calloc(max_size, sizeof(*line));;
 
   int f_analysis = 0;
@@ -62,15 +65,14 @@ int ParseObj(const char* file_path, data_t** data) {
   int i = 0;
   int j = 0;
   if (vertexes) {
-    while ((getline(&line, &max_size, obj) != -1) && (!feof(obj))) {
+    while (fgets(line, MAX_SIZE, obj) != NULL && (!feof(obj))) {
       if (FormatCheck(line) == VERTICE) {
         int a = i, b=i+1, c=i+2;
         long double tmp1=0, tmp2=0, tmp3=0;
+        char t[24];
         printf("line = %s", line);
-        sscanf(line, "v %Lf %Lf %Lf", &tmp1, &tmp2, &tmp3);
-        //sscanf(line, "v %Lf %Lf %Lf", &(vertexes[a]), &vertexes[b], &vertexes[c]);
+        sscanf(line, "%s %Lf %Lf %Lf", t, &tmp1, &tmp2, &tmp3);
         printf("v %Lf %Lf %Lf = SCED\n", tmp1, tmp2, tmp3);
-        //printf("v %Lf %Lf %Lf = SCANNED\n", (vertexes[a]), vertexes[b], vertexes[c]);
         i+=3;
       } else if (FormatCheck(line) == FACET) {
         facets_memory += FacetsAnalyzer(line);
@@ -78,7 +80,7 @@ int ParseObj(const char* file_path, data_t** data) {
         ArrayFacetFactory(line, facets, &j);
       }
     }
-  }
+  } 
   (*data)->vertex_array = vertexes;
   (*data)->lines_array = facets;
   free(line);
@@ -93,6 +95,21 @@ FILE* OpenFile(const char* filename) {
     exit(1);
   }
   return fp;
+}
+
+vertices_t VerticeParser(const char* line) {
+  vertices_t xyz = {0};
+  size_t index = 0;
+  for (; *line != '\0' && *line !='\n'; ++line) {
+    if (*line == 'v') {
+      continue;
+    } else if (isdigit(*line)) {
+
+    } else if (*line == ' ') {
+      index++;
+    }
+  }
+  return xyz;
 }
 
 int FormatCheck(const char* line) {
