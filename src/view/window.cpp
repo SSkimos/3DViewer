@@ -29,19 +29,18 @@ Window::~Window()
 
 void Window::SaveSettings() {
     QSettings settings("settings.conf", QSettings::IniFormat);
-    SaveSldrGroupSettings();
+    SaveSldrGroupSettings(&settings);
 }
 
-void Window::SaveSldrGroupSettings() {
-    QSettings settings("settings.conf", QSettings::IniFormat);
-    settings.beginGroup("sldrs");
-    settings.setValue("rotateX", ui->xRotSldr->value());
-    settings.setValue("rotateY", ui->yRotSldr->value());
-    settings.setValue("rotateZ", ui->zRotSldr->value());
-    settings.setValue("moveX", ui->xMoveSldr->value());
-    settings.setValue("moveY", ui->yMoveSldr->value());
-    settings.setValue("moveZ", ui->zMoveSldr->value());
-    settings.endGroup();
+void Window::SaveSldrGroupSettings(QSettings *settings) {
+    settings->beginGroup("sldrs");
+    settings->setValue("rotateX", ui->xRotSldr->value());
+    settings->setValue("rotateY", ui->yRotSldr->value());
+    settings->setValue("rotateZ", ui->zRotSldr->value());
+    settings->setValue("moveX", ui->xMoveSldr->value());
+    settings->setValue("moveY", ui->yMoveSldr->value());
+    settings->setValue("moveZ", ui->zMoveSldr->value());
+    settings->endGroup();
 }
 
 void Window::RestoreSettings() {

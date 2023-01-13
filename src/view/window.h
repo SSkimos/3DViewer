@@ -27,7 +27,7 @@ private slots:
 private:
     Ui::Window *ui;
     void SaveSettings();
-    void SaveSldrGroupSettings();
+    void SaveSldrGroupSettings(QSettings *settings);
     void RestoreSettings();
     void InitSldrGroupSettings(QSettings *settings);
 
