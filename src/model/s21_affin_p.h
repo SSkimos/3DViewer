@@ -26,9 +26,9 @@ int Scale(data_t **A, affine_t* zoom);
 int MoveAndRotateModel(data_t **A, affine_t* vector);
 void RotationX(data_t *A, affine_t* angle);
 
-matrices_t MatrixFactory(vertices_t xyz, affine_t* data);
-matrix_t* FactoryDot(vertices_t xyz);
 matrix_t* FactoryAffine(affine_t* data);
+matrix_t* CreateDot(vertices_t* point);
+void InputDot(vertices_t* point, matrix_t *inp);
 
 #ifdef __cplusplus
 }
