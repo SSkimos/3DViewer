@@ -33,8 +33,6 @@ message(STATUS "HELLO_LIB: [${HELLO_LIB}]")
 
 
 set(PROJECT_SOURCES
-        model/s21_affin_p.h
-        model/s21_affin_p.c
         view/myglwidget.cpp
         view/myglwidget.h
         view/window.cpp
