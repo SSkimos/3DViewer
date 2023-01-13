@@ -82,6 +82,13 @@ matrix_t* FactoryAffine(affine_t* data) {
   modificator_dot = malloc(1*sizeof(*modificator_dot));
   s21_create_matrix(4, 4, modificator_dot);
   for (size_t i = 0; i != 4; ++i) modificator_dot->matrix[i][i] = 1.0;
+  if (data->rotateX) {
+    double rotate = data->rotateX / 10;
+    modificator_dot->matrix[0][0] = cos(rotate);
+    modificator_dot->matrix[0][1] = sin(rotate);
+    modificator_dot->matrix[1][0] =-sin(rotate);
+    modificator_dot->matrix[1][1] = cos(rotate);
+  }
   modificator_dot->matrix[kX][3] = data->moveX;
   modificator_dot->matrix[kY][3] = data->moveY;
   modificator_dot->matrix[kZ][3] = data->moveZ;
