@@ -44,7 +44,7 @@ QOpenGLShaderProgram *MyGLWidget::compileShaders() {
 void MyGLWidget::paintGL(void) {
   glClearColor(0, 0, 0, 1); // настраиваю цвет окна
   prog->bind();
-  std::cout << moveX << std::endl;
+  // std::cout << moveX << std::endl;
   // TODO: функция, для получения массива из файла
   // TODO: набор функций, в результате выполнения которых мы получаем буффер матрицу, которую загрузим в файл
   // TODO: удалить add_example()
@@ -61,18 +61,19 @@ void MyGLWidget::GetData() {
   v->rotateX = rotateX;
   v->rotateY = rotateY;
   v->rotateZ = rotateZ;
-  v->moveX = moveX;
-  v->moveY = moveY;
+  v->moveX = moveX / 10.0;
+  v->moveY = moveY / 10.0;
+  printf("%f = F\n", v->moveY);
   v->moveZ = moveZ;
   // const char *c_str2 =  qPrintable(filename);
   const char *c_str2 =  "model/obj/cube.obj";
   if (c_str2 && strlen(c_str2) > 1) { 
     data_t* s = ParseCountObj(c_str2);
+    MoveX(&s, v);
     vertex_count = s->vertices_count;
     lines_count = s->facets_count;
     vertex_array = s->vertex_array;
     lines_array = s->lines_array;
-    MoveX(&s, v);
   }
   free(v);
 }

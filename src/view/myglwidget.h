@@ -62,13 +62,13 @@ private:
    QVector3D verticleColorV = {1, 0, 0};
    int m_coeffMatrixLoc = 0;
 
-  int rotateX;
-  int rotateY;
-  int rotateZ;
+  double rotateX;
+  double rotateY;
+  double rotateZ;
 
-  int moveX;
-  int moveY;
-  int moveZ;
+  double moveX;
+  double moveY;
+  double moveZ;
 
   QString filename;
 

@@ -21,7 +21,7 @@ int MoveAndRotateModel(data_t **A, affine_t* vector) {
   matrix_t* p = CreateDot(&point);
   for (size_t i = 0; i != (*A)->vertices_count / 3; ++i) {
     for (size_t j = 0; j != 3; ++j) {
-      point.xyz[j] = (*A)->vertex_array[f++];
+      point.xyz[j] = (long double) (*A)->vertex_array[f++];
       // get 4x1 vector
       // mult vector
       // override vector
@@ -29,6 +29,7 @@ int MoveAndRotateModel(data_t **A, affine_t* vector) {
     InputDot(&point, p);
     s21_mult_matrix(m, p, &result_vector); 
     (*A)->vertex_array[f-3] = result_vector.matrix[kX][0];
+    printf("%Lf = value \n", result_vector.matrix[kX][0]);
     (*A)->vertex_array[f-2] = result_vector.matrix[kY][0];
     (*A)->vertex_array[f-1] = result_vector.matrix[kZ][0];
     s21_remove_matrix(&result_vector);
@@ -72,7 +73,7 @@ void InputDot(vertices_t* point, matrix_t *inp) {
     inp->matrix[kX][0] = point->xyz[kX];
     inp->matrix[kY][0] = point->xyz[kY];
     inp->matrix[kZ][0] = point->xyz[kZ];
-    inp->matrix[3][0] = 1;
+    inp->matrix[3][0] = 1.0;
   }
   return;
 }
@@ -81,9 +82,9 @@ matrix_t* FactoryAffine(affine_t* data) {
   matrix_t* modificator_dot = 0;
   modificator_dot = malloc(1*sizeof(*modificator_dot));
   s21_create_matrix(4, 4, modificator_dot);
-  for (size_t i = 0; i != 4; ++i) modificator_dot->matrix[i][i] = 1;
-  modificator_dot->matrix[0][kX] = data->moveX;
-  /* modificator_dot->matrix[0][kY] = data->moveY;
-     modificator_dot->matrix[0][kZ] = data->moveZ; */
+  for (size_t i = 0; i != 4; ++i) modificator_dot->matrix[i][i] = 1.0;
+  modificator_dot->matrix[kX][3] = data->moveX;
+  modificator_dot->matrix[kY][3] = data->moveY;
+  /*   modificator_dot->matrix[0][kZ] = data->moveZ; */
   return modificator_dot;
 }
