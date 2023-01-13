@@ -1,6 +1,6 @@
 CC=gcc 
 SRC=#back/stack.c back/polish.c back/parser.c back/credit.c
-OBJ= model/s21_affin_p.o model/s21_parse_obj.o
+OBJ= s21_affin_p.o s21_parse_obj.o
 SRC_T=#back/tests/s21_calc_tests.c
 OBJ_T=#back/tests/s21_calc_tests.o
 CFLAGS=
