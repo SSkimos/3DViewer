@@ -16,14 +16,19 @@ int RotateX();
 int RotateY(); 
 int RotateZ(); 
 
-int MoveX(data_t **A, double a); 
-int MoveY(data_t **A, double a); 
-int MoveZ(data_t **A, double a); 
+int MoveX(data_t **A, affine_t* vector); 
+int MoveY(data_t **A, affine_t* vector); 
+int MoveZ(data_t **A, affine_t* vector); 
+int Move(data_t **A, affine_t* vector);
 
-int Scale(data_t **A, double zoom);
+int Scale(data_t **A, affine_t* zoom);
 
-int Move(data_t **A, double a, int cord);
-void RotationX(data_t *A, double angle);
+int MoveAndRotateModel(data_t **A, affine_t* vector);
+void RotationX(data_t *A, affine_t* angle);
+
+matrices_t MatrixFactory(vertices_t xyz, affine_t* data);
+matrix_t* FactoryDot(vertices_t xyz);
+matrix_t* FactoryAffine(affine_t* data);
 
 #ifdef __cplusplus
 }

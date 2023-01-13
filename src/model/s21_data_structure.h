@@ -21,4 +21,19 @@ typedef struct vertices {
   long double xyz[3];
 } vertices_t;
 
+typedef struct affine {
+  int rotateX;
+  int rotateY;
+  int rotateZ;
+
+  int moveX;
+  int moveY;
+  int moveZ;
+} affine_t;
+
+typedef struct matrices {
+  matrix_t *affine;
+  matrix_t *data;
+} matrices_t;
+
 #endif // MODEL_DATA_STRUCTURE_H_

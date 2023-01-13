@@ -158,7 +158,7 @@ int ArrayFacetFactory(const char* line, unsigned int* facet_row, int* ind) {
     }
     num_pointer = strtok(NULL, " ");
   }
-  if (start) facet_row[i++] = start;
+  if (start) facet_row[i++] = first_facet_value;
   *ind = i;
   return ret;
 }

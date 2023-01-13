@@ -57,7 +57,13 @@ void MyGLWidget::GetData() {
   // vertex_array = new float[3 * vertex_count]; // CALLOC
 
   // data_t* s = ParseCountObj("model/obj/cube.obj");
-  
+  affine_t* v = (affine_t*) calloc(1, sizeof(*v));
+  v->rotateX = rotateX;
+  v->rotateY = rotateY;
+  v->rotateZ = rotateZ;
+  v->moveX = moveX;
+  v->moveY = moveY;
+  v->moveZ = moveZ;
   const char *c_str2 =  qPrintable(filename);
   if (c_str2 && strlen(c_str2) > 1) { 
     data_t* s = ParseCountObj(c_str2);
@@ -65,8 +71,9 @@ void MyGLWidget::GetData() {
     lines_count = s->facets_count;
     vertex_array = s->vertex_array;
     lines_array = s->lines_array;
-    MoveX(&s, moveX);
+    MoveX(&s, v);
   }
+  free(v);
 }
 
 void MyGLWidget::initBuffers() {
