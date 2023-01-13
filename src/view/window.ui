@@ -86,14 +86,14 @@
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_5">
               <item>
-               <widget class="QRadioButton" name="radioButton_7">
+               <widget class="QRadioButton" name="projModeSolidRdBttn">
                 <property name="text">
                  <string>solid</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QRadioButton" name="radioButton_6">
+               <widget class="QRadioButton" name="projModeDashedRdBttn">
                 <property name="text">
                  <string>dashed</string>
                 </property>
