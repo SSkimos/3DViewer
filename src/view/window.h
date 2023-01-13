@@ -30,8 +30,13 @@ private:
     void SaveSldrGroupSettings();
     void RestoreSettings();
     void InitSldrGroupSettings(QSettings *settings);
+
     void SetRotateX(QSettings *settings); //TODO: не нравится нейминг
     void SetRotateY(QSettings *settings);
     void SetRotateZ(QSettings *settings);
+
+    void SetMoveX(QSettings *settings); //TODO: не нравится нейминг
+    void SetMoveY(QSettings *settings);
+    void SetMoveZ(QSettings *settings);
 };
 #endif // WINDOW_H

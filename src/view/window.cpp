@@ -54,6 +54,10 @@ void Window::InitSldrGroupSettings(QSettings *settings) {
     SetRotateX(settings);
     SetRotateY(settings);
     SetRotateZ(settings);
+
+    SetMoveX(settings);
+    SetMoveY(settings);
+    SetMoveZ(settings);
     settings->endGroup();
 }
 
@@ -73,6 +77,24 @@ void Window::SetRotateZ(QSettings *settings) {
     int rotateZ = settings->value("rotateZ").toInt();
     ui->zRotSldr->setValue(rotateZ);
     ui->zRotEdit->setText(locale().toString(rotateZ));
+}
+
+void Window::SetMoveX(QSettings *settings) {
+    int moveX = settings->value("moveX").toInt();
+    ui->xMoveSldr->setValue(moveX);
+    ui->xMoveEdit->setText(locale().toString(moveX));
+}
+
+void Window::SetMoveY(QSettings *settings) {
+    int moveY = settings->value("moveY").toInt();
+    ui->yMoveSldr->setValue(moveY);
+    ui->yMoveEdit->setText(locale().toString(moveY));
+}
+
+void Window::SetMoveZ(QSettings *settings) {
+    int moveZ = settings->value("moveZ").toInt();
+    ui->zMoveSldr->setValue(moveZ);
+    ui->zMoveEdit->setText(locale().toString(moveZ));
 }
 
 void Window::on_chooseFileButton_clicked()
