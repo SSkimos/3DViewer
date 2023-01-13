@@ -19,8 +19,9 @@ matrix_t_clean:
 # 	$(CC) $(CFLAGS) lib.a $(OBJ_T) $(OBJ) $(TESTFLAGS) -o test
 # 	./test
 
-libmodel.a: $(OBJ) matrix_t
-	ar rcs libmodel.a $(OBJ)
+libmodel.a: model/s21_parse_obj.c model/s21_affin_p.c matrix_t
+	gcc -c model/s21_parse_obj.c model/s21_affin_p.c
+	ar rcs libmodel.a s21_parse_obj.o s21_affin_p.o
 	ranlib libmodel.a
 
 install: libmodel.a
