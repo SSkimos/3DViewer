@@ -44,7 +44,7 @@ QOpenGLShaderProgram *MyGLWidget::compileShaders() {
 void MyGLWidget::paintGL(void) {
   glClearColor(0, 0, 0, 1); // настраиваю цвет окна
   prog->bind();
-  std::cout << moveX << std::endl;
+  // std::cout << moveX << std::endl;
   // TODO: функция, для получения массива из файла
   // TODO: набор функций, в результате выполнения которых мы получаем буффер матрицу, которую загрузим в файл
   // TODO: удалить add_example()
@@ -57,21 +57,23 @@ void MyGLWidget::GetData() {
   // vertex_array = new float[3 * vertex_count]; // CALLOC
 
   // data_t* s = ParseCountObj("model/obj/cube.obj");
-  affine_t* v = (affine_t*) calloc(1, sizeof(*v));
+  affine_t* v = (affine_t*) malloc(1*sizeof(*v));
   v->rotateX = rotateX;
   v->rotateY = rotateY;
   v->rotateZ = rotateZ;
-  v->moveX = moveX;
-  v->moveY = moveY;
-  v->moveZ = moveZ;
-  const char *c_str2 =  qPrintable(filename);
+  v->moveX = moveX / 100.0;
+  v->moveY = moveY / 100.0;
+  v->moveZ = moveZ / 100.0;
+  printf("%f = F\n", v->moveZ);
+  // const char *c_str2 =  qPrintable(filename);
+  const char *c_str2 =  "model/obj/cube.obj";
   if (c_str2 && strlen(c_str2) > 1) { 
     data_t* s = ParseCountObj(c_str2);
+    MoveAndRotateModel(&s, v);
     vertex_count = s->vertices_count;
     lines_count = s->facets_count;
     vertex_array = s->vertex_array;
     lines_array = s->lines_array;
-    MoveX(&s, v);
   }
   free(v);
 }

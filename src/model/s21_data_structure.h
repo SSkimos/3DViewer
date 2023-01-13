@@ -22,13 +22,13 @@ typedef struct vertices {
 } vertices_t;
 
 typedef struct affine {
-  int rotateX;
-  int rotateY;
-  int rotateZ;
+  double rotateX;
+  double rotateY;
+  double rotateZ;
 
-  int moveX;
-  int moveY;
-  int moveZ;
+  double moveX;
+  double moveY;
+  double moveZ;
 } affine_t;
 
 typedef struct matrices {
