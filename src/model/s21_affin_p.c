@@ -18,36 +18,25 @@ void FactoryTransformationData(matrix_t* m, matrix_t*p, vertices_t*point, data_t
 
 int MoveAndRotateModel(data_t **A, affine_t* vector) {
   int f = 0;
-  matrix_t result_vector = {0};
   vertices_t point = {0};
   matrix_t* m = FactoryAffine(vector);
   matrix_t* p = CreateDot(&point);
-  matrices_t* pack = malloc(1*sizeof(*pack));
-  pack->affine = m;
-  pack->data = p;
+  matrices_t* pack = FactoryMatrices(m, p);
   for (size_t i = 0; i != (*A)->vertices_count / 3; ++i) {
     for (size_t j = 0; j != 3; ++j) {
       point.xyz[j] = (long double) (*A)->vertex_array[f++];
     }
     InputDot(&point, p);
     TransformateDot(&point, pack, A, f);
-    // s21_mult_matrix(m, p, &result_vector); 
-    // (*A)->vertex_array[f-3] = result_vector.matrix[kX][0];
-    // (*A)->vertex_array[f-2] = result_vector.matrix[kY][0];
-    // (*A)->vertex_array[f-1] = result_vector.matrix[kZ][0];
-    // s21_remove_matrix(&result_vector);
   }
+  FreeBufferData(pack, m, p);
   // 3 multiply matrix rotations
   // multiply them 
   // multiply other
   /* cos(a)  sin(a) 0
     -sin(a) cos(a) 0
     0       0      1
-*/
-  s21_remove_matrix(m);
-  s21_remove_matrix(p);
-  free(p);
-  free(m);
+  */
   return 0;
 }
 
@@ -97,4 +86,18 @@ matrix_t* FactoryAffine(affine_t* data) {
   modificator_dot->matrix[kY][3] = data->moveY;
   modificator_dot->matrix[kZ][3] = data->moveZ;
   return modificator_dot;
+}
+
+matrices_t* FactoryMatrices(matrix_t* m, matrix_t*p) {
+  matrices_t* pack = malloc(1*sizeof(*pack));
+  pack->affine = m;
+  pack->data = p;
+  return pack;
+}
+
+void FreeBufferData(matrices_t* pack, matrix_t* m, matrix_t*p) {
+  s21_remove_matrix(m);
+  s21_remove_matrix(p);
+  free(p);
+  free(m);
 }

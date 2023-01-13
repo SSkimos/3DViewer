@@ -30,6 +30,8 @@ matrix_t* FactoryAffine(affine_t* data);
 matrix_t* CreateDot(vertices_t* point);
 void InputDot(vertices_t* point, matrix_t *inp);
 void TransformateDot(vertices_t *point, matrices_t* dataset, data_t **A, int f);
+matrices_t* FactoryMatrices(matrix_t*m, matrix_t*p);
+void FreeBufferData(matrices_t* pack, matrix_t* m, matrix_t*p);
 
 #ifdef __cplusplus
 }
