@@ -1,15 +1,12 @@
 CC=gcc 
 SRC=#back/stack.c back/polish.c back/parser.c back/credit.c
-OBJ=#back/stack.o back/polish.o back/parser.o back/credit.o
+OBJ= s21_affin_p.o s21_parse_obj.o
 SRC_T=#back/tests/s21_calc_tests.c
 OBJ_T=#back/tests/s21_calc_tests.o
-CFLAGS=--coverage $(shell pkg-config --cflags --libs check)
+CFLAGS=
 
-all: #tests install
+all: install
 
-gcov_report: tests
-	lcov -t "otchet" -o otchet.info -c -d ./back
-	genhtml -o report otchet.info
 
 .PHONY:matrix_t
 matrix_t:
@@ -18,17 +15,19 @@ matrix_t:
 matrix_t_clean:
 	$(MAKE) -C model/matrix_t clean
 
-tests: lib.a $(OBJ_T) $(OBJ)
-	$(CC) $(CFLAGS) lib.a $(OBJ_T) $(OBJ) $(TESTFLAGS) -o test
-	./test
+# tests: lib.a $(OBJ_T) $(OBJ)
+# 	$(CC) $(CFLAGS) lib.a $(OBJ_T) $(OBJ) $(TESTFLAGS) -o test
+# 	./test
 
-lib.a: $(OBJ)
-	ar rcs lib.a $(OBJ)
+libmodel.a: model/s21_parse_obj.c model/s21_affin_p.c matrix_t
+	gcc -c model/s21_parse_obj.c model/s21_affin_p.c
+	ar rcs libmodel.a s21_parse_obj.o s21_affin_p.o
+	ranlib libmodel.a
 
-install:
-	mkdir -p build
-	cd ./build; cmake ../view/CMakeLists.txt; make
-	./build/test_calc.app/Contents/MacOS/test_calc
+install: libmodel.a
+	cmake -S . -B build
+	make -C build/
+	./build/3DViewer.app/Contents/MacOS/3DViewer
 
 uninstall:
 	rm -rf build-app-Desktop_x86_darwin_generic_mach_o_64bit-Debug
@@ -51,3 +50,4 @@ dvi:
 	open ../README_RUS.md
 dist:
 	tar -cvf archive.tar ../src
+

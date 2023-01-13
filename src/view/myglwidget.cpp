@@ -1,4 +1,5 @@
 #include "myglwidget.h"
+#include <string>
 #include "../model/s21_data_structure.h"
 #include "../model/s21_parse_obj.h"
 #include "../model/s21_affin_p.h"
@@ -9,7 +10,12 @@ MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
     setGeometry(400, 200, 800, 600);
 }
 
-QOpenGLShaderProgram *MyGLWidget::initialize_shaders() {
+void MyGLWidget::initializeGL(void) {
+  glEnable(GL_DEPTH_TEST);
+  prog = compileShaders();
+}
+
+QOpenGLShaderProgram *MyGLWidget::compileShaders() {
     const char *vertexShaderSource =
         "attribute vec3 position;\n"
         "void main()\n"
@@ -32,129 +38,116 @@ QOpenGLShaderProgram *MyGLWidget::initialize_shaders() {
                                   fragmentShaderSource);
     prog->bindAttributeLocation("position", 0);
     prog->link();
-
     return prog;
 }
 
-void MyGLWidget::initializeGL(void) {
-    glEnable(GL_DEPTH_TEST); // включаю буффер глубины (хранит в себе расстояние от камеры до отрисовки)
-
-    prog =  initialize_shaders();
-    add_example() ;
-}
-
-void MyGLWidget::add_example() {
-    vertex_count = 4;
-    vertex_array = new float[3 * vertex_count];
-    float buff_vertex[] = {-0.5, 0,   -0.5, 0.5, 0,    -0.5,
-                           0,    0.5, -0.5, 0,   -0.5, -1};
-    for (int i = 0; i < vertex_count * 3; i++) {
-        vertex_array[i] = buff_vertex[i];
-    }
-
-    lines_count = 6;
-    unsigned int buff_lines[] = {0, 1, 1, 2, 2, 0, 0, 3, 1, 3, 2, 3};
-    lines_array = new unsigned int[2 * lines_count];
-    for (int i = 0; i < 2 * lines_count; i++) {
-        lines_array[i] = buff_lines[i];
-    }
-}
-
 void MyGLWidget::paintGL(void) {
+  glClearColor(0, 0, 0, 1); // настраиваю цвет окна
+  prog->bind();
+  // std::cout << moveX << std::endl;
+  // TODO: функция, для получения массива из файла
+  // TODO: набор функций, в результате выполнения которых мы получаем буффер матрицу, которую загрузим в файл
+  // TODO: удалить add_example()
+  GetData();
+  initBuffers();
+}
 
-    glClearColor(0, 0, 0, 1); // настраиваю цвет окна
-    prog->bind();
+void MyGLWidget::GetData() {
+  // vertex_count = 8;
+  // vertex_array = new float[3 * vertex_count]; // CALLOC
 
-    QOpenGLBuffer vbo(QOpenGLBuffer::VertexBuffer);
-    vbo.create();
-    vbo.bind();
-    vbo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
-    vbo.allocate(vertex_array, vertex_count * 3 * sizeof(float));
+  // data_t* s = ParseCountObj("model/obj/cube.obj");
+  affine_t* v = (affine_t*) malloc(1*sizeof(*v));
+  v->rotateX = rotateX;
+  v->rotateY = rotateY;
+  v->rotateZ = rotateZ;
+  v->moveX = moveX / 100.0;
+  v->moveY = moveY / 100.0;
+  v->moveZ = moveZ / 100.0;
+  printf("%f = F\n", v->moveZ);
+  // const char *c_str2 =  qPrintable(filename);
+  const char *c_str2 =  "model/obj/cube.obj";
+  if (c_str2 && strlen(c_str2) > 1) { 
+    data_t* s = ParseCountObj(c_str2);
+    MoveAndRotateModel(&s, v);
+    vertex_count = s->vertices_count;
+    lines_count = s->facets_count;
+    vertex_array = s->vertex_array;
+    lines_array = s->lines_array;
+  }
+  free(v);
+}
 
-    prog->setAttributeBuffer(0, GL_FLOAT, 0, 3, 0);
-    prog->enableAttributeArray(0);
+void MyGLWidget::initBuffers() {
+  clearBuffers();
 
-    QOpenGLBuffer ibo(QOpenGLBuffer::IndexBuffer);
-    ibo.create();
-    ibo.bind();
-    ibo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
-    ibo.allocate(lines_array, sizeof(unsigned int) * 2 * lines_count);
+  // TODO: попробовать вынести VAO 
+  vao.create();
+  vao.bind();
 
-    glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_TEST);
+  // TODO: вынести? createVBO()
+  QOpenGLBuffer vbo(QOpenGLBuffer::VertexBuffer);
+  vbo.create();
+  vbo.bind();
+  vbo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
+  vbo.allocate(vertex_array, vertex_count * 3 * sizeof(float));
 
-    lineColorV = {1, 0, 0};
+  prog->setAttributeBuffer(0, GL_FLOAT, 0, 3, 0);
+  prog->enableAttributeArray(0);
 
-    prog->setUniformValue(prog->uniformLocation("color"), lineColorV);
+  // TODO: вынести? createIBO()
+  QOpenGLBuffer ibo(QOpenGLBuffer::IndexBuffer);
+  ibo.create();
+  ibo.bind();
+  ibo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
+  ibo.allocate(lines_array, sizeof(unsigned int) * 2 * lines_count);
 
-    glLineWidth(0.5);
-    glDrawElements(GL_LINES, 2 * lines_count, GL_UNSIGNED_INT, 0);
+  glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_TEST);
 
-//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_TEST); // очищаю буффер цвета и буффер глубины (каждый тик)
-////    long double *f = RemakeMatrix(s);
+  lineColorV = {1, 0, 0};
 
-//    glMatrixMode(GL_MODELVIEW); // указываю тип матрицы
-//    glLoadIdentity(); // загружаю матрицу в стек
-//    glFrustum(-1, 1, -1, 1, 1, 10);
+  prog->setUniformValue(prog->uniformLocation("color"), lineColorV);
 
-//    //glRotatef(90, 0, 0, 1); // вращаю матрицу 90 - угол, остльное это оси
-//    glTranslatef(0, 0, -3);
-//    glRotatef(xRot, 1, 0, 0);
-//    glRotatef(yRot, 0, 1, 0);
-//    drawCube(0.5);
+  glLineWidth(0.5);
+  glDrawElementsBaseVertex(GL_LINES, 2 * lines_count, GL_UNSIGNED_INT, 0, 0);
+
+  vao.release();
+}
+
+void MyGLWidget::clearBuffers() {
+  clearVAO();
+  // clearVBO();
+  // clearIBO();
+}
+
+void MyGLWidget::clearVAO() {
+  if (vao.isCreated()) {
+    vao.destroy();
+  }
+}
+
+void MyGLWidget::clearVBO() {
+  // if (vbo->isCreated()) {
+  //   vbo->destroy();
+  // }
+}
+
+void MyGLWidget::clearIBO() {
+  // if (ibo->isCreated()) {
+  //   ibo->destroy();
+  // }
 }
 
 void MyGLWidget::resizeGL(int width, int height) {
 
-/*    glViewport(0, 0, width, height); // задаю размер окна
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity(); */// загружаю едининчную матрицу
-    // (-1 1 по x) (-1 1 по y) (1 расстояние от камеры до передней плоскости) (2 растоняние от камеры до задней плоскости)
-    // glOrtho(-1, 1, -1, 1, 1, 2); // преобразую матрицу в ортогональную проекцию
-
-}
-
-void MyGLWidget::drawCube(float a) {
-    float ver_cub[] = {
-        -a, -a, a,     a, -a, a,        a, a, a,     -a, a, a, // передняя
-        a, -a, -a,    -a, -a, -a,     -a, a, -a,     a, a, -a, // задняя
-        -a, -a, -a,    -a, -a, a,     -a, a, a,     -a, a, -a, // левая
-        a, -a, a,    a, -a, -a,     a, a, -a,     a, a, a, // правая
-        -a, -a, a,    a, -a, a,     a, -a, -a,     -a, -a, -a, // нижняя
-        -a, a, a,    a, a, a,     a, a, -a,     -a, a, -a, // верхняя
-    };
-    float color_arr[] {
-        1, 0, 0,    1, 0, 0,    1, 0, 0,    1, 0, 0,
-        0, 0, 1,    0, 0, 1,    0, 0, 1,    0, 0, 1,
-        1, 1, 0,    1, 1, 0,    1, 1, 0,    1, 1, 0,
-        0, 1, 1,    0, 1, 1,    0, 1, 1,    0, 1, 1,
-        1, 0, 1,    1, 0, 1,    1, 0, 1,    1, 0, 1,
-        1, 0.5, 0.5,    1, 0.5, 0.5,    1, 0.5, 0.5,    1, 0.5, 0.5
-    };
-    data_t* s = ParseCountObj("../../../../model/obj/cube.obj");
-    int *size = NULL;
-   // long double* f = RemakeFacets(s, size);
-   // std::cout << f[0] << " SSSS" << std::endl;
-    glVertexPointer(3, GL_DOUBLE, 0, s->v_array);
-    glEnableClientState(GL_VERTEX_ARRAY);
-
-   //glColorPointer(3, GL_FLOAT, 0, &color_arr);
-   //glEnableClientState(GL_COLOR_ARRAY);
-
-  // glDrawElements(GL_LINES, 0, s->size_v, s->v_array);
-    glDrawArrays(GL_LINES, 0, s->size);
-    // glDrawArrays(GL_PATCHES, 0, 24);
-
-   // glDisableClientState(GL_COLOR_ARRAY);
-    glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void MyGLWidget::mousePressEvent(QMouseEvent * mo) {
-    mPos = mo->pos();
+  mPos = mo->pos();
 }
 
 void MyGLWidget::mouseMoveEvent(QMouseEvent * mo) {
-    xRot = 1 / M_PI * (mo->pos().y() - mPos.y());
-    yRot = 1 / M_PI * (mo->pos().x() - mPos.x());
-    update();
+  xRot = 1 / M_PI * (mo->pos().y() - mPos.y());
+  yRot = 1 / M_PI * (mo->pos().x() - mPos.x());
+  update();
 }
