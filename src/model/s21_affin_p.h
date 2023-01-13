@@ -29,6 +29,7 @@ void RotationX(data_t *A, affine_t* angle);
 matrix_t* FactoryAffine(affine_t* data);
 matrix_t* CreateDot(vertices_t* point);
 void InputDot(vertices_t* point, matrix_t *inp);
+void TransformateDot(vertices_t *point, matrices_t* dataset, data_t **A, int f);
 
 #ifdef __cplusplus
 }

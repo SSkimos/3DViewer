@@ -36,4 +36,10 @@ typedef struct matrices {
   matrix_t *data;
 } matrices_t;
 
+typedef struct transformation {
+  matrices_t * dataset;
+  vertices_t * point;
+  data_t* info;
+} transformation_t;
+
 #endif // MODEL_DATA_STRUCTURE_H_

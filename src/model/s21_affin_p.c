@@ -13,29 +13,37 @@ int Scale(data_t **A, affine_t* zoom) {
   return ret;
 }
 // 4*4 matrix of modif mult by 4x1 dot vector
+
+void FactoryTransformationData(matrix_t* m, matrix_t*p, vertices_t*point, data_t*info);
+
 int MoveAndRotateModel(data_t **A, affine_t* vector) {
   int f = 0;
   matrix_t result_vector = {0};
   vertices_t point = {0};
   matrix_t* m = FactoryAffine(vector);
   matrix_t* p = CreateDot(&point);
+  matrices_t* pack = malloc(1*sizeof(*pack));
+  pack->affine = m;
+  pack->data = p;
   for (size_t i = 0; i != (*A)->vertices_count / 3; ++i) {
     for (size_t j = 0; j != 3; ++j) {
       point.xyz[j] = (long double) (*A)->vertex_array[f++];
-      // get 4x1 vector
-      // mult vector
-      // override vector
     }
     InputDot(&point, p);
-    s21_mult_matrix(m, p, &result_vector); 
-    (*A)->vertex_array[f-3] = result_vector.matrix[kX][0];
-    (*A)->vertex_array[f-2] = result_vector.matrix[kY][0];
-    (*A)->vertex_array[f-1] = result_vector.matrix[kZ][0];
-    s21_remove_matrix(&result_vector);
+    TransformateDot(&point, pack, A, f);
+    // s21_mult_matrix(m, p, &result_vector); 
+    // (*A)->vertex_array[f-3] = result_vector.matrix[kX][0];
+    // (*A)->vertex_array[f-2] = result_vector.matrix[kY][0];
+    // (*A)->vertex_array[f-1] = result_vector.matrix[kZ][0];
+    // s21_remove_matrix(&result_vector);
   }
   // 3 multiply matrix rotations
   // multiply them 
   // multiply other
+  /* cos(a)  sin(a) 0
+    -sin(a) cos(a) 0
+    0       0      1
+*/
   s21_remove_matrix(m);
   s21_remove_matrix(p);
   free(p);
@@ -43,17 +51,17 @@ int MoveAndRotateModel(data_t **A, affine_t* vector) {
   return 0;
 }
 
-int MoveX(data_t **A, affine_t* a) {
-  return MoveAndRotateModel(A, a);
+void TransformateDot(vertices_t *point, matrices_t* dataset, data_t **A, int f) {
+    matrix_t* affine = dataset->affine;
+    matrix_t* data = dataset->data;
+    matrix_t result_vector = {0};
+    s21_mult_matrix(affine, data, &result_vector); 
+    (*A)->vertex_array[f-3] = result_vector.matrix[kX][0];
+    (*A)->vertex_array[f-2] = result_vector.matrix[kY][0];
+    (*A)->vertex_array[f-1] = result_vector.matrix[kZ][0];
+    s21_remove_matrix(&result_vector);
 }
 
-int MoveY(data_t **A, affine_t* a) {
-  return MoveAndRotateModel(A, a);
-}
-
-int MoveZ(data_t **A, affine_t* a) {
-  return MoveAndRotateModel(A, a);
-}
 
 void RotationX(data_t *A, affine_t* angle) {
   /* for (int i = 0; i < A->rows; i++) {
