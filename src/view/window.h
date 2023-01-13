@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QMainWindow>
 #include <QFileDialog>
+#include <QSettings>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Window; }
@@ -25,5 +26,12 @@ private slots:
 
 private:
     Ui::Window *ui;
+    void SaveSettings();
+    void SaveSldrGroupSettings();
+    void RestoreSettings();
+    void InitSldrGroupSettings(QSettings *settings);
+    void SetRotateX(QSettings *settings); //TODO: не нравится нейминг
+    void SetRotateY(QSettings *settings);
+    void SetRotateZ(QSettings *settings);
 };
 #endif // WINDOW_H
