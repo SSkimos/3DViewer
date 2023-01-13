@@ -29,11 +29,13 @@ int MoveAndRotateModel(data_t **A, affine_t* vector) {
     InputDot(&point, p);
     s21_mult_matrix(m, p, &result_vector); 
     (*A)->vertex_array[f-3] = result_vector.matrix[kX][0];
-    printf("%Lf = value \n", result_vector.matrix[kX][0]);
     (*A)->vertex_array[f-2] = result_vector.matrix[kY][0];
     (*A)->vertex_array[f-1] = result_vector.matrix[kZ][0];
     s21_remove_matrix(&result_vector);
   }
+  // 3 multiply matrix rotations
+  // multiply them 
+  // multiply other
   s21_remove_matrix(m);
   s21_remove_matrix(p);
   free(p);
@@ -85,6 +87,6 @@ matrix_t* FactoryAffine(affine_t* data) {
   for (size_t i = 0; i != 4; ++i) modificator_dot->matrix[i][i] = 1.0;
   modificator_dot->matrix[kX][3] = data->moveX;
   modificator_dot->matrix[kY][3] = data->moveY;
-  /*   modificator_dot->matrix[0][kZ] = data->moveZ; */
+  modificator_dot->matrix[kZ][3] = data->moveZ;
   return modificator_dot;
 }

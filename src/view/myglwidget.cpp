@@ -61,15 +61,15 @@ void MyGLWidget::GetData() {
   v->rotateX = rotateX;
   v->rotateY = rotateY;
   v->rotateZ = rotateZ;
-  v->moveX = moveX / 10.0;
-  v->moveY = moveY / 10.0;
-  printf("%f = F\n", v->moveY);
-  v->moveZ = moveZ;
+  v->moveX = moveX / 100.0;
+  v->moveY = moveY / 100.0;
+  v->moveZ = moveZ / 100.0;
+  printf("%f = F\n", v->moveZ);
   // const char *c_str2 =  qPrintable(filename);
   const char *c_str2 =  "model/obj/cube.obj";
   if (c_str2 && strlen(c_str2) > 1) { 
     data_t* s = ParseCountObj(c_str2);
-    MoveX(&s, v);
+    MoveAndRotateModel(&s, v);
     vertex_count = s->vertices_count;
     lines_count = s->facets_count;
     vertex_array = s->vertex_array;
