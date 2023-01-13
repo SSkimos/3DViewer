@@ -19,7 +19,7 @@ data_t* ParseCountObj(const char* file_path) {
   if (data) {
     CountObj(file_path, data);
     ParseObj(file_path, &data);
-    // DebugObj(file_path, data);
+    DebugObj(file_path, data);
     // printf("%zu\n", sizeof(*data));
     // FREE DATA !!!
     // USE FGETS
@@ -60,7 +60,7 @@ int ParseObj(const char* file_path, data_t** data) {
   int f_analysis = 0;
   int mas = (*data)->vertices_count * 3;
   int facets_memory = 1;
-  long double * vertexes = calloc(mas, sizeof(long double));
+  float* vertexes = calloc(mas, sizeof(long double));
   unsigned int* facets = calloc(facets_memory, sizeof(unsigned int));
   int i = 0;
   int j = 0;
@@ -68,11 +68,7 @@ int ParseObj(const char* file_path, data_t** data) {
     while (fgets(line, MAX_SIZE, obj) != NULL && (!feof(obj))) {
       if (FormatCheck(line) == VERTICE) {
         int a = i, b=i+1, c=i+2;
-        long double tmp1=0, tmp2=0, tmp3=0;
-        char t[24];
-        printf("line = %s", line);
-        sscanf(line, "%s %Lf %Lf %Lf", t, &tmp1, &tmp2, &tmp3);
-        printf("v %Lf %Lf %Lf = SCED\n", tmp1, tmp2, tmp3);
+        sscanf(line, "v %f %f %f", &vertexes[a], &vertexes[b], &vertexes[c]);
         i+=3;
       } else if (FormatCheck(line) == FACET) {
         facets_memory += FacetsAnalyzer(line);
@@ -83,6 +79,7 @@ int ParseObj(const char* file_path, data_t** data) {
   } 
   (*data)->vertex_array = vertexes;
   (*data)->lines_array = facets;
+  (*data)->size_f = j;
   free(line);
   fclose(obj);
   return 0;
@@ -172,20 +169,16 @@ int DebugObj(const char* file_path, data_t *data) {
   printf("%d = facets_count \n", data->facets_count);
   printf("VERTICES_MATRIX \n");
   int f = 0;
-  for (int i = 0; i < data->vertices_count; i++) {
+  for (int i = 0; i < data->vertices_count/3; i++) {
     for (int j = 0; j < 3; j++) {
-      printf("%lf ", data->vertex_array[f++]);
+      printf("%f ", data->vertex_array[f++]);
     }
     printf("\n");
   }
   printf("FACET_DATA \n");
-  // for (int i = 0; i < data->facets_count; i++) {
-  //   printf("%d: ", i+1);
-  //   for (int j = 0; j < data->polygons[i].v_in_facets; j++) {
-  //     printf(" %1.2Lf", data->polygons[i].vertexes[j]);
-  //   }
-  //   printf("\n");
-  // }
+  for (int i = 0; i < data->size_f; i++) {
+    printf("%d ", data->lines_array[i]);
+  }
   return 0;
 }
 

@@ -53,14 +53,14 @@ void MyGLWidget::paintGL(void) {
 }
 
 void MyGLWidget::add_example() {
-  vertex_count = 8;
-  vertex_array = new float[3 * vertex_count]; // CALLOC
+  // vertex_count = 8;
+  // vertex_array = new float[3 * vertex_count]; // CALLOC
 
-  data_t* s = ParseCountObj("model/obj/diamond.obj");
+  data_t* s = ParseCountObj("model/obj/cube.obj");
   
   /* const char *c_str2 =  qPrintable(filename);
   if (c_str2 && strlen(c_str2) > 1) data_t* s = ParseCountObj(c_str2); */
-  float buff_vertex[] = {
+  /* float buff_vertex[] = {
     0.0, 0.0, 0.0,
     0.0, 0.0, 1.0,
     0.0, 1.0, 0.0,
@@ -79,7 +79,11 @@ void MyGLWidget::add_example() {
   lines_array = new unsigned int[2 * lines_count]; // CALLOC 
   for (int i = 0; i < 2 * lines_count; i++) {
     lines_array[i] = buff_lines[i];
-  }
+  } */
+  vertex_count = s->vertices_count;
+  lines_count = s->facets_count;
+  vertex_array = s->vertex_array;
+  lines_array = s->lines_array;
 }
 
 void MyGLWidget::initBuffers() {
