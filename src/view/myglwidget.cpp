@@ -48,42 +48,32 @@ void MyGLWidget::paintGL(void) {
   // TODO: функция, для получения массива из файла
   // TODO: набор функций, в результате выполнения которых мы получаем буффер матрицу, которую загрузим в файл
   // TODO: удалить add_example()
-  add_example();
+  GetData();
   initBuffers();
 }
 
-void MyGLWidget::add_example() {
+void MyGLWidget::GetData() {
   // vertex_count = 8;
   // vertex_array = new float[3 * vertex_count]; // CALLOC
 
-  data_t* s = ParseCountObj("model/obj/cube.obj");
-  
-  /* const char *c_str2 =  qPrintable(filename);
-  if (c_str2 && strlen(c_str2) > 1) data_t* s = ParseCountObj(c_str2); */
-  /* float buff_vertex[] = {
-    0.0, 0.0, 0.0,
-    0.0, 0.0, 1.0,
-    0.0, 1.0, 0.0,
-    0.0, 1.0, 1.0,
-    1.0, 0.0, 0.0,
-    1.0, 0.0, 1.0,
-    1.0, 1.0, 0.0,
-    1.0, 1.0, 1.0,
-  };
-  for (int i = 0; i < vertex_count * 3; i++) {
-    vertex_array[i] = buff_vertex[i];
+  // data_t* s = ParseCountObj("model/obj/cube.obj");
+  affine_t* v = (affine_t*) calloc(1, sizeof(*v));
+  v->rotateX = rotateX;
+  v->rotateY = rotateY;
+  v->rotateZ = rotateZ;
+  v->moveX = moveX;
+  v->moveY = moveY;
+  v->moveZ = moveZ;
+  const char *c_str2 =  qPrintable(filename);
+  if (c_str2 && strlen(c_str2) > 1) { 
+    data_t* s = ParseCountObj(c_str2);
+    vertex_count = s->vertices_count;
+    lines_count = s->facets_count;
+    vertex_array = s->vertex_array;
+    lines_array = s->lines_array;
+    MoveX(&s, v);
   }
-
-  lines_count = 6;
-  unsigned int buff_lines[] = {0, 1, 1, 2, 2, 0, 0, 3, 1, 3, 2, 3};
-  lines_array = new unsigned int[2 * lines_count]; // CALLOC 
-  for (int i = 0; i < 2 * lines_count; i++) {
-    lines_array[i] = buff_lines[i];
-  } */
-  vertex_count = s->vertices_count;
-  lines_count = s->facets_count;
-  vertex_array = s->vertex_array;
-  lines_array = s->lines_array;
+  free(v);
 }
 
 void MyGLWidget::initBuffers() {

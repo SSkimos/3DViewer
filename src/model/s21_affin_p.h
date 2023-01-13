@@ -3,8 +3,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "matrix_t/s21_matrix.h"
 #include <math.h>
+#include "s21_data_structure.h"
 
 typedef enum {
   kX = 0,
@@ -12,18 +12,23 @@ typedef enum {
   kZ
 } kCord;
 
-int MatrixRotateX(); 
-int MatrixRotateY(); 
-int MatrixRotateZ(); 
+int RotateX(); 
+int RotateY(); 
+int RotateZ(); 
 
-int MatrixMoveX(matrix_t *A, double a); 
-int MatrixMoveY(matrix_t *A, double a); 
-int MatrixMoveZ(matrix_t *A, double a); 
+int MoveX(data_t **A, affine_t* vector); 
+int MoveY(data_t **A, affine_t* vector); 
+int MoveZ(data_t **A, affine_t* vector); 
+int Move(data_t **A, affine_t* vector);
 
-int MatrixScale(matrix_t *A, double zoom);
+int Scale(data_t **A, affine_t* zoom);
 
-int MatrixMove(matrix_t *A, double a, int cord);
-void RotationX(matrix_t *A, double angle);
+int MoveAndRotateModel(data_t **A, affine_t* vector);
+void RotationX(data_t *A, affine_t* angle);
+
+matrices_t MatrixFactory(vertices_t xyz, affine_t* data);
+matrix_t* FactoryDot(vertices_t xyz);
+matrix_t* FactoryAffine(affine_t* data);
 
 #ifdef __cplusplus
 }
