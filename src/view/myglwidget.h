@@ -53,7 +53,7 @@ private:
   void initBuffers();
    double scale;
    QOpenGLShaderProgram *prog = nullptr;
-   void GetData();
+   int GetData();
    int vertex_count;
    int lines_count;
    float *vertex_array;
