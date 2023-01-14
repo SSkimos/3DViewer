@@ -14,30 +14,23 @@ int Scale(data_t **A, affine_t* zoom) {
 }
 // 4*4 matrix of modif mult by 4x1 dot vector
 
-void FactoryTransformationData(matrix_t* m, matrix_t*p, vertices_t*point, data_t*info);
 
-int MoveAndRotateModel(data_t **A, affine_t* vector) {
-  int f = 0;
+void MoveAndRotateModel(data_t **object, affine_t* vector) {
   vertices_t point = {0};
   matrix_t* m = FactoryAffine(vector);
   matrix_t* p = CreateDot(&point);
   matrices_t* pack = FactoryMatrices(m, p);
-  for (size_t i = 0; i != (*A)->vertices_count / 3; ++i) {
-    for (size_t j = 0; j != 3; ++j) {
-      point.xyz[j] = (long double) (*A)->vertex_array[f++];
-    }
-    InputDot(&point, p);
-    TransformateDot(&point, pack, A, f);
+
+  for (size_t i = 0, vertex_ind = 0; i != (*object)->vertices_count / 3; ++i) {
+    /* for (size_t j = 0; j != 3; ++j, ++vertex_ind) {
+      point.xyz[j] = (*object)->vertex_array[vertex_ind];
+    } */
+
+    InputDot(object, &vertex_ind, &point, p);
+    TransformateDot(&point, pack, object, vertex_ind);
   }
   FreeBufferData(pack, m, p);
-  // 3 multiply matrix rotations
-  // multiply them 
-  // multiply other
-  /* cos(a)  sin(a) 0
-    -sin(a) cos(a) 0
-    0       0      1
-  */
-  return 0;
+  return;
 }
 
 void TransformateDot(vertices_t *point, matrices_t* dataset, data_t **A, int f) {
@@ -67,7 +60,10 @@ matrix_t* CreateDot(vertices_t* point) {
     s21_create_matrix(4, 1, dot);
     return dot;
 }
-void InputDot(vertices_t* point, matrix_t *inp) {
+void InputDot(data_t** object, size_t *vertex_ind, vertices_t* point, matrix_t *inp) {
+  for (size_t j = 0; j != 3; ++j, ++(*vertex_ind)) {
+    point->xyz[j] = (*object)->vertex_array[*vertex_ind];
+  }
   if (inp) {
     inp->matrix[kX][0] = point->xyz[kX];
     inp->matrix[kY][0] = point->xyz[kY];
@@ -88,7 +84,7 @@ matrix_t* FactoryAffine(affine_t* data) {
     modificator_dot->matrix[0][1] = sin(rotate);
     modificator_dot->matrix[1][0] =-sin(rotate);
     modificator_dot->matrix[1][1] = cos(rotate);
-  }
+  } 
   modificator_dot->matrix[kX][3] = data->moveX;
   modificator_dot->matrix[kY][3] = data->moveY;
   modificator_dot->matrix[kZ][3] = data->moveZ;
