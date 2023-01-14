@@ -27,7 +27,7 @@ void MoveAndRotateModel(data_t **object, affine_t* vector) {
     TransformateDot(&point, pack, object, vertex_ind);
   }
 
-  FreeBufferData(pack, m, p);
+  FreeBufferData(pack);
   return;
 }
 
@@ -108,9 +108,10 @@ matrices_t* FactoryMatrices(matrix_t* m, matrix_t*p) {
   return pack;
 }
 
-void FreeBufferData(matrices_t* pack, matrix_t* m, matrix_t*p) {
-  s21_remove_matrix(m);
-  s21_remove_matrix(p);
-  free(p);
-  free(m);
+void FreeBufferData(matrices_t* pack) {
+  s21_remove_matrix(pack->data);
+  s21_remove_matrix(pack->affine);
+  free(pack->data);
+  free(pack->affine);
+  free(pack);
 }

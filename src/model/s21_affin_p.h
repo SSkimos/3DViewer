@@ -26,7 +26,7 @@ matrix_t* CreateMatrix(size_t row, size_t column);
 void InputDot(data_t** object, size_t *vertex_ind, vertices_t* point, matrix_t *inp);
 void TransformateDot(vertices_t *point, matrices_t* dataset, data_t **object, size_t vertex_ind);
 matrices_t* FactoryMatrices(matrix_t*m, matrix_t*p);
-void FreeBufferData(matrices_t* pack, matrix_t* m, matrix_t*p);
+void FreeBufferData(matrices_t* pack);
 
 #ifdef __cplusplus
 }
