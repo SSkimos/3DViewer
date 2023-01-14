@@ -19,7 +19,7 @@ data_t* ParseCountObj(const char* file_path) {
   if (data) {
     CountObj(file_path, data);
     ParseObj(file_path, &data);
-    // DebugObj(file_path, data);
+    DebugObj(file_path, data);
     // printf("%zu\n", sizeof(*data));
     // FREE DATA !!!
     // USE FGETS
@@ -64,6 +64,8 @@ int ParseObj(const char* file_path, data_t** data) {
   unsigned int* facets = calloc(facets_memory, sizeof(unsigned int));
   int i = 0;
   int j = 0;
+  int start = 0;
+  int first_facet = 0;
   if (vertexes) {
     while (fgets(line, MAX_SIZE, obj) != NULL && (!feof(obj))) {
       if (FormatCheck(line) == VERTICE) {
@@ -74,9 +76,12 @@ int ParseObj(const char* file_path, data_t** data) {
         facets_memory += FacetsAnalyzer(line);
         facets = realloc(facets, facets_memory * 2 * sizeof(unsigned int));
         ArrayFacetFactory(line, facets, &j);
+        if (!start) first_facet = facets[0];
       }
     }
   } 
+  facets = realloc(facets, 1 + facets_memory * 2 * sizeof(unsigned int));
+  facets[j+1] = first_facet;
   (*data)->vertex_array = vertexes;
   (*data)->lines_array = facets;
   (*data)->size_f = j;
