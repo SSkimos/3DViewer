@@ -61,17 +61,19 @@ int MyGLWidget::GetData() {
   // vertex_array = new float[3 * vertex_count]; // CALLOC
 
   // data_t* s = ParseCountObj("model/obj/cube.obj");
-  if (filename.size() > 0) {
+  int debug = 1;
+  if (debug == 1 || filename.size() > 0) {
     affine_t* v = (affine_t*) malloc(1*sizeof(*v));
     v->rotateX = rotateX;
     v->rotateY = rotateY;
     v->rotateZ = rotateZ;
+    std::cout << v->rotateX << std::endl;
     v->moveX = moveX / 100.0;
     v->moveY = moveY / 100.0;
     v->moveZ = moveZ / 100.0;
     printf("%f = F\n", v->moveZ);
-    const char *c_str2 =  qPrintable(filename);
-    // const char *c_str2 =  "model/obj/cube.obj";
+    // const char *c_str2 =  qPrintable(filename);
+    const char *c_str2 =  "model/obj/cube.obj";
     if (c_str2 && strlen(c_str2) > 1) { 
       data_t* s = ParseCountObj(c_str2);
       MoveAndRotateModel(&s, v);

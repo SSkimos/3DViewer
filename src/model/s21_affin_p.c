@@ -38,7 +38,7 @@ matrix_t* FactoryAffine(affine_t* data) {
   FillDiagonalOnes(&modificator_dot);
   AddRotateXYZ(&modificator_dot, data);
   AddMoveXYZ(&modificator_dot, data);
-  Scale(&modificator_dot, data);
+  AddScale(&modificator_dot, data);
   return modificator_dot;
 }
 
@@ -71,7 +71,7 @@ void TransformateDot(transformation_t* dataset) {
     s21_remove_matrix(&result_vector);
 }
 
-int Scale(matrix_t** affine, affine_t* data) {
+int AddScale(matrix_t** affine, affine_t* data) {
   matrix_t result = {0};
   matrix_t* scale_matrix = CreateMatrix(4, 4);
   FillDiagonalOnes(&scale_matrix);
@@ -91,7 +91,7 @@ int Scale(matrix_t** affine, affine_t* data) {
 matrix_t* AddRotateX(matrix_t** affine, affine_t* data) {
   matrix_t* rotateX = CreateMatrix(4, 4);
   FillDiagonalOnes(&rotateX);
-  if (data->rotateZ) {
+  if (data->rotateX) {
     double rotate = data->rotateX / 10;
     rotateX->matrix[0][0] = cos(rotate);
     rotateX->matrix[0][1] = sin(rotate);
