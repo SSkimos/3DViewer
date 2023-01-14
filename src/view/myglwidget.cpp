@@ -72,7 +72,6 @@ int MyGLWidget::GetData() {
     v->moveY = moveY / 100.0;
     v->moveZ = moveZ / 100.0;
     printf("%f = F\n", v->moveZ);
-    // const char *c_str2 =  qPrintable(filename);
     const char *c_str2 =  "model/obj/cube.obj";
     if (c_str2 && strlen(c_str2) > 1) { 
       data_t* s = ParseCountObj(c_str2);
@@ -88,6 +87,22 @@ int MyGLWidget::GetData() {
     ret_code = 0;
   }
   return ret_code;
+}
+void MyGLWidget::add_example() {
+    vertex_count = 4;
+    vertex_array = new float[3 * vertex_count];
+    float buff_vertex[] = {-0.5, 0,   -0.5, 0.5, 0,    -0.5,
+                           0,    0.5, -0.5, 0,   -0.5, -1};
+    for (int i = 0; i < vertex_count * 3; i++) {
+        vertex_array[i] = buff_vertex[i];
+    }
+
+    lines_count = 6;
+    unsigned int buff_lines[] = {0, 1, 1, 2, 2, 0, 0, 3, 1, 3, 2, 3};
+    lines_array = new unsigned int[2 * lines_count];
+    for (int i = 0; i < 2 * lines_count; i++) {
+        lines_array[i] = buff_lines[i];
+    }
 }
 
 void MyGLWidget::initBuffers() {

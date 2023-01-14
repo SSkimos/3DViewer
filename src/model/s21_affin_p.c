@@ -71,6 +71,10 @@ void TransformateDot(transformation_t* dataset) {
     s21_remove_matrix(&result_vector);
 }
 
+void RemoveMatrix(matrix_t* m) {
+  s21_remove_matrix(m);
+  free(m);
+}
 int AddScale(matrix_t** affine, affine_t* data) {
   matrix_t result = {0};
   matrix_t* scale_matrix = CreateMatrix(4, 4);
@@ -122,13 +126,19 @@ void AddRotateXYZ(matrix_t** affine, affine_t* data) {
   }
   matrix_t* rotateX = AddRotateX(affine, data);
   matrix_t* rotateY = AddRotateY(affine, data);
+  // matrix_t* rotateZ = AddRotateY(affine, data);
   matrix_t result = {0};
+  // matrix_t result2 = {0};
   s21_mult_matrix(rotateX, rotateY, &result);
   for (size_t i = 0; i != 4; ++i) {
     for (size_t j = 0; j != 4; ++j) {
       (*affine)->matrix[i][j] = result.matrix[i][j];
     }
   }
+  s21_remove_matrix(&result);
+  RemoveMatrix(rotateX);
+  RemoveMatrix(rotateY);
+
 }
 
 
@@ -157,6 +167,7 @@ matrix_t* CreateMatrix(size_t row, size_t column) {
   if (m) s21_create_matrix(row, column, m);
   return m;
 }
+
 
 
 void FreeBufferData(transformation_t* data) {

@@ -80,8 +80,8 @@ int ParseObj(const char* file_path, data_t** data) {
       }
     }
   } 
-  facets = realloc(facets, 1 + facets_memory * 2 * sizeof(unsigned int));
-  facets[j+1] = first_facet;
+  /* facets = realloc(facets, 1 + facets_memory * 2 * sizeof(unsigned int));
+  facets[j+1] = first_facet; */
   (*data)->vertex_array = vertexes;
   (*data)->lines_array = facets;
   (*data)->size_f = j;
