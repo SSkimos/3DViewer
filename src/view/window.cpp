@@ -18,6 +18,8 @@ Window::Window(QWidget *parent)
         [this](const int& val)->void{ui->yMoveEdit->setText(locale().toString(val)); ui->widget->moveY = val; ui->widget->update();});
     connect(ui->zMoveSldr, &QSlider::valueChanged,
         [this](const int& val)->void{ui->zMoveEdit->setText(locale().toString(val)); ui->widget->moveZ = val; ui->widget->update();});
+    connect(ui->scaleSldr, &QSlider::valueChanged,
+        [this](const int& val)->void{ui->scaleEdit->setText(locale().toString(val)); ui->widget->scale_val = val; ui->widget->update();});
     RestoreSettings();
 }
 

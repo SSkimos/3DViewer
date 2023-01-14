@@ -70,6 +70,8 @@ private:
   double moveY;
   double moveZ;
 
+  double scale_val; // ???
+
   QString filename;
 
 };

@@ -45,7 +45,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QLineEdit" name="lineEdit_7">
+             <widget class="QLineEdit" name="scaleEdit">
               <property name="text">
                <string>0</string>
               </property>
@@ -54,7 +54,13 @@
            </layout>
           </item>
           <item>
-           <widget class="QSlider" name="horizontalSlider_7">
+           <widget class="QSlider" name="scaleSldr">
+            <property name="maximum">
+             <number>100</number>
+            </property>
+            <property name="singleStep">
+             <number>1</number>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
