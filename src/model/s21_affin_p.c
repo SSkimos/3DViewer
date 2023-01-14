@@ -17,35 +17,33 @@ int Scale(data_t **A, affine_t* zoom) {
 
 void MoveAndRotateModel(data_t **object, affine_t* vector) {
   vertices_t point = {0};
+  size_t vertex_ind = 0;
   matrix_t* m = FactoryAffine(vector);
   matrix_t* p = CreateDot(&point);
   matrices_t* pack = FactoryMatrices(m, p);
 
-  for (size_t i = 0, vertex_ind = 0; i != (*object)->vertices_count / 3; ++i) {
-    /* for (size_t j = 0; j != 3; ++j, ++vertex_ind) {
-      point.xyz[j] = (*object)->vertex_array[vertex_ind];
-    } */
-
+  for (size_t i = 0; i != (*object)->vertices_count / 3; ++i) {
     InputDot(object, &vertex_ind, &point, p);
     TransformateDot(&point, pack, object, vertex_ind);
   }
+
   FreeBufferData(pack, m, p);
   return;
 }
 
-void TransformateDot(vertices_t *point, matrices_t* dataset, data_t **A, int f) {
-    matrix_t* affine = dataset->affine;
-    matrix_t* data = dataset->data;
+void TransformateDot(vertices_t *point, matrices_t* dataset, data_t **object, size_t vertex_ind) {
     matrix_t result_vector = {0};
-    s21_mult_matrix(affine, data, &result_vector); 
-    (*A)->vertex_array[f-3] = result_vector.matrix[kX][0];
-    (*A)->vertex_array[f-2] = result_vector.matrix[kY][0];
-    (*A)->vertex_array[f-1] = result_vector.matrix[kZ][0];
+    s21_mult_matrix(dataset->affine, dataset->data, &result_vector); 
+
+    (*object)->vertex_array[vertex_ind-3] = result_vector.matrix[kX][0];
+    (*object)->vertex_array[vertex_ind-2] = result_vector.matrix[kY][0];
+    (*object)->vertex_array[vertex_ind-1] = result_vector.matrix[kZ][0];
+
     s21_remove_matrix(&result_vector);
 }
 
 
-void RotationX(data_t *A, affine_t* angle) {
+void RotationX(data_t *object, affine_t* angle) {
   /* for (int i = 0; i < A->rows; i++) {
      double temp_y = A->data[i][1];
      double temp_z = A->data[i][2];
@@ -60,6 +58,7 @@ matrix_t* CreateDot(vertices_t* point) {
     s21_create_matrix(4, 1, dot);
     return dot;
 }
+
 void InputDot(data_t** object, size_t *vertex_ind, vertices_t* point, matrix_t *inp) {
   for (size_t j = 0; j != 3; ++j, ++(*vertex_ind)) {
     point->xyz[j] = (*object)->vertex_array[*vertex_ind];
