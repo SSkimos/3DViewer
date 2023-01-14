@@ -14,22 +14,26 @@ typedef enum {
   kZ
 } kCord;
 
+void MoveAndRotateModel(data_t **A, affine_t* vector);
+
+int AddScale(matrix_t** affine, affine_t* data);
 void AddMoveXYZ(matrix_t** affine, affine_t* data);
 void AddRotateXYZ(matrix_t** affine, affine_t* data);
-int AddScale(matrix_t** affine, affine_t* data);
-  
-void MoveAndRotateModel(data_t **A, affine_t* vector);
-void RotationX(data_t *A, affine_t* angle);
 
-void FillDiagonalOnes(matrix_t** m);
-transformation_t* FactoryTransformation(data_t** info, affine_t* vector);
-matrix_t* FactoryAffine(affine_t* data);
-matrix_t* CreateDot();
+void RemoveMatrix(matrix_t* m);
 matrix_t* CreateMatrix(size_t row, size_t column);
+void FreeBufferData(transformation_t* data);
+void FillDiagonalOnes(matrix_t** m);
+
+matrix_t* CreateDot();
 void InputDot(transformation_t* data_with_point);
 void TransformateDot(transformation_t* dataset);
+
+matrix_t* FactoryAffine(affine_t* data);
 matrices_t* PackMatrices(matrix_t*m, matrix_t*p);
-void FreeBufferData(transformation_t* data);
+
+transformation_t* FactoryTransformation(data_t** info, affine_t* vector);
+
 
 #ifdef __cplusplus
 }

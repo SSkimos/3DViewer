@@ -71,10 +71,7 @@ void TransformateDot(transformation_t* dataset) {
     s21_remove_matrix(&result_vector);
 }
 
-void RemoveMatrix(matrix_t* m) {
-  s21_remove_matrix(m);
-  free(m);
-}
+
 int AddScale(matrix_t** affine, affine_t* data) {
   matrix_t result = {0};
   matrix_t* scale_matrix = CreateMatrix(4, 4);
@@ -168,13 +165,14 @@ matrix_t* CreateMatrix(size_t row, size_t column) {
   return m;
 }
 
-
+void RemoveMatrix(matrix_t* m) {
+  s21_remove_matrix(m);
+  free(m);
+}
 
 void FreeBufferData(transformation_t* data) {
-  s21_remove_matrix(data->pack->data);
-  s21_remove_matrix(data->pack->affine);
-  free(data->pack->data);
-  free(data->pack->affine);
+  RemoveMatrix(data->pack->data);
+  RemoveMatrix(data->pack->affine);
   free(data->pack);
   free(data->point);
   free(data->vertex_ind);
