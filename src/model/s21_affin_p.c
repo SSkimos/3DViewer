@@ -75,12 +75,11 @@ void TransformateDot(transformation_t* dataset) {
 void AddScale(matrix_t** affine, affine_t* data) {
   matrix_t result = {0};
   matrix_t* scale_matrix = CreateMatrix(4, 4);
-  if (scale_matrix) {
+  if (data->scale && scale_matrix) {
     FillDiagonalOnes(&scale_matrix);
-    double scale_base = 0.3;
-    scale_matrix->matrix[0][0] = scale_base;
-    scale_matrix->matrix[1][1] = scale_base;
-    scale_matrix->matrix[2][2] = scale_base;
+    scale_matrix->matrix[0][0] = data->scale / 100;
+    scale_matrix->matrix[1][1] = data->scale / 100;
+    scale_matrix->matrix[2][2] = data->scale / 100;
     s21_mult_matrix(*affine, scale_matrix, &result);
     for (size_t i = 0; i != 4; ++i) {
       for (size_t j = 0; j != 4; ++j) {
@@ -110,14 +109,14 @@ matrix_t* AddRotateY(matrix_t** affine, affine_t* data) {
   matrix_t * rotateY = NULL;
   rotateY = CreateMatrix(4, 4);
   if (rotateY) {
-    FillDiagonalOnes(&rotateY);
-    if (data->rotateY) {
-      double rotate = data->rotateY / 10;
-      rotateY->matrix[1][1] = cos(rotate);
-      rotateY->matrix[1][2] = sin(rotate);
-      rotateY->matrix[2][1] =-sin(rotate);
-      rotateY->matrix[2][2] = cos(rotate);
-    }
+  FillDiagonalOnes(&rotateY);
+  if (data->rotateY) {
+    double rotate = data->rotateY / 10;
+    rotateY->matrix[1][1] = cos(rotate);
+    rotateY->matrix[1][2] = sin(rotate);
+    rotateY->matrix[2][1] =-sin(rotate);
+    rotateY->matrix[2][2] = cos(rotate);
+  }
   }
   return rotateY;
 }
@@ -170,7 +169,7 @@ void AddMoveXYZ(matrix_t** affine, affine_t* data) {
 }
 
 void FillDiagonalOnes(matrix_t** m) {
-  for (size_t i = 0; i != 4; ++i) (*m)->matrix[i][i] = 1.0;
+  if (m) for (size_t i = 0; i != 4; ++i) (*m)->matrix[i][i] = 1.0;
 }
 
 

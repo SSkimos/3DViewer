@@ -82,7 +82,7 @@ int ParseObj(const char* file_path, data_t** data) {
   facets[j+1] = first_facet; */
   (*data)->vertex_array = vertexes;
   (*data)->lines_array = facets;
-  (*data)->size_f = j / 2;
+  (*data)->size_f = j;
   free(line);
   fclose(obj);
   return 0;

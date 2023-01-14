@@ -67,6 +67,7 @@ int MyGLWidget::GetData() {
     v->rotateX = rotateX;
     v->rotateY = rotateY;
     v->rotateZ = rotateZ;
+    v->scale = scale_val;
     // std::cout << v->rotateX << std::endl;
     v->moveX = moveX / 100.0;
     v->moveY = moveY / 100.0;
