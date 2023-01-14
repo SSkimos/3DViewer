@@ -19,7 +19,7 @@ void MoveAndRotateModel(data_t **object, affine_t* vector) {
   vertices_t point = {0};
   size_t vertex_ind = 0;
   matrix_t* m = FactoryAffine(vector);
-  matrix_t* p = CreateDot(&point);
+  matrix_t* p = CreateDot();
   matrices_t* pack = FactoryMatrices(m, p);
 
   for (size_t i = 0; i != (*object)->vertices_count / 3; ++i) {
@@ -52,11 +52,14 @@ void RotationX(data_t *object, affine_t* angle) {
      } */
 }
 
-matrix_t* CreateDot(vertices_t* point) {
-    matrix_t* dot = {0};
-    dot = malloc(1*sizeof(*dot));
-    s21_create_matrix(4, 1, dot);
-    return dot;
+matrix_t* CreateDot() {
+    return CreateMatrix(4, 1);
+}
+
+matrix_t* CreateMatrix(size_t row, size_t column) {
+    matrix_t* m = malloc(1*sizeof(*m));
+    if (m) s21_create_matrix(row, column, m);
+    return m;
 }
 
 void InputDot(data_t** object, size_t *vertex_ind, vertices_t* point, matrix_t *inp) {
@@ -72,11 +75,15 @@ void InputDot(data_t** object, size_t *vertex_ind, vertices_t* point, matrix_t *
   return;
 }
 
+void FillDiagonalOnes(matrix_t** m) {
+  for (size_t i = 0; i != 4; ++i) (*m)->matrix[i][i] = 1.0;
+}
+
 matrix_t* FactoryAffine(affine_t* data) {
-  matrix_t* modificator_dot = 0;
-  modificator_dot = malloc(1*sizeof(*modificator_dot));
-  s21_create_matrix(4, 4, modificator_dot);
-  for (size_t i = 0; i != 4; ++i) modificator_dot->matrix[i][i] = 1.0;
+  matrix_t* modificator_dot = CreateMatrix(4, 4);
+  FillDiagonalOnes(&modificator_dot);
+  // AddRotate
+  // AddMove
   if (data->rotateX) {
     double rotate = data->rotateX / 10;
     modificator_dot->matrix[0][0] = cos(rotate);
@@ -84,10 +91,14 @@ matrix_t* FactoryAffine(affine_t* data) {
     modificator_dot->matrix[1][0] =-sin(rotate);
     modificator_dot->matrix[1][1] = cos(rotate);
   } 
-  modificator_dot->matrix[kX][3] = data->moveX;
-  modificator_dot->matrix[kY][3] = data->moveY;
-  modificator_dot->matrix[kZ][3] = data->moveZ;
+  AddMoveXYZ(&modificator_dot, data);
   return modificator_dot;
+}
+
+void AddMoveXYZ(matrix_t** affine, affine_t* data) {
+  (*affine)->matrix[kX][3] = data->moveX;
+  (*affine)->matrix[kY][3] = data->moveY;
+  (*affine)->matrix[kZ][3] = data->moveZ;
 }
 
 matrices_t* FactoryMatrices(matrix_t* m, matrix_t*p) {
