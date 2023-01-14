@@ -25,7 +25,7 @@ matrix_t* FactoryAffine(affine_t* data);
 matrix_t* CreateDot();
 matrix_t* CreateMatrix(size_t row, size_t column);
 void InputDot(transformation_t* data_with_point);
-void TransformateDot(matrices_t* dataset, data_t **object, size_t* vertex_ind);
+void TransformateDot(transformation_t* dataset);
 matrices_t* PackMatrices(matrix_t*m, matrix_t*p);
 void FreeBufferData(matrices_t* pack);
 

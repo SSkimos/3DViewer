@@ -32,22 +32,20 @@ void MoveAndRotateModel(data_t **object, affine_t* vector) {
 
   for (size_t i = 0; i != (*object)->vertices_count / 3; ++i) {
     InputDot(data_with_point);
-    TransformateDot(data_with_point->pack, object, data_with_point->vertex_ind);
+    TransformateDot(data_with_point);
   }
 
-  // FreeBufferData(pack);
+  FreeBufferData(data_with_point->pack);
   return;
 }
 
-
-
-void TransformateDot(matrices_t* dataset, data_t **object, size_t* vertex_ind) {
+void TransformateDot(transformation_t* dataset) {
     matrix_t result_vector = {0};
-    s21_mult_matrix(dataset->affine, dataset->data, &result_vector); 
+    s21_mult_matrix(dataset->pack->affine, dataset->pack->data, &result_vector); 
 
-    (*object)->vertex_array[*vertex_ind-3] = result_vector.matrix[kX][0];
-    (*object)->vertex_array[*vertex_ind-2] = result_vector.matrix[kY][0];
-    (*object)->vertex_array[*vertex_ind-1] = result_vector.matrix[kZ][0];
+    (*dataset->object)->vertex_array[*dataset->vertex_ind-3] = result_vector.matrix[kX][0];
+    (*dataset->object)->vertex_array[*dataset->vertex_ind-2] = result_vector.matrix[kY][0];
+    (*dataset->object)->vertex_array[*dataset->vertex_ind-1] = result_vector.matrix[kZ][0];
 
     s21_remove_matrix(&result_vector);
 }
