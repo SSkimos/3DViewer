@@ -49,6 +49,7 @@ private:
    void clearIBO();
 
  public:
+   void add_example();
   void clearBuffers();
   void initBuffers();
    double scale;

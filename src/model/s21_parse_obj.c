@@ -19,7 +19,7 @@ data_t* ParseCountObj(const char* file_path) {
   if (data) {
     CountObj(file_path, data);
     ParseObj(file_path, &data);
-    DebugObj(file_path, data);
+    // DebugObj(file_path, data);
     // printf("%zu\n", sizeof(*data));
     // FREE DATA !!!
     // USE FGETS
@@ -80,8 +80,8 @@ int ParseObj(const char* file_path, data_t** data) {
       }
     }
   } 
-  facets = realloc(facets, 1 + facets_memory * 2 * sizeof(unsigned int));
-  facets[j+1] = first_facet;
+  /* facets = realloc(facets, 1 + facets_memory * 2 * sizeof(unsigned int));
+  facets[j+1] = first_facet; */
   (*data)->vertex_array = vertexes;
   (*data)->lines_array = facets;
   (*data)->size_f = j;
