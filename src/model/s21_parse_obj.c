@@ -19,10 +19,8 @@ data_t* ParseCountObj(const char* file_path) {
   if (data) {
     CountObj(file_path, data);
     ParseObj(file_path, &data);
-    // DebugObj(file_path, data);
-    // printf("%zu\n", sizeof(*data));
+    DebugObj(file_path, data);
     // FREE DATA !!!
-    // USE FGETS
   }
   return data;
 }
@@ -84,7 +82,7 @@ int ParseObj(const char* file_path, data_t** data) {
   facets[j+1] = first_facet; */
   (*data)->vertex_array = vertexes;
   (*data)->lines_array = facets;
-  (*data)->size_f = j;
+  (*data)->size_f = j / 2;
   free(line);
   fclose(obj);
   return 0;
@@ -187,3 +185,19 @@ int DebugObj(const char* file_path, data_t *data) {
   return 0;
 }
 
+// int msec = 0, trigger = 10; /* 10ms */
+// clock_t before = clock();
+// 
+// do {
+//   /*
+//    * Do something to busy the CPU just here while you drink a coffee
+//    * Be sure this code will not take more than `trigger` ms
+//    */
+// 
+//   clock_t difference = clock() - before;
+//   msec = difference * 1000 / CLOCKS_PER_SEC;
+//   iterations++;
+// } while ( msec < trigger );
+// 
+// printf("Time taken %d seconds %d milliseconds (%d iterations)\n",
+//   msec/1000, msec%1000, iterations);

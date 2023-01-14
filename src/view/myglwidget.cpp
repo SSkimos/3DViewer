@@ -67,16 +67,16 @@ int MyGLWidget::GetData() {
     v->rotateX = rotateX;
     v->rotateY = rotateY;
     v->rotateZ = rotateZ;
-    std::cout << v->rotateX << std::endl;
+    // std::cout << v->rotateX << std::endl;
     v->moveX = moveX / 100.0;
     v->moveY = moveY / 100.0;
     v->moveZ = moveZ / 100.0;
-    printf("%f = F\n", v->moveZ);
+    // printf("%f = F\n", v->moveZ);
     const char *c_str2 =  "model/obj/cube.obj";
     if (c_str2 && strlen(c_str2) > 1) { 
       data_t* s = ParseCountObj(c_str2);
       MoveAndRotateModel(&s, v);
-      vertex_count = s->vertices_count;
+      vertex_count = s->vertices_count / 3;
       lines_count = s->facets_count;
       vertex_array = s->vertex_array;
       lines_array = s->lines_array;
@@ -127,7 +127,7 @@ void MyGLWidget::initBuffers() {
   ibo.create();
   ibo.bind();
   ibo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
-  ibo.allocate(lines_array, sizeof(unsigned int) * 2 * lines_count);
+  ibo.allocate(lines_array, sizeof(unsigned int) * 5 * lines_count);
 
   glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_TEST);
 
@@ -136,7 +136,7 @@ void MyGLWidget::initBuffers() {
   prog->setUniformValue(prog->uniformLocation("color"), lineColorV);
 
   glLineWidth(0.5);
-  glDrawElementsBaseVertex(GL_LINES, 2 * lines_count, GL_UNSIGNED_INT, 0, 0);
+  glDrawElementsBaseVertex(GL_LINES, 5 * lines_count, GL_UNSIGNED_INT, 0, 0);
 
   vao.release();
 }

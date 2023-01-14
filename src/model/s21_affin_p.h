@@ -16,7 +16,7 @@ typedef enum {
 
 void MoveAndRotateModel(data_t **A, affine_t* vector);
 
-int AddScale(matrix_t** affine, affine_t* data);
+void AddScale(matrix_t** affine, affine_t* data);
 void AddMoveXYZ(matrix_t** affine, affine_t* data);
 void AddRotateXYZ(matrix_t** affine, affine_t* data);
 
