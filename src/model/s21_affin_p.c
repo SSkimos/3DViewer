@@ -14,30 +14,40 @@ int Scale(data_t **A, affine_t* zoom) {
 }
 // 4*4 matrix of modif mult by 4x1 dot vector
 
+transformation_t* FactoryTransformation(data_t** info, affine_t* vector) {
+  transformation_t* base = malloc(1*sizeof(*base));
+
+  base->pack = PackMatrices(FactoryAffine(vector), CreateDot());
+  base->object = info;
+  base->point = malloc(1*sizeof(*base->point));
+  base->vertex_ind = calloc(1, sizeof(size_t));
+
+  return base;
+}
+
 
 void MoveAndRotateModel(data_t **object, affine_t* vector) {
-  vertices_t point = {0};
-  size_t vertex_ind = 0;
-  matrix_t* m = FactoryAffine(vector);
-  matrix_t* p = CreateDot();
-  matrices_t* pack = FactoryMatrices(m, p);
+
+  transformation_t* data_with_point = FactoryTransformation(object, vector);
 
   for (size_t i = 0; i != (*object)->vertices_count / 3; ++i) {
-    InputDot(object, &vertex_ind, &point, p);
-    TransformateDot(&point, pack, object, vertex_ind);
+    InputDot(data_with_point);
+    TransformateDot(data_with_point->pack, object, data_with_point->vertex_ind);
   }
 
-  FreeBufferData(pack);
+  // FreeBufferData(pack);
   return;
 }
 
-void TransformateDot(vertices_t *point, matrices_t* dataset, data_t **object, size_t vertex_ind) {
+
+
+void TransformateDot(matrices_t* dataset, data_t **object, size_t* vertex_ind) {
     matrix_t result_vector = {0};
     s21_mult_matrix(dataset->affine, dataset->data, &result_vector); 
 
-    (*object)->vertex_array[vertex_ind-3] = result_vector.matrix[kX][0];
-    (*object)->vertex_array[vertex_ind-2] = result_vector.matrix[kY][0];
-    (*object)->vertex_array[vertex_ind-1] = result_vector.matrix[kZ][0];
+    (*object)->vertex_array[*vertex_ind-3] = result_vector.matrix[kX][0];
+    (*object)->vertex_array[*vertex_ind-2] = result_vector.matrix[kY][0];
+    (*object)->vertex_array[*vertex_ind-1] = result_vector.matrix[kZ][0];
 
     s21_remove_matrix(&result_vector);
 }
@@ -62,15 +72,15 @@ matrix_t* CreateMatrix(size_t row, size_t column) {
     return m;
 }
 
-void InputDot(data_t** object, size_t *vertex_ind, vertices_t* point, matrix_t *inp) {
-  for (size_t j = 0; j != 3; ++j, ++(*vertex_ind)) {
-    point->xyz[j] = (*object)->vertex_array[*vertex_ind];
+void InputDot(transformation_t* data_with_point) {
+  for (size_t j = 0; j != 3; ++j, ++(*data_with_point->vertex_ind)) {
+    data_with_point->point->xyz[j] = (*data_with_point->object)->vertex_array[*data_with_point->vertex_ind];
   }
-  if (inp) {
-    inp->matrix[kX][0] = point->xyz[kX];
-    inp->matrix[kY][0] = point->xyz[kY];
-    inp->matrix[kZ][0] = point->xyz[kZ];
-    inp->matrix[3][0] = 1.0;
+  if (data_with_point->point) {
+    data_with_point->pack->data->matrix[kX][0] = data_with_point->point->xyz[kX];
+    data_with_point->pack->data->matrix[kY][0] = data_with_point->point->xyz[kY];
+    data_with_point->pack->data->matrix[kZ][0] = data_with_point->point->xyz[kZ];
+    data_with_point->pack->data->matrix[3][0] = 1.0;
   }
   return;
 }
@@ -84,15 +94,19 @@ matrix_t* FactoryAffine(affine_t* data) {
   FillDiagonalOnes(&modificator_dot);
   // AddRotate
   // AddMove
-  if (data->rotateX) {
-    double rotate = data->rotateX / 10;
-    modificator_dot->matrix[0][0] = cos(rotate);
-    modificator_dot->matrix[0][1] = sin(rotate);
-    modificator_dot->matrix[1][0] =-sin(rotate);
-    modificator_dot->matrix[1][1] = cos(rotate);
-  } 
+  AddRotateXYZ(&modificator_dot, data);
   AddMoveXYZ(&modificator_dot, data);
   return modificator_dot;
+}
+
+void AddRotateXYZ(matrix_t** affine, affine_t* data) {
+  if (data->rotateX) {
+    double rotate = data->rotateX / 10;
+    (*affine)->matrix[0][0] = cos(rotate);
+    (*affine)->matrix[0][1] = sin(rotate);
+    (*affine)->matrix[1][0] =-sin(rotate);
+    (*affine)->matrix[1][1] = cos(rotate);
+  } 
 }
 
 void AddMoveXYZ(matrix_t** affine, affine_t* data) {
@@ -101,7 +115,7 @@ void AddMoveXYZ(matrix_t** affine, affine_t* data) {
   (*affine)->matrix[kZ][3] = data->moveZ;
 }
 
-matrices_t* FactoryMatrices(matrix_t* m, matrix_t*p) {
+matrices_t* PackMatrices(matrix_t* m, matrix_t*p) {
   matrices_t* pack = malloc(1*sizeof(*pack));
   pack->affine = m;
   pack->data = p;

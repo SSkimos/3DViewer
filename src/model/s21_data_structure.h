@@ -1,6 +1,7 @@
 #ifndef MODEL_DATA_STRUCTURE_H_
 #define MODEL_DATA_STRUCTURE_H_
 #include "matrix_t/s21_matrix.h"
+#include <stdio.h>
 
 typedef struct facets {
 	long double *vertexes; // f 2 3 4 51 2 31 .. array
@@ -37,9 +38,10 @@ typedef struct matrices {
 } matrices_t;
 
 typedef struct transformation {
-  matrices_t * dataset;
+  matrices_t* pack;
+  size_t* vertex_ind;
   vertices_t * point;
-  data_t* info;
+  data_t** object;
 } transformation_t;
 
 #endif // MODEL_DATA_STRUCTURE_H_
