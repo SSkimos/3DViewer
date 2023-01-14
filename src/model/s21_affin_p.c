@@ -32,11 +32,13 @@ transformation_t* FactoryTransformation(data_t** info, affine_t* vector) {
   return base;
 }
 
+
 matrix_t* FactoryAffine(affine_t* data) {
   matrix_t* modificator_dot = CreateMatrix(4, 4);
   FillDiagonalOnes(&modificator_dot);
   AddRotateXYZ(&modificator_dot, data);
   AddMoveXYZ(&modificator_dot, data);
+  Scale(&modificator_dot, data);
   return modificator_dot;
 }
 
@@ -69,10 +71,21 @@ void TransformateDot(transformation_t* dataset) {
     s21_remove_matrix(&result_vector);
 }
 
-
-int Scale(data_t **A, affine_t* zoom) {
-  int ret = 0;
-  return ret;
+int Scale(matrix_t** affine, affine_t* data) {
+  matrix_t result = {0};
+  matrix_t* scale_matrix = CreateMatrix(4, 4);
+  FillDiagonalOnes(&scale_matrix);
+  double scale = 0.3;
+  scale_matrix->matrix[0][0] = 0.2;
+  scale_matrix->matrix[1][1] = 0.2;
+  scale_matrix->matrix[2][2] = 0.2;
+  s21_mult_matrix(*affine, scale_matrix, &result);
+  for (size_t i = 0; i != 4; ++i) {
+    for (size_t j = 0; j != 4; ++j) {
+      (*affine)->matrix[i][j] = result.matrix[i][j];
+    }
+  }
+  return 0;
 }
 
 matrix_t* AddRotateX(matrix_t** affine, affine_t* data) {
@@ -119,32 +132,6 @@ void AddRotateXYZ(matrix_t** affine, affine_t* data) {
 }
 
 
-// void AddRotateXYZ(matrix_t** affine, affine_t* data) {
-//   matrix_t * rotateX = NULL;
-//   matrix_t * rotateZ = NULL;
-//   matrix_t result = {0};
-//   double rotate = 0.0;
-//   if (data->rotateX) {
-//     rotateX = CreateMatrix(4, 4);
-//     FillDiagonalOnes(&rotateX);
-//     rotate = data->rotateX / 10;
-//     rotateX->matrix[0][0] = cos(rotate);
-//     rotateX->matrix[0][1] = sin(rotate);
-//     rotateX->matrix[1][0] =-sin(rotate);
-//     rotateX->matrix[1][1] = cos(rotate);
-//   } 
-//      if (data->rotateZ) {
-//   // FillDiagonalOnes(&rotateZ);
-//   }
-//   s21_mult_matrix(rotateX, rotateY, &result); */
-//   if (data->rotateX || data->rotateY || data->rotateZ) {
-//     for (size_t i = 0; i != 4; ++i) {
-//       for (size_t j = 0; j != 4; ++j) {
-//         (*affine)->matrix[i][j] = rotateX->matrix[i][j];
-//       }
-//     }
-//   }
-// }
 
 void AddMoveXYZ(matrix_t** affine, affine_t* data) {
   (*affine)->matrix[kX][3] = data->moveX;
