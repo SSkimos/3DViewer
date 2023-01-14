@@ -75,16 +75,76 @@ int Scale(data_t **A, affine_t* zoom) {
   return ret;
 }
 
+matrix_t* AddRotateX(matrix_t** affine, affine_t* data) {
+  matrix_t* rotateX = CreateMatrix(4, 4);
+  FillDiagonalOnes(&rotateX);
+  if (data->rotateZ) {
+    double rotate = data->rotateX / 10;
+    rotateX->matrix[0][0] = cos(rotate);
+    rotateX->matrix[0][1] = sin(rotate);
+    rotateX->matrix[1][0] =-sin(rotate);
+    rotateX->matrix[1][1] = cos(rotate);
+  }
+  return rotateX;
+}
+
+
+matrix_t* AddRotateY(matrix_t** affine, affine_t* data) {
+  matrix_t * rotateY = NULL;
+  rotateY = CreateMatrix(4, 4);
+  FillDiagonalOnes(&rotateY);
+  if (data->rotateY) {
+    double rotate = data->rotateY / 10;
+    rotateY->matrix[1][1] = cos(rotate);
+    rotateY->matrix[1][2] = sin(rotate);
+    rotateY->matrix[2][1] =-sin(rotate);
+    rotateY->matrix[2][2] = cos(rotate);
+  }
+  return rotateY;
+}
 
 void AddRotateXYZ(matrix_t** affine, affine_t* data) {
-  if (data->rotateX) {
-    double rotate = data->rotateX / 10;
-    (*affine)->matrix[0][0] = cos(rotate);
-    (*affine)->matrix[0][1] = sin(rotate);
-    (*affine)->matrix[1][0] =-sin(rotate);
-    (*affine)->matrix[1][1] = cos(rotate);
-  } 
+  if (!data->rotateX && !data->rotateY && !data->rotateZ) {
+    return;
+  }
+  matrix_t* rotateX = AddRotateX(affine, data);
+  matrix_t* rotateY = AddRotateY(affine, data);
+  matrix_t result = {0};
+  s21_mult_matrix(rotateX, rotateY, &result);
+  for (size_t i = 0; i != 4; ++i) {
+    for (size_t j = 0; j != 4; ++j) {
+      (*affine)->matrix[i][j] = result.matrix[i][j];
+    }
+  }
 }
+
+
+// void AddRotateXYZ(matrix_t** affine, affine_t* data) {
+//   matrix_t * rotateX = NULL;
+//   matrix_t * rotateZ = NULL;
+//   matrix_t result = {0};
+//   double rotate = 0.0;
+//   if (data->rotateX) {
+//     rotateX = CreateMatrix(4, 4);
+//     FillDiagonalOnes(&rotateX);
+//     rotate = data->rotateX / 10;
+//     rotateX->matrix[0][0] = cos(rotate);
+//     rotateX->matrix[0][1] = sin(rotate);
+//     rotateX->matrix[1][0] =-sin(rotate);
+//     rotateX->matrix[1][1] = cos(rotate);
+//   } 
+//      if (data->rotateZ) {
+//   // FillDiagonalOnes(&rotateZ);
+//   }
+//   s21_mult_matrix(rotateX, rotateY, &result); */
+//   if (data->rotateX || data->rotateY || data->rotateZ) {
+//     for (size_t i = 0; i != 4; ++i) {
+//       for (size_t j = 0; j != 4; ++j) {
+//         (*affine)->matrix[i][j] = rotateX->matrix[i][j];
+//       }
+//     }
+//   }
+// }
 
 void AddMoveXYZ(matrix_t** affine, affine_t* data) {
   (*affine)->matrix[kX][3] = data->moveX;
@@ -106,9 +166,9 @@ matrices_t* PackMatrices(matrix_t* m, matrix_t*p) {
 
 
 matrix_t* CreateMatrix(size_t row, size_t column) {
-    matrix_t* m = malloc(1*sizeof(*m));
-    if (m) s21_create_matrix(row, column, m);
-    return m;
+  matrix_t* m = malloc(1*sizeof(*m));
+  if (m) s21_create_matrix(row, column, m);
+  return m;
 }
 
 
