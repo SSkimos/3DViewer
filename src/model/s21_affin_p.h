@@ -21,13 +21,15 @@ int Scale(data_t **A, affine_t* zoom);
 void MoveAndRotateModel(data_t **A, affine_t* vector);
 void RotationX(data_t *A, affine_t* angle);
 
+void FillDiagonalOnes(matrix_t** m);
+transformation_t* FactoryTransformation(data_t** info, affine_t* vector);
 matrix_t* FactoryAffine(affine_t* data);
 matrix_t* CreateDot();
 matrix_t* CreateMatrix(size_t row, size_t column);
 void InputDot(transformation_t* data_with_point);
 void TransformateDot(transformation_t* dataset);
 matrices_t* PackMatrices(matrix_t*m, matrix_t*p);
-void FreeBufferData(matrices_t* pack);
+void FreeBufferData(transformation_t* data);
 
 #ifdef __cplusplus
 }

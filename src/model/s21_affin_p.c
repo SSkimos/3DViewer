@@ -8,11 +8,18 @@
 #define INPUT 2
 
 
-int Scale(data_t **A, affine_t* zoom) {
-  int ret = 0;
-  return ret;
+void MoveAndRotateModel(data_t **object, affine_t* vector) {
+
+  transformation_t* data_with_point = FactoryTransformation(object, vector);
+
+  for (size_t i = 0; i != (*object)->vertices_count / 3; ++i) {
+    InputDot(data_with_point);
+    TransformateDot(data_with_point);
+  }
+
+  FreeBufferData(data_with_point);
+  return;
 }
-// 4*4 matrix of modif mult by 4x1 dot vector
 
 transformation_t* FactoryTransformation(data_t** info, affine_t* vector) {
   transformation_t* base = malloc(1*sizeof(*base));
@@ -25,17 +32,29 @@ transformation_t* FactoryTransformation(data_t** info, affine_t* vector) {
   return base;
 }
 
+matrix_t* FactoryAffine(affine_t* data) {
+  matrix_t* modificator_dot = CreateMatrix(4, 4);
+  FillDiagonalOnes(&modificator_dot);
+  AddRotateXYZ(&modificator_dot, data);
+  AddMoveXYZ(&modificator_dot, data);
+  return modificator_dot;
+}
 
-void MoveAndRotateModel(data_t **object, affine_t* vector) {
 
-  transformation_t* data_with_point = FactoryTransformation(object, vector);
+matrix_t* CreateDot() {
+    return CreateMatrix(4, 1);
+}
 
-  for (size_t i = 0; i != (*object)->vertices_count / 3; ++i) {
-    InputDot(data_with_point);
-    TransformateDot(data_with_point);
+void InputDot(transformation_t* all_data) {
+  for (size_t j = 0; j != 3; ++j, ++(*all_data->vertex_ind)) {
+    all_data->point->xyz[j] = (*all_data->object)->vertex_array[*all_data->vertex_ind];
   }
-
-  FreeBufferData(data_with_point->pack);
+  if (all_data->point) {
+    all_data->pack->data->matrix[kX][0] = all_data->point->xyz[kX];
+    all_data->pack->data->matrix[kY][0] = all_data->point->xyz[kY];
+    all_data->pack->data->matrix[kZ][0] = all_data->point->xyz[kZ];
+    all_data->pack->data->matrix[3][0] = 1.0;
+  }
   return;
 }
 
@@ -51,51 +70,11 @@ void TransformateDot(transformation_t* dataset) {
 }
 
 
-void RotationX(data_t *object, affine_t* angle) {
-  /* for (int i = 0; i < A->rows; i++) {
-     double temp_y = A->data[i][1];
-     double temp_z = A->data[i][2];
-     A->data[i][1] = cos(angle) * temp_y - sin(angle) * temp_z;
-     A->data[i][2] = sin(angle) * temp_y + cos(angle) * temp_z;
-     } */
+int Scale(data_t **A, affine_t* zoom) {
+  int ret = 0;
+  return ret;
 }
 
-matrix_t* CreateDot() {
-    return CreateMatrix(4, 1);
-}
-
-matrix_t* CreateMatrix(size_t row, size_t column) {
-    matrix_t* m = malloc(1*sizeof(*m));
-    if (m) s21_create_matrix(row, column, m);
-    return m;
-}
-
-void InputDot(transformation_t* data_with_point) {
-  for (size_t j = 0; j != 3; ++j, ++(*data_with_point->vertex_ind)) {
-    data_with_point->point->xyz[j] = (*data_with_point->object)->vertex_array[*data_with_point->vertex_ind];
-  }
-  if (data_with_point->point) {
-    data_with_point->pack->data->matrix[kX][0] = data_with_point->point->xyz[kX];
-    data_with_point->pack->data->matrix[kY][0] = data_with_point->point->xyz[kY];
-    data_with_point->pack->data->matrix[kZ][0] = data_with_point->point->xyz[kZ];
-    data_with_point->pack->data->matrix[3][0] = 1.0;
-  }
-  return;
-}
-
-void FillDiagonalOnes(matrix_t** m) {
-  for (size_t i = 0; i != 4; ++i) (*m)->matrix[i][i] = 1.0;
-}
-
-matrix_t* FactoryAffine(affine_t* data) {
-  matrix_t* modificator_dot = CreateMatrix(4, 4);
-  FillDiagonalOnes(&modificator_dot);
-  // AddRotate
-  // AddMove
-  AddRotateXYZ(&modificator_dot, data);
-  AddMoveXYZ(&modificator_dot, data);
-  return modificator_dot;
-}
 
 void AddRotateXYZ(matrix_t** affine, affine_t* data) {
   if (data->rotateX) {
@@ -113,6 +92,11 @@ void AddMoveXYZ(matrix_t** affine, affine_t* data) {
   (*affine)->matrix[kZ][3] = data->moveZ;
 }
 
+void FillDiagonalOnes(matrix_t** m) {
+  for (size_t i = 0; i != 4; ++i) (*m)->matrix[i][i] = 1.0;
+}
+
+
 matrices_t* PackMatrices(matrix_t* m, matrix_t*p) {
   matrices_t* pack = malloc(1*sizeof(*pack));
   pack->affine = m;
@@ -120,10 +104,22 @@ matrices_t* PackMatrices(matrix_t* m, matrix_t*p) {
   return pack;
 }
 
-void FreeBufferData(matrices_t* pack) {
-  s21_remove_matrix(pack->data);
-  s21_remove_matrix(pack->affine);
-  free(pack->data);
-  free(pack->affine);
-  free(pack);
+
+matrix_t* CreateMatrix(size_t row, size_t column) {
+    matrix_t* m = malloc(1*sizeof(*m));
+    if (m) s21_create_matrix(row, column, m);
+    return m;
 }
+
+
+void FreeBufferData(transformation_t* data) {
+  s21_remove_matrix(data->pack->data);
+  s21_remove_matrix(data->pack->affine);
+  free(data->pack->data);
+  free(data->pack->affine);
+  free(data->pack);
+  free(data->point);
+  free(data->vertex_ind);
+  free(data);
+}
+
