@@ -39,6 +39,7 @@ set(PROJECT_SOURCES
         view/window.ui
         data/position.h
         view/window.h
+        gif/gif.h
         main.cpp
 )
 

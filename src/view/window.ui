@@ -1040,6 +1040,13 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QPushButton" name="makeGIFButton">
+          <property name="text">
+           <string>GIF</string>
+          </property>
+         </widget>
+        </item>
        </layout>
       </item>
       <item>
