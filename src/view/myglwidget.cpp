@@ -48,7 +48,7 @@ void MyGLWidget::paintGL(void) {
   glClearColor(0, 0, 0, 1); // настраиваю цвет окна
   prog->bind();
   if (file_load == 1) {
-    // RemoveObject(object);
+    RemoveObject(object);
     GetData();
     file_load = 0;
   }
@@ -87,8 +87,6 @@ int MyGLWidget::GetData() {
       object = ParseCountObj(c_str2);
       vertex_count = object->vertices_count / 3;
       lines_count = object->facets_count;
-      qDebug() << vertex_count;
-      qDebug() << lines_count;
     }
   } else {
     ret_code = 1;

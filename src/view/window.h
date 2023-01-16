@@ -7,7 +7,6 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QSettings>
-#include "../gif/gif.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Window; }

@@ -114,7 +114,7 @@ void Window::on_chooseFileButton_clicked()
     }
 }
 
-void Window::oneGif() {
+/* void Window::oneGif() {
   if (startTime == tmpTime) {
     ui->widget->grab().scaled(640, 480, Qt::IgnoreAspectRatio).save(QDir::homePath() + "/screenshots/gif_obj/" + QString::number(counter) +".bmp");
     counter++;
@@ -176,4 +176,4 @@ void Window::createGif() {
   pathFile.setPath(QDir::homePath() + "/screenshots/gif_obj/");
   pathFile.removeRecursively();
   ui->makeGIFButton->setEnabled(true);
-}
+} */

@@ -27,7 +27,13 @@ data_t* ParseCountObj(const char* file_path) {
 
 int ScaleObj(data_t** object) {
   affine_t* a = malloc(1 * sizeof(*a));
-  if (a) {
+  if (a && object) {
+    a->rotateX = 0;
+    a->rotateY = 0;
+    a->rotateZ = 0;
+    a->moveX = 0;
+    a->moveY = 0;
+    a->moveZ = 0;
     a->scale = 1/(*object)->max_vert;
     MoveAndRotateModel(object, a);
   }
@@ -45,13 +51,15 @@ int CountObj(const char* file_path, data_t* data) {
   data->vertices_count = 0;
   data->facets_count = 0;
   data->size_f = 0;
-  while (fgets(line, MAX_SIZE, obj) != NULL && (!feof(obj))) {
-    if (FormatCheck(line) == VERTICE) {
-      long double tmp1 = 0, tmp2 = 0, tmp3 = 0;
-      data->vertices_count += 3;
-    } else if (FormatCheck(line) == FACET) {
-      data->size_f += FacetsAnalyzer(line);
-      (data->facets_count)++;
+  if (line) {
+    while (fgets(line, MAX_SIZE, obj) != NULL && (!feof(obj))) {
+      if (FormatCheck(line) == VERTICE) {
+        long double tmp1 = 0, tmp2 = 0, tmp3 = 0;
+        data->vertices_count += 3;
+      } else if (FormatCheck(line) == FACET) {
+        data->size_f += FacetsAnalyzer(line);
+        (data->facets_count)++;
+      }
     }
   }
   free(line);

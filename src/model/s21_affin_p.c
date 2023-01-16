@@ -11,12 +11,13 @@
 void MoveAndRotateModel(data_t **object, affine_t* vector) {
 
   transformation_t* data_with_point = FactoryTransformation(object, vector);
+  if (!object || !data_with_point || !data_with_point->point || !data_with_point->pack || !data_with_point->vertex_ind) return;
 
   for (size_t i = 0; i != (*object)->vertices_count / 3; ++i) {
     InputDot(data_with_point);
     TransformateDot(data_with_point);
-  }
 
+  }
   FreeBufferData(data_with_point);
   return;
 }
@@ -24,10 +25,12 @@ void MoveAndRotateModel(data_t **object, affine_t* vector) {
 transformation_t* FactoryTransformation(data_t** info, affine_t* vector) {
   transformation_t* base = malloc(1*sizeof(*base));
 
-  base->pack = PackMatrices(FactoryAffine(vector), CreateDot());
-  base->object = info;
-  base->point = malloc(1*sizeof(*base->point));
-  base->vertex_ind = calloc(1, sizeof(size_t));
+  if (base) {
+    base->pack = PackMatrices(FactoryAffine(vector), CreateDot());
+    base->object = info;
+    base->point = malloc(1*sizeof(*base->point));
+    base->vertex_ind = calloc(1, sizeof(size_t));
+  }
 
   return base;
 }
@@ -77,7 +80,7 @@ void TransformateDot(transformation_t* dataset) {
 void AddScale(matrix_t** affine, affine_t* data) {
   matrix_t result = {0};
   matrix_t* scale_matrix = CreateMatrix(4, 4);
-  if (data->scale && scale_matrix) {
+  if (data->scale && scale_matrix && affine) {
     FillDiagonalOnes(&scale_matrix);
     scale_matrix->matrix[0][0] = data->scale / 100;
     scale_matrix->matrix[1][1] = data->scale / 100;
@@ -88,20 +91,22 @@ void AddScale(matrix_t** affine, affine_t* data) {
         (*affine)->matrix[i][j] = result.matrix[i][j];
       }
     }
-    RemoveMatrix(scale_matrix);
     s21_remove_matrix(&result);
   }
+  RemoveMatrix(scale_matrix);
 }
 
 matrix_t* AddRotateX(matrix_t** affine, affine_t* data) {
   matrix_t* rotateX = CreateMatrix(4, 4);
-  FillDiagonalOnes(&rotateX);
-  if (data->rotateX) {
-    double rotate = data->rotateX / 10;
-    rotateX->matrix[0][0] = cos(rotate);
-    rotateX->matrix[0][1] = sin(rotate);
-    rotateX->matrix[1][0] =-sin(rotate);
-    rotateX->matrix[1][1] = cos(rotate);
+  if (rotateX) {
+    FillDiagonalOnes(&rotateX);
+    if (data->rotateX) {
+      double rotate = data->rotateX / 10;
+      rotateX->matrix[0][0] = cos(rotate);
+      rotateX->matrix[0][1] = sin(rotate);
+      rotateX->matrix[1][0] =-sin(rotate);
+      rotateX->matrix[1][1] = cos(rotate);
+    }
   }
   return rotateX;
 }
@@ -165,9 +170,11 @@ void AddRotateXYZ(matrix_t** affine, affine_t* data) {
 }
 
 void AddMoveXYZ(matrix_t** affine, affine_t* data) {
-  (*affine)->matrix[kX][3] = data->moveX;
-  (*affine)->matrix[kY][3] = data->moveY;
-  (*affine)->matrix[kZ][3] = data->moveZ;
+  if (affine) {
+    (*affine)->matrix[kX][3] = data->moveX;
+    (*affine)->matrix[kY][3] = data->moveY;
+    (*affine)->matrix[kZ][3] = data->moveZ;
+  }
 }
 
 void FillDiagonalOnes(matrix_t** m) {
@@ -192,16 +199,18 @@ matrix_t* CreateMatrix(size_t row, size_t column) {
 }
 
 void RemoveMatrix(matrix_t* m) {
-  s21_remove_matrix(m);
+  if (m) s21_remove_matrix(m);
   free(m);
 }
 
 void FreeBufferData(transformation_t* data) {
-  RemoveMatrix(data->pack->data);
-  RemoveMatrix(data->pack->affine);
-  free(data->pack);
-  free(data->point);
-  free(data->vertex_ind);
-  free(data);
+  if (data && data->pack && data->point && data->vertex_ind) {
+    RemoveMatrix(data->pack->data);
+    RemoveMatrix(data->pack->affine);
+    free(data->pack);
+    free(data->point);
+    free(data->vertex_ind);
+    free(data);
+  }
 }
 
