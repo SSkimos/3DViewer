@@ -20,7 +20,6 @@ data_t* ParseCountObj(const char* file_path) {
     CountObj(file_path, data);
     ParseObj(file_path, &data);
     DebugObj(file_path, data);
-    // FREE DATA !!!
   }
   return data;
 }
@@ -58,7 +57,7 @@ int ParseObj(const char* file_path, data_t** data) {
   int f_analysis = 0;
   int mas = (*data)->vertices_count * 3;
   int facets_memory = 1;
-  float* vertexes = calloc(mas, sizeof(long double));
+  float* vertexes = calloc(mas, sizeof(float));
   unsigned int* facets = calloc(facets_memory, sizeof(unsigned int));
   int i = 0;
   int j = 0;
@@ -80,9 +79,11 @@ int ParseObj(const char* file_path, data_t** data) {
   } 
   /* facets = realloc(facets, 1 + facets_memory * 2 * sizeof(unsigned int));
   facets[j+1] = first_facet; */
-  (*data)->vertex_array = vertexes;
-  (*data)->lines_array = facets;
+  (*data)->base_vertex_array = vertexes;
+  (*data)->base_lines_array = facets;
   (*data)->size_f = j;
+  (*data)->vertex_array = calloc(mas, sizeof(float));
+  (*data)->lines_array = calloc(j, sizeof(unsigned int));
   free(line);
   fclose(obj);
   return 0;
@@ -151,8 +152,6 @@ int ArrayFacetFactory(const char* line, unsigned int* facet_row, int* ind) {
   int first_facet_value = 0;
   while (num_pointer != NULL) {
     if (isdigit(*num_pointer)) {
-      // 1 7 5
-      // 1 7 7 5 5 1
       int facet = strtold(num_pointer, NULL) - 1;
       facet_row[i++] = facet;
       if (start) facet_row[i++] = facet;
@@ -185,19 +184,12 @@ int DebugObj(const char* file_path, data_t *data) {
   return 0;
 }
 
-// int msec = 0, trigger = 10; /* 10ms */
-// clock_t before = clock();
-// 
-// do {
-//   /*
-//    * Do something to busy the CPU just here while you drink a coffee
-//    * Be sure this code will not take more than `trigger` ms
-//    */
-// 
-//   clock_t difference = clock() - before;
-//   msec = difference * 1000 / CLOCKS_PER_SEC;
-//   iterations++;
-// } while ( msec < trigger );
-// 
-// printf("Time taken %d seconds %d milliseconds (%d iterations)\n",
-//   msec/1000, msec%1000, iterations);
+void RemoveObject(data_t* obj) {
+  if (obj) {
+    printf("Null Down\n");
+    free((obj)->lines_array);
+    free((obj)->vertex_array);
+    free(obj);
+  }
+}
+

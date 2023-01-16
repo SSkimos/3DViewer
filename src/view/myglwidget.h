@@ -13,6 +13,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "../model/s21_data_structure.h"
 #include <QMessageBox>
 #include <QMouseEvent>
 #include <QOpenGLBuffer>
@@ -55,10 +56,16 @@ private:
    double scale;
    QOpenGLShaderProgram *prog = nullptr;
    int GetData();
+   int ModifyData();
+   int DrawData();
+   data_t *object;
+   int file_load;
    int vertex_count;
    int lines_count;
    float *vertex_array;
    unsigned int *lines_array;
+   float* base_vertex_array;
+   unsigned int* base_lines_array;
    QVector3D lineColorV = {1, 1, 1};
    QVector3D verticleColorV = {1, 0, 0};
    int m_coeffMatrixLoc = 0;

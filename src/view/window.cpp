@@ -100,10 +100,16 @@ void Window::SetMoveZ(QSettings *settings) {
 
 void Window::on_chooseFileButton_clicked()
 {
+    QString old_filename = ui->widget->filename;
     ui->widget->filename = QFileDialog::getOpenFileName(
-                this, tr("Choose File"),
-                "Desktop",
-                "All files (*.*)"
-    );
-    if (ui->widget->filename.size() > 0) ui->statusbar->showMessage(ui->widget->filename);
+        this, tr("Choose File"),
+        "Desktop",
+        "All files (*.*)"
+        );
+    if (ui->widget->filename.size() > 0) {
+      ui->statusbar->showMessage(ui->widget->filename);
+      if (old_filename != ui->widget->filename) {
+        ui->widget->file_load = 1;
+      }
+    }
 }
