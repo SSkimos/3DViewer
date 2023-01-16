@@ -44,11 +44,13 @@ int CountObj(const char* file_path, data_t* data) {
   int f_analysis = 0;
   data->vertices_count = 0;
   data->facets_count = 0;
+  data->size_f = 0;
   while (fgets(line, MAX_SIZE, obj) != NULL && (!feof(obj))) {
     if (FormatCheck(line) == VERTICE) {
       long double tmp1 = 0, tmp2 = 0, tmp3 = 0;
       data->vertices_count += 3;
     } else if (FormatCheck(line) == FACET) {
+      data->size_f += FacetsAnalyzer(line);
       (data->facets_count)++;
     }
   }
@@ -80,7 +82,7 @@ int ParseObj(const char* file_path, data_t** data) {
   int mas = (*data)->vertices_count * 3;
   int facets_memory = 1;
   float* vertexes = calloc(mas, sizeof(float));
-  unsigned int* facets = calloc(facets_memory, sizeof(unsigned int));
+  unsigned int* facets = calloc((*data)->size_f * 2, sizeof(unsigned int));
   int i = 0;
   int j = 0;
   int start = 0;
@@ -93,18 +95,14 @@ int ParseObj(const char* file_path, data_t** data) {
         (*data)->max_vert = max_elem(vertexes[a], vertexes[b], vertexes[c]);
         i+=3;
       } else if (FormatCheck(line) == FACET) {
-        facets_memory += FacetsAnalyzer(line);
-        facets = realloc(facets, facets_memory * 2 * sizeof(unsigned int));
         ArrayFacetFactory(line, facets, &j);
         if (!start) first_facet = facets[0];
       }
     }
   } 
-  /* facets = realloc(facets, 1 + facets_memory * 2 * sizeof(unsigned int));
-     facets[j+1] = first_facet; */
+  (*data)->size_f = j;
   (*data)->base_vertex_array = vertexes;
   (*data)->base_lines_array = facets;
-  (*data)->size_f = j;
   (*data)->vertex_array = calloc(mas, sizeof(float));
   (*data)->lines_array = calloc(j, sizeof(unsigned int));
   free(line);
@@ -120,21 +118,6 @@ FILE* OpenFile(const char* filename) {
     exit(1);
   }
   return fp;
-}
-
-vertices_t VerticeParser(const char* line) {
-  vertices_t xyz = {0};
-  size_t index = 0;
-  for (; *line != '\0' && *line !='\n'; ++line) {
-    if (*line == 'v') {
-      continue;
-    } else if (isdigit(*line)) {
-
-    } else if (*line == ' ') {
-      index++;
-    }
-  }
-  return xyz;
 }
 
 int FormatCheck(const char* line) {

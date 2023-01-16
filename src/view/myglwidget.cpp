@@ -48,7 +48,7 @@ void MyGLWidget::paintGL(void) {
   glClearColor(0, 0, 0, 1); // настраиваю цвет окна
   prog->bind();
   if (file_load == 1) {
-    RemoveObject(object);
+    // RemoveObject(object);
     GetData();
     file_load = 0;
   }
