@@ -102,10 +102,10 @@ matrix_t* AddRotateX(matrix_t** affine, affine_t* data) {
     FillDiagonalOnes(&rotateX);
     if (data->rotateX) {
       double rotate = data->rotateX / 10;
-      rotateX->matrix[0][0] = cos(rotate);
-      rotateX->matrix[0][1] = sin(rotate);
-      rotateX->matrix[1][0] =-sin(rotate);
       rotateX->matrix[1][1] = cos(rotate);
+      rotateX->matrix[1][2] =-sin(rotate);
+      rotateX->matrix[2][1] = sin(rotate);
+      rotateX->matrix[2][2] = cos(rotate);
     }
   }
   return rotateX;
@@ -119,10 +119,10 @@ matrix_t* AddRotateY(matrix_t** affine, affine_t* data) {
     FillDiagonalOnes(&rotateY);
     if (data->rotateY) {
       double rotate = data->rotateY / 10;
-      rotateY->matrix[1][1] = cos(rotate);
-      rotateY->matrix[1][2] = sin(rotate);
-      rotateY->matrix[2][1] =-sin(rotate);
-      rotateY->matrix[2][2] = cos(rotate);
+      rotateY->matrix[0][0] = cos(-rotate);
+      rotateY->matrix[0][2] = -sin(-rotate);
+      rotateY->matrix[2][0] = sin(-rotate);
+      rotateY->matrix[2][2] = cos(-rotate);
     }
   }
   return rotateY;
@@ -136,9 +136,9 @@ matrix_t* AddRotateZ(matrix_t** affine, affine_t* data) {
     if (data->rotateZ) {
       double rotate = data->rotateY / 10;
       rotateZ->matrix[0][0] = cos(rotate);
-      rotateZ->matrix[0][2] = -sin(rotate);
-      rotateZ->matrix[2][0] = sin(rotate);
-      rotateZ->matrix[2][2] = cos(rotate);
+      rotateZ->matrix[0][1] = -sin(rotate);
+      rotateZ->matrix[1][0] = sin(rotate);
+      rotateZ->matrix[1][1] = cos(rotate);
     }
   }
   return rotateZ;
