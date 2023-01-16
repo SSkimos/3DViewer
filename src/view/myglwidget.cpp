@@ -14,9 +14,6 @@ MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 void MyGLWidget::initializeGL(void) {
   glEnable(GL_DEPTH_TEST);
   prog = compileShaders();
-  file_load = 1;
-  qDebug() << "Nullify";
-  object = NULL;
 }
 
 QOpenGLShaderProgram *MyGLWidget::compileShaders() {
@@ -48,82 +45,67 @@ QOpenGLShaderProgram *MyGLWidget::compileShaders() {
 void MyGLWidget::paintGL(void) {
   glClearColor(0, 0, 0, 1); // настраиваю цвет окна
   prog->bind();
-    std::cout << "maybe object" << std::endl;
-  if (!object) {
-    if (file_load == 0) RemoveObject(object);
-    std::cout << "no object" << std::endl;
-    file_load = GetData();
+  // std::cout << moveX << std::endl;
+  // TODO: функция, для получения массива из файла
+  // TODO: набор функций, в результате выполнения которых мы получаем буффер матрицу, которую загрузим в файл
+  // TODO: удалить add_example()
+  int data = GetData();
+  if (data > 0) {
+     initBuffers();
   }
-  if (object && file_load == 0) {
-    ModifyData();
-    initBuffers();
-  }
-}
-
-int inad = 0;
-
-int MyGLWidget::ModifyData(void) {
-  affine_t* v = (affine_t*) malloc(1*sizeof(*v));
-  for (size_t i = 0; i != object->vertices_count; ++i) {
-    object->vertex_array[i] = object->base_vertex_array[i];
-  }
-  for (size_t i = 0; i != object->size_f; ++i) {
-    object->lines_array[i] = object->base_vertex_array[i];
-  }
-  if (v) {
-    v->rotateX = rotateX;
-    v->rotateY = rotateY;
-    v->rotateZ = rotateZ;
-    v->scale = scale_val;
-    v->moveX = moveX / 100.0;
-    v->moveY = moveY / 100.0;
-    v->moveZ = moveZ / 100.0;
-    std::cout << "tryng object" << std::endl;
-    MoveAndRotateModel(&object, v);
-  }
-  free(v);
-  vertex_array = object->vertex_array;
-  lines_array = object->lines_array;
-  std::cout << vertex_count << ' ' << (++inad) << std::endl;
 }
 
 int MyGLWidget::GetData() {
   int ret_code = 0;
+  // vertex_count = 8;
+  // vertex_array = new float[3 * vertex_count]; // CALLOC
+
+  // data_t* s = ParseCountObj("model/obj/cube.obj");
   int debug = 1;
-  // if max == 4000
-  // scale = 1/4000
-  if (filename.size() > 0) {
+  if (debug == 1 || filename.size() > 0) {
+    affine_t* v = (affine_t*) malloc(1*sizeof(*v));
+    v->rotateX = rotateX;
+    v->rotateY = rotateY;
+    v->rotateZ = rotateZ;
+    v->scale = scale_val;
+    // std::cout << v->rotateX << std::endl;
+    v->moveX = moveX / 100.0;
+    v->moveY = moveY / 100.0;
+    v->moveZ = moveZ / 100.0;
+    // printf("%f = F\n", v->moveZ);
+    // const char *c_str2 =  "model/obj/cube.obj";
     const char *c_str2 =  qPrintable(filename);
-    if (c_str2 && strlen(c_str2) > 0) { 
-      if (!debug) object = ParseCountObj(c_str2);
-      else object = ParseCountObj("obj/cube.obj");
-      vertex_count = object->vertices_count / 3;
-      lines_count = object->facets_count;
-      base_vertex_array = object->vertex_array;
-      base_lines_array = object->lines_array;
+    if (c_str2 && strlen(c_str2) > 1 || debug == 1) { 
+      data_t* s = ParseCountObj("obj/cube.obj");
+      MoveAndRotateModel(&s, v);
+      vertex_count = s->vertices_count / 3;
+      lines_count = s->facets_count;
+      vertex_array = s->base_vertex_array;
+      lines_array = s->base_lines_array;
     }
-  } else {
+    free(v);
     ret_code = 1;
+  } else {
+    ret_code = 0;
   }
   return ret_code;
 }
+void MyGLWidget::add_example() {
+    vertex_count = 4;
+    vertex_array = new float[3 * vertex_count];
+    float buff_vertex[] = {-0.5, 0,   -0.5, 0.5, 0,    -0.5,
+                           0,    0.5, -0.5, 0,   -0.5, -1};
+    for (int i = 0; i < vertex_count * 3; i++) {
+        vertex_array[i] = buff_vertex[i];
+    }
 
-/* void MyGLWidget::add_example() {
-   vertex_count = 4;
-   vertex_array = new float[3 * vertex_count];
-   float buff_vertex[] = {-0.5, 0,   -0.5, 0.5, 0,    -0.5,
-   0,    0.5, -0.5, 0,   -0.5, -1};
-   for (int i = 0; i < vertex_count * 3; i++) {
-   vertex_array[i] = buff_vertex[i];
-   }
-
-   lines_count = 6;
-   unsigned int buff_lines[] = {0, 1, 1, 2, 2, 0, 0, 3, 1, 3, 2, 3};
-   lines_array = new unsigned int[2 * lines_count];
-   for (int i = 0; i < 2 * lines_count; i++) {
-   lines_array[i] = buff_lines[i];
-   }
-   } */
+    lines_count = 6;
+    unsigned int buff_lines[] = {0, 1, 1, 2, 2, 0, 0, 3, 1, 3, 2, 3};
+    lines_array = new unsigned int[2 * lines_count];
+    for (int i = 0; i < 2 * lines_count; i++) {
+        lines_array[i] = buff_lines[i];
+    }
+}
 
 void MyGLWidget::initBuffers() {
   clearBuffers();
@@ -151,7 +133,7 @@ void MyGLWidget::initBuffers() {
 
   glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_TEST);
 
-  lineColorV = {1, 4, 0};
+  lineColorV = {1, 0, 0};
 
   prog->setUniformValue(prog->uniformLocation("color"), lineColorV);
 
