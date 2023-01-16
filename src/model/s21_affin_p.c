@@ -35,16 +35,18 @@ transformation_t* FactoryTransformation(data_t** info, affine_t* vector) {
 
 matrix_t* FactoryAffine(affine_t* data) {
   matrix_t* modificator_dot = CreateMatrix(4, 4);
-  FillDiagonalOnes(&modificator_dot);
-  AddRotateXYZ(&modificator_dot, data);
-  AddMoveXYZ(&modificator_dot, data);
-  AddScale(&modificator_dot, data);
+  if (modificator_dot) {
+    FillDiagonalOnes(&modificator_dot);
+    AddRotateXYZ(&modificator_dot, data);
+    AddMoveXYZ(&modificator_dot, data);
+    AddScale(&modificator_dot, data);
+  }
   return modificator_dot;
 }
 
 
 matrix_t* CreateDot() {
-    return CreateMatrix(4, 1);
+  return CreateMatrix(4, 1);
 }
 
 void InputDot(transformation_t* all_data) {
@@ -61,14 +63,14 @@ void InputDot(transformation_t* all_data) {
 }
 
 void TransformateDot(transformation_t* dataset) {
-    matrix_t result_vector = {0};
-    s21_mult_matrix(dataset->pack->affine, dataset->pack->data, &result_vector); 
+  matrix_t result_vector = {0};
+  s21_mult_matrix(dataset->pack->affine, dataset->pack->data, &result_vector); 
 
-    (*dataset->object)->vertex_array[*dataset->vertex_ind-3] = result_vector.matrix[kX][0];
-    (*dataset->object)->vertex_array[*dataset->vertex_ind-2] = result_vector.matrix[kY][0];
-    (*dataset->object)->vertex_array[*dataset->vertex_ind-1] = result_vector.matrix[kZ][0];
+  (*dataset->object)->vertex_array[*dataset->vertex_ind-3] = result_vector.matrix[kX][0];
+  (*dataset->object)->vertex_array[*dataset->vertex_ind-2] = result_vector.matrix[kY][0];
+  (*dataset->object)->vertex_array[*dataset->vertex_ind-1] = result_vector.matrix[kZ][0];
 
-    s21_remove_matrix(&result_vector);
+  s21_remove_matrix(&result_vector);
 }
 
 
@@ -86,8 +88,8 @@ void AddScale(matrix_t** affine, affine_t* data) {
         (*affine)->matrix[i][j] = result.matrix[i][j];
       }
     }
-  RemoveMatrix(scale_matrix);
-  s21_remove_matrix(&result);
+    RemoveMatrix(scale_matrix);
+    s21_remove_matrix(&result);
   }
 }
 
@@ -109,14 +111,14 @@ matrix_t* AddRotateY(matrix_t** affine, affine_t* data) {
   matrix_t * rotateY = NULL;
   rotateY = CreateMatrix(4, 4);
   if (rotateY) {
-  FillDiagonalOnes(&rotateY);
-  if (data->rotateY) {
-    double rotate = data->rotateY / 10;
-    rotateY->matrix[1][1] = cos(rotate);
-    rotateY->matrix[1][2] = sin(rotate);
-    rotateY->matrix[2][1] =-sin(rotate);
-    rotateY->matrix[2][2] = cos(rotate);
-  }
+    FillDiagonalOnes(&rotateY);
+    if (data->rotateY) {
+      double rotate = data->rotateY / 10;
+      rotateY->matrix[1][1] = cos(rotate);
+      rotateY->matrix[1][2] = sin(rotate);
+      rotateY->matrix[2][1] =-sin(rotate);
+      rotateY->matrix[2][2] = cos(rotate);
+    }
   }
   return rotateY;
 }
@@ -175,8 +177,10 @@ void FillDiagonalOnes(matrix_t** m) {
 
 matrices_t* PackMatrices(matrix_t* m, matrix_t*p) {
   matrices_t* pack = malloc(1*sizeof(*pack));
-  pack->affine = m;
-  pack->data = p;
+  if (pack) {
+    pack->affine = m;
+    pack->data = p;
+  }
   return pack;
 }
 
