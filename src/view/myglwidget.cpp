@@ -14,6 +14,8 @@ MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 void MyGLWidget::initializeGL(void) {
   glEnable(GL_DEPTH_TEST);
   prog = compileShaders();
+  file_load = 0;
+  object = NULL;
 }
 
 QOpenGLShaderProgram *MyGLWidget::compileShaders() {
@@ -53,10 +55,6 @@ void MyGLWidget::paintGL(void) {
 
 int MyGLWidget::GetData() {
   int ret_code = 0;
-  // vertex_count = 8;
-  // vertex_array = new float[3 * vertex_count]; // CALLOC
-
-  // data_t* s = ParseCountObj("model/obj/cube.obj");
   int debug = 1;
   if (debug == 1 || filename.size() > 0) {
     affine_t* v = (affine_t*) malloc(1*sizeof(*v));
@@ -69,18 +67,18 @@ int MyGLWidget::GetData() {
     v->moveZ = moveZ / 100.0;
     const char *c_str2 =  qPrintable(filename);
     if (c_str2 && strlen(c_str2) > 1 || debug == 1) { 
-      data_t* s = ParseCountObj("obj/cube.obj");
-      for (int i = 0; i != s->vertices_count; ++i) {
-        s->vertex_array[i] = s->base_vertex_array[i];
+      object = ParseCountObj("obj/cube.obj");
+      for (int i = 0; i != object->vertices_count; ++i) {
+        object->vertex_array[i] = object->base_vertex_array[i];
       }
-      for (int i = 0; i != s->size_f; ++i) {
-        s->lines_array[i] = s->base_lines_array[i];
+      for (int i = 0; i != object->size_f; ++i) {
+        object->lines_array[i] = object->base_lines_array[i];
       }
-      MoveAndRotateModel(&s, v);
-      vertex_count = s->vertices_count / 3;
-      lines_count = s->facets_count;
-      vertex_array = s->vertex_array;
-      lines_array = s->lines_array;
+      MoveAndRotateModel(&object, v);
+      vertex_count = object->vertices_count / 3;
+      lines_count = object->facets_count;
+      vertex_array = object->vertex_array;
+      lines_array = object->lines_array;
     }
     free(v);
     ret_code = 1;
@@ -88,22 +86,6 @@ int MyGLWidget::GetData() {
     ret_code = 0;
   }
   return ret_code;
-}
-void MyGLWidget::add_example() {
-    vertex_count = 4;
-    vertex_array = new float[3 * vertex_count];
-    float buff_vertex[] = {-0.5, 0,   -0.5, 0.5, 0,    -0.5,
-                           0,    0.5, -0.5, 0,   -0.5, -1};
-    for (int i = 0; i < vertex_count * 3; i++) {
-        vertex_array[i] = buff_vertex[i];
-    }
-
-    lines_count = 6;
-    unsigned int buff_lines[] = {0, 1, 1, 2, 2, 0, 0, 3, 1, 3, 2, 3};
-    lines_array = new unsigned int[2 * lines_count];
-    for (int i = 0; i < 2 * lines_count; i++) {
-        lines_array[i] = buff_lines[i];
-    }
 }
 
 void MyGLWidget::initBuffers() {
