@@ -59,7 +59,8 @@ void MyGLWidget::paintGL(void) {
 }
 
 int MyGLWidget::ModifyData(void) {
-    affine_t* v = (affine_t*) malloc(1*sizeof(*v));
+  affine_t* v = (affine_t*) malloc(1*sizeof(*v));
+  if (v) {
     v->rotateX = rotateX;
     v->rotateY = rotateY;
     v->rotateZ = rotateZ;
@@ -76,6 +77,8 @@ int MyGLWidget::ModifyData(void) {
     MoveAndRotateModel(&object, v);
     vertex_array = object->vertex_array;
     lines_array = object->lines_array;
+    free(v);
+  }
 }
 
 int MyGLWidget::GetData() {
@@ -85,8 +88,10 @@ int MyGLWidget::GetData() {
     const char *c_str2 =  qPrintable(filename);
     if (c_str2 && strlen(c_str2) > 1 || debug == 1) { 
       object = ParseCountObj(c_str2);
-      vertex_count = object->vertices_count / 3;
-      lines_count = object->facets_count;
+      if (object) {
+        vertex_count = object->vertices_count / 3;
+        lines_count = object->facets_count;
+      }
     }
   } else {
     ret_code = 1;
