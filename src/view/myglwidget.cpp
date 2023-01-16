@@ -116,7 +116,7 @@ void MyGLWidget::initBuffers() {
   ibo.create();
   ibo.bind();
   ibo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
-  ibo.allocate(lines_array, sizeof(unsigned int) * 5 * lines_count);
+  ibo.allocate(lines_array, sizeof(unsigned int) * object->size_f);
 
   glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_TEST);
 
@@ -125,7 +125,7 @@ void MyGLWidget::initBuffers() {
   prog->setUniformValue(prog->uniformLocation("color"), lineColorV);
 
   glLineWidth(0.5);
-  glDrawElementsBaseVertex(GL_LINES, 5 * lines_count, GL_UNSIGNED_INT, 0, 0);
+  glDrawElementsBaseVertex(GL_LINES, object->size_f, GL_UNSIGNED_INT, 0, 0);
 
   vao.release();
 }
