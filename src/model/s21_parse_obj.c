@@ -10,8 +10,6 @@
 #define MAX_SIZE 512
 #define VERTICE 1
 #define FACET 2 
-#define MATRIX &(*data)->matrix_3d.matrix
-#define POLYGON (*data)->polygons
 
 
 data_t* ParseCountObj(const char* file_path) {
@@ -173,13 +171,13 @@ int DebugObj(const char* file_path, data_t *data) {
   int f = 0;
   for (int i = 0; i < data->vertices_count/3; i++) {
     for (int j = 0; j < 3; j++) {
-      printf("%f ", data->vertex_array[f++]);
+      printf("%f ", data->base_vertex_array[f++]);
     }
     printf("\n");
   }
   printf("FACET_DATA \n");
   for (int i = 0; i < data->size_f; i++) {
-    printf("%d ", data->lines_array[i]);
+    printf("%d ", data->base_lines_array[i]);
   }
   return 0;
 }
