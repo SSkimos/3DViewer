@@ -34,7 +34,7 @@ int ScaleObj(data_t** object) {
     a->moveX = 0;
     a->moveY = 0;
     a->moveZ = 0;
-    a->scale = 1/(*object)->max_vert;
+    a->scale = 1/(*object)->max_vert+(*object)->min_vert;
     MoveAndRotateModel(object, a);
   }
   free(a);
@@ -44,7 +44,7 @@ int ScaleObj(data_t** object) {
 int CountObj(const char* file_path, data_t* data) {
   FILE* obj = OpenFile(file_path);
 
-  size_t max_size = 128;
+  size_t max_size = MAX_SIZE;
   char* line = calloc(max_size, sizeof(*line));;
 
   int f_analysis = 0;
@@ -52,7 +52,7 @@ int CountObj(const char* file_path, data_t* data) {
   data->facets_count = 0;
   data->size_f = 0;
   if (line) {
-    while (fgets(line, MAX_SIZE, obj) != NULL && (!feof(obj))) {
+    while (fgets(line, MAX_SIZE-1, obj) != NULL && (!feof(obj))) {
       if (FormatCheck(line) == VERTICE) {
         long double tmp1 = 0, tmp2 = 0, tmp3 = 0;
         data->vertices_count += 3;
@@ -73,6 +73,18 @@ float max_elem(float a, float b, float c) {
   if (a >= b && a >= c) {
     ans = a;
   } else if (b >= a && b >= c) {
+    ans = b;
+  } else {
+    ans = c;
+  }
+  return ans;
+}
+
+float min_elem(float a, float b, float c) {
+  float ans = 0;
+  if (a <= b && a <= c) {
+    ans = a;
+  } else if (b <= a && b <= c) {
     ans = b;
   } else {
     ans = c;
@@ -101,6 +113,7 @@ int ParseObj(const char* file_path, data_t** data) {
         int a = i, b=i+1, c=i+2;
         sscanf(line, "v %f %f %f", &vertexes[a], &vertexes[b], &vertexes[c]);
         (*data)->max_vert = max_elem(vertexes[a], vertexes[b], vertexes[c]);
+        (*data)->min_vert = min_elem(vertexes[a], vertexes[b], vertexes[c]);
         i+=3;
       } else if (FormatCheck(line) == FACET) {
         ArrayFacetFactory(line, facets, &j);

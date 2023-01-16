@@ -16,6 +16,7 @@ typedef struct data {
   unsigned int size_f;
   unsigned int size_v;
   float max_vert;
+  float min_vert;
 } data_t;
 
 typedef struct vertices {
