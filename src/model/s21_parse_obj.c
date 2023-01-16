@@ -32,7 +32,7 @@ int CountObj(const char* file_path, data_t* data) {
   int f_analysis = 0;
   data->vertices_count = 0;
   data->facets_count = 0;
-  while ((getline(&line, &max_size, obj) != -1) && (!feof(obj))) {
+  while (fgets(line, MAX_SIZE, obj) != NULL && (!feof(obj))) {
     if (FormatCheck(line) == VERTICE) {
       long double tmp1 = 0, tmp2 = 0, tmp3 = 0;
       data->vertices_count += sscanf(line, "v %Lf %Lf %Lf", &tmp1, &tmp2, &tmp3);
@@ -76,7 +76,7 @@ int ParseObj(const char* file_path, data_t** data) {
     }
   } 
   /* facets = realloc(facets, 1 + facets_memory * 2 * sizeof(unsigned int));
-  facets[j+1] = first_facet; */
+     facets[j+1] = first_facet; */
   (*data)->base_vertex_array = vertexes;
   (*data)->base_lines_array = facets;
   (*data)->size_f = j;
