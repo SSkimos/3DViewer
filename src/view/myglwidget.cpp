@@ -14,7 +14,7 @@ MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 void MyGLWidget::initializeGL(void) {
   glEnable(GL_DEPTH_TEST);
   prog = compileShaders();
-  file_load = 0;
+  file_load = 1;
   object = NULL;
 }
 
@@ -47,16 +47,17 @@ QOpenGLShaderProgram *MyGLWidget::compileShaders() {
 void MyGLWidget::paintGL(void) {
   glClearColor(0, 0, 0, 1); // настраиваю цвет окна
   prog->bind();
-  int data = GetData();
-  if (data > 0) {
-     initBuffers();
+  if (file_load == 1) {
+    GetData();
+    file_load = 0;
+  }
+  if (object) {
+    ModifyData();
+    initBuffers();
   }
 }
 
-int MyGLWidget::GetData() {
-  int ret_code = 0;
-  int debug = 1;
-  if (debug == 1 || filename.size() > 0) {
+int MyGLWidget::ModifyData(void) {
     affine_t* v = (affine_t*) malloc(1*sizeof(*v));
     v->rotateX = rotateX;
     v->rotateY = rotateY;
@@ -65,25 +66,29 @@ int MyGLWidget::GetData() {
     v->moveX = moveX / 100.0;
     v->moveY = moveY / 100.0;
     v->moveZ = moveZ / 100.0;
+    for (int i = 0; i != object->vertices_count; ++i) {
+      object->vertex_array[i] = object->base_vertex_array[i];
+    }
+    for (int i = 0; i != object->size_f; ++i) {
+      object->lines_array[i] = object->base_lines_array[i];
+    }
+    MoveAndRotateModel(&object, v);
+    vertex_array = object->vertex_array;
+    lines_array = object->lines_array;
+}
+
+int MyGLWidget::GetData() {
+  int ret_code = 0;
+  int debug = 1;
+  if (debug == 1 || filename.size() > 0) {
     const char *c_str2 =  qPrintable(filename);
     if (c_str2 && strlen(c_str2) > 1 || debug == 1) { 
       object = ParseCountObj("obj/cube.obj");
-      for (int i = 0; i != object->vertices_count; ++i) {
-        object->vertex_array[i] = object->base_vertex_array[i];
-      }
-      for (int i = 0; i != object->size_f; ++i) {
-        object->lines_array[i] = object->base_lines_array[i];
-      }
-      MoveAndRotateModel(&object, v);
       vertex_count = object->vertices_count / 3;
       lines_count = object->facets_count;
-      vertex_array = object->vertex_array;
-      lines_array = object->lines_array;
     }
-    free(v);
-    ret_code = 1;
   } else {
-    ret_code = 0;
+    ret_code = 1;
   }
   return ret_code;
 }
