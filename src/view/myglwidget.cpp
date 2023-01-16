@@ -73,7 +73,8 @@ int MyGLWidget::GetData() {
     v->moveY = moveY / 100.0;
     v->moveZ = moveZ / 100.0;
     // printf("%f = F\n", v->moveZ);
-    const char *c_str2 =  "model/obj/cube.obj";
+    // const char *c_str2 =  "model/obj/cube.obj";
+    const char *c_str2 =  qPrintable(filename);
     if (c_str2 && strlen(c_str2) > 1) { 
       data_t* s = ParseCountObj(c_str2);
       MoveAndRotateModel(&s, v);
