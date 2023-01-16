@@ -1,4 +1,5 @@
 #include "myglwidget.h"
+#include <QDebug>
 #include <string>
 #include "../model/s21_data_structure.h"
 #include "../model/s21_parse_obj.h"
@@ -13,6 +14,8 @@ MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 void MyGLWidget::initializeGL(void) {
   glEnable(GL_DEPTH_TEST);
   prog = compileShaders();
+  file_load = 1;
+  object = NULL;
 }
 
 QOpenGLShaderProgram *MyGLWidget::compileShaders() {
@@ -44,38 +47,51 @@ QOpenGLShaderProgram *MyGLWidget::compileShaders() {
 void MyGLWidget::paintGL(void) {
   glClearColor(0, 0, 0, 1); // настраиваю цвет окна
   prog->bind();
-  // std::cout << moveX << std::endl;
-  // TODO: функция, для получения массива из файла
-  // TODO: набор функций, в результате выполнения которых мы получаем буффер матрицу, которую загрузим в файл
-  // TODO: удалить add_example()
-  GetData();
-  initBuffers();
+  if (file_load == 1) {
+    RemoveObject(object);
+    GetData();
+    file_load = 0;
+  }
+  if (object) {
+    ModifyData();
+    initBuffers();
+  }
 }
 
-void MyGLWidget::GetData() {
-  // vertex_count = 8;
-  // vertex_array = new float[3 * vertex_count]; // CALLOC
+int MyGLWidget::ModifyData(void) {
+    affine_t* v = (affine_t*) malloc(1*sizeof(*v));
+    v->rotateX = rotateX;
+    v->rotateY = rotateY;
+    v->rotateZ = rotateZ;
+    v->scale = scale_val;
+    v->moveX = moveX / 100.0;
+    v->moveY = moveY / 100.0;
+    v->moveZ = moveZ / 100.0;
+    for (int i = 0; i != object->vertices_count; ++i) {
+      object->vertex_array[i] = object->base_vertex_array[i];
+    }
+    for (int i = 0; i != object->size_f; ++i) {
+      object->lines_array[i] = object->base_lines_array[i];
+    }
+    MoveAndRotateModel(&object, v);
+    vertex_array = object->vertex_array;
+    lines_array = object->lines_array;
+}
 
-  // data_t* s = ParseCountObj("model/obj/cube.obj");
-  affine_t* v = (affine_t*) malloc(1*sizeof(*v));
-  v->rotateX = rotateX;
-  v->rotateY = rotateY;
-  v->rotateZ = rotateZ;
-  v->moveX = moveX / 100.0;
-  v->moveY = moveY / 100.0;
-  v->moveZ = moveZ / 100.0;
-  printf("%f = F\n", v->moveZ);
-  // const char *c_str2 =  qPrintable(filename);
-  const char *c_str2 =  "model/obj/cube.obj";
-  if (c_str2 && strlen(c_str2) > 1) { 
-    data_t* s = ParseCountObj(c_str2);
-    MoveAndRotateModel(&s, v);
-    vertex_count = s->vertices_count;
-    lines_count = s->facets_count;
-    vertex_array = s->vertex_array;
-    lines_array = s->lines_array;
+int MyGLWidget::GetData() {
+  int ret_code = 0;
+  int debug = 1;
+  if (filename.size() > 0) {
+    const char *c_str2 =  qPrintable(filename);
+    if (c_str2 && strlen(c_str2) > 1 || debug == 1) { 
+      object = ParseCountObj(c_str2);
+      vertex_count = object->vertices_count / 3;
+      lines_count = object->facets_count;
+    }
+  } else {
+    ret_code = 1;
   }
-  free(v);
+  return ret_code;
 }
 
 void MyGLWidget::initBuffers() {
@@ -100,7 +116,7 @@ void MyGLWidget::initBuffers() {
   ibo.create();
   ibo.bind();
   ibo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
-  ibo.allocate(lines_array, sizeof(unsigned int) * 2 * lines_count);
+  ibo.allocate(lines_array, sizeof(unsigned int) * object->size_f);
 
   glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_TEST);
 
@@ -109,7 +125,7 @@ void MyGLWidget::initBuffers() {
   prog->setUniformValue(prog->uniformLocation("color"), lineColorV);
 
   glLineWidth(0.5);
-  glDrawElementsBaseVertex(GL_LINES, 2 * lines_count, GL_UNSIGNED_INT, 0, 0);
+  glDrawElementsBaseVertex(GL_LINES, object->size_f, GL_UNSIGNED_INT, 0, 0);
 
   vao.release();
 }

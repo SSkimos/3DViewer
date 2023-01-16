@@ -18,6 +18,8 @@ Window::Window(QWidget *parent)
         [this](const int& val)->void{ui->yMoveEdit->setText(locale().toString(val)); ui->widget->moveY = val; ui->widget->update();});
     connect(ui->zMoveSldr, &QSlider::valueChanged,
         [this](const int& val)->void{ui->zMoveEdit->setText(locale().toString(val)); ui->widget->moveZ = val; ui->widget->update();});
+    connect(ui->scaleSldr, &QSlider::valueChanged,
+        [this](const int& val)->void{ui->widget->scale_val = val; ui->widget->update();});
     RestoreSettings();
 }
 
@@ -98,10 +100,80 @@ void Window::SetMoveZ(QSettings *settings) {
 
 void Window::on_chooseFileButton_clicked()
 {
+    QString old_filename = ui->widget->filename;
     ui->widget->filename = QFileDialog::getOpenFileName(
-                this, tr("Choose File"),
-                "Desktop",
-                "All files (*.*)"
-    );
-    if (ui->widget->filename.size() > 0) ui->statusbar->showMessage(ui->widget->filename);
+        this, tr("Choose File"),
+        "Desktop",
+        "All files (*.*)"
+        );
+    if (ui->widget->filename.size() > 0) {
+      ui->statusbar->showMessage(ui->widget->filename);
+      if (old_filename != ui->widget->filename) {
+        ui->widget->file_load = 1;
+      }
+    }
 }
+
+/* void Window::oneGif() {
+  if (startTime == tmpTime) {
+    ui->widget->grab().scaled(640, 480, Qt::IgnoreAspectRatio).save(QDir::homePath() + "/screenshots/gif_obj/" + QString::number(counter) +".bmp");
+    counter++;
+    tmpTime += 1000 / GifFps;
+  }
+  if (startTime == 1000 * GifLength) {
+    createGif();
+    timer->stop();
+    counter = 1;
+  }
+  startTime += 1000 / GifFps;
+}
+
+void Window::createGif() {
+  QDir pathFile;
+  QDateTime dateTime = dateTime.currentDateTime();
+  QString currentDateTime = dateTime.toString("yyyy_MM_dd_HHmmss_zzz");
+  QString gif_name = QDir::homePath() + "/screenshots/" + currentDateTime + ".gif";
+  QByteArray ga = gif_name.toLocal8Bit();
+  GifWriter writer = {};
+  int err = 0;
+
+  if (GifBegin(&writer, ga.data(), 640, 480, 10, 8, false)) {
+    for (int i = 1; i <= 50; i++) {
+      if (err == 1) {
+        break;
+      }
+      QImage img(QDir::homePath() + "/screenshots/gif_obj/" + QString::number(i) +
+                 ".bmp");
+      if (!img.isNull()) {
+        if (GifWriteFrame(&writer,
+                          img.convertToFormat(QImage::Format_Indexed8)
+                              .convertToFormat(QImage::Format_RGBA8888)
+                              .constBits(),
+                          640, 480, 10, 8, false)) {
+        } else {
+          QMessageBox::critical(0, "Error", "Gif file can not be created...");
+          err = 1;
+        }
+      } else {
+        QMessageBox::critical(0, "Error", "Gif file can not be created...");
+        err = 1;
+      }
+    }
+    if (err == 0) {
+      GifEnd(&writer);
+    }
+  } else {
+    err = 1;
+    QMessageBox::critical(0, "Error", "Gif file can not be created...");
+  }
+
+  if (err == 1) {
+    if (QFile::exists(gif_name)) {
+      QFile::remove(gif_name);
+    }
+  }
+
+  pathFile.setPath(QDir::homePath() + "/screenshots/gif_obj/");
+  pathFile.removeRecursively();
+  ui->makeGIFButton->setEnabled(true);
+} */

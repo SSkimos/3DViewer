@@ -38,5 +38,14 @@ private:
     void SetMoveX(QSettings *settings); //TODO: не нравится нейминг
     void SetMoveY(QSettings *settings);
     void SetMoveZ(QSettings *settings);
+
+    void oneGif();
+    void createGif();
+
+    const int GifFps = 10, GifLength = 5;
+    QTimer *timer;
+    int startTime, tmpTime;
+    int counter = 1;
+
 };
 #endif // WINDOW_H
