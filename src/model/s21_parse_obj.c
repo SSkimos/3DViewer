@@ -1,4 +1,5 @@
 #include "s21_parse_obj.h"
+#include "s21_affin_p.h"
 #include "matrix_t/s21_matrix.h"
 #include "s21_data_structure.h"
 #include <ctype.h>
@@ -10,8 +11,6 @@
 #define MAX_SIZE 512
 #define VERTICE 1
 #define FACET 2 
-#define MATRIX &(*data)->matrix_3d.matrix
-#define POLYGON (*data)->polygons
 
 
 data_t* ParseCountObj(const char* file_path) {
@@ -19,12 +18,22 @@ data_t* ParseCountObj(const char* file_path) {
   if (data) {
     CountObj(file_path, data);
     ParseObj(file_path, &data);
-    DebugObj(file_path, data);
-    // FREE DATA !!!
+    // DebugObj(file_path, data);
+    ScaleObj(&data);
   }
   return data;
 }
 
+
+int ScaleObj(data_t** object) {
+  affine_t* a = malloc(1 * sizeof(*a));
+  if (a) {
+    a->scale = 1/(*object)->max_vert;
+    MoveAndRotateModel(object, a);
+  }
+  free(a);
+  return 0;
+}
 
 int CountObj(const char* file_path, data_t* data) {
   FILE* obj = OpenFile(file_path);
@@ -35,11 +44,13 @@ int CountObj(const char* file_path, data_t* data) {
   int f_analysis = 0;
   data->vertices_count = 0;
   data->facets_count = 0;
-  while ((getline(&line, &max_size, obj) != -1) && (!feof(obj))) {
+  data->size_f = 0;
+  while (fgets(line, MAX_SIZE, obj) != NULL && (!feof(obj))) {
     if (FormatCheck(line) == VERTICE) {
       long double tmp1 = 0, tmp2 = 0, tmp3 = 0;
-      data->vertices_count += sscanf(line, "v %Lf %Lf %Lf", &tmp1, &tmp2, &tmp3);
+      data->vertices_count += 3;
     } else if (FormatCheck(line) == FACET) {
+      data->size_f += FacetsAnalyzer(line);
       (data->facets_count)++;
     }
   }
@@ -48,6 +59,18 @@ int CountObj(const char* file_path, data_t* data) {
   return 0;
 }
 
+
+float max_elem(float a, float b, float c) {
+  float ans = 0;
+  if (a >= b && a >= c) {
+    ans = a;
+  } else if (b >= a && b >= c) {
+    ans = b;
+  } else {
+    ans = c;
+  }
+  return ans;
+}
 
 int ParseObj(const char* file_path, data_t** data) {
   FILE* obj = OpenFile(file_path);
@@ -58,8 +81,8 @@ int ParseObj(const char* file_path, data_t** data) {
   int f_analysis = 0;
   int mas = (*data)->vertices_count * 3;
   int facets_memory = 1;
-  float* vertexes = calloc(mas, sizeof(long double));
-  unsigned int* facets = calloc(facets_memory, sizeof(unsigned int));
+  float* vertexes = calloc(mas, sizeof(float));
+  unsigned int* facets = calloc((*data)->size_f * 2, sizeof(unsigned int));
   int i = 0;
   int j = 0;
   int start = 0;
@@ -69,20 +92,19 @@ int ParseObj(const char* file_path, data_t** data) {
       if (FormatCheck(line) == VERTICE) {
         int a = i, b=i+1, c=i+2;
         sscanf(line, "v %f %f %f", &vertexes[a], &vertexes[b], &vertexes[c]);
+        (*data)->max_vert = max_elem(vertexes[a], vertexes[b], vertexes[c]);
         i+=3;
       } else if (FormatCheck(line) == FACET) {
-        facets_memory += FacetsAnalyzer(line);
-        facets = realloc(facets, facets_memory * 2 * sizeof(unsigned int));
         ArrayFacetFactory(line, facets, &j);
         if (!start) first_facet = facets[0];
       }
     }
   } 
-  /* facets = realloc(facets, 1 + facets_memory * 2 * sizeof(unsigned int));
-  facets[j+1] = first_facet; */
-  (*data)->vertex_array = vertexes;
-  (*data)->lines_array = facets;
   (*data)->size_f = j;
+  (*data)->base_vertex_array = vertexes;
+  (*data)->base_lines_array = facets;
+  (*data)->vertex_array = calloc(mas, sizeof(float));
+  (*data)->lines_array = calloc(j, sizeof(unsigned int));
   free(line);
   fclose(obj);
   return 0;
@@ -92,24 +114,10 @@ FILE* OpenFile(const char* filename) {
   FILE* fp = fopen(filename, "r");
   if (!fp) {
     perror("File doesn't exist.");
+    fprintf(stderr, "%s\n", filename);
     exit(1);
   }
   return fp;
-}
-
-vertices_t VerticeParser(const char* line) {
-  vertices_t xyz = {0};
-  size_t index = 0;
-  for (; *line != '\0' && *line !='\n'; ++line) {
-    if (*line == 'v') {
-      continue;
-    } else if (isdigit(*line)) {
-
-    } else if (*line == ' ') {
-      index++;
-    }
-  }
-  return xyz;
 }
 
 int FormatCheck(const char* line) {
@@ -151,8 +159,6 @@ int ArrayFacetFactory(const char* line, unsigned int* facet_row, int* ind) {
   int first_facet_value = 0;
   while (num_pointer != NULL) {
     if (isdigit(*num_pointer)) {
-      // 1 7 5
-      // 1 7 7 5 5 1
       int facet = strtold(num_pointer, NULL) - 1;
       facet_row[i++] = facet;
       if (start) facet_row[i++] = facet;
@@ -174,30 +180,25 @@ int DebugObj(const char* file_path, data_t *data) {
   int f = 0;
   for (int i = 0; i < data->vertices_count/3; i++) {
     for (int j = 0; j < 3; j++) {
-      printf("%f ", data->vertex_array[f++]);
+      printf("%f ", data->base_vertex_array[f++]);
     }
     printf("\n");
   }
   printf("FACET_DATA \n");
   for (int i = 0; i < data->size_f; i++) {
-    printf("%d ", data->lines_array[i]);
+    printf("%d ", data->base_lines_array[i]);
   }
   return 0;
 }
 
-// int msec = 0, trigger = 10; /* 10ms */
-// clock_t before = clock();
-// 
-// do {
-//   /*
-//    * Do something to busy the CPU just here while you drink a coffee
-//    * Be sure this code will not take more than `trigger` ms
-//    */
-// 
-//   clock_t difference = clock() - before;
-//   msec = difference * 1000 / CLOCKS_PER_SEC;
-//   iterations++;
-// } while ( msec < trigger );
-// 
-// printf("Time taken %d seconds %d milliseconds (%d iterations)\n",
-//   msec/1000, msec%1000, iterations);
+void RemoveObject(data_t* obj) {
+  if (obj) {
+    printf("Null Down\n");
+    free(obj->lines_array);
+    free(obj->vertex_array);
+    free(obj->base_lines_array);
+    free(obj->base_vertex_array);
+    free(obj);
+  }
+}
+
