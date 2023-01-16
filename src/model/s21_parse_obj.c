@@ -1,4 +1,5 @@
 #include "s21_parse_obj.h"
+#include "s21_affin_p.h"
 #include "matrix_t/s21_matrix.h"
 #include "s21_data_structure.h"
 #include <ctype.h>
@@ -17,11 +18,22 @@ data_t* ParseCountObj(const char* file_path) {
   if (data) {
     CountObj(file_path, data);
     ParseObj(file_path, &data);
-    DebugObj(file_path, data);
+    // DebugObj(file_path, data);
+    ScaleObj(&data);
   }
   return data;
 }
 
+
+int ScaleObj(data_t** object) {
+  affine_t* a = malloc(1 * sizeof(*a));
+  if (a) {
+    a->scale = 1/(*object)->max_vert;
+    MoveAndRotateModel(object, a);
+  }
+  free(a);
+  return 0;
+}
 
 int CountObj(const char* file_path, data_t* data) {
   FILE* obj = OpenFile(file_path);
@@ -35,7 +47,7 @@ int CountObj(const char* file_path, data_t* data) {
   while (fgets(line, MAX_SIZE, obj) != NULL && (!feof(obj))) {
     if (FormatCheck(line) == VERTICE) {
       long double tmp1 = 0, tmp2 = 0, tmp3 = 0;
-      data->vertices_count += sscanf(line, "v %Lf %Lf %Lf", &tmp1, &tmp2, &tmp3);
+      data->vertices_count += 3;
     } else if (FormatCheck(line) == FACET) {
       (data->facets_count)++;
     }
@@ -45,6 +57,18 @@ int CountObj(const char* file_path, data_t* data) {
   return 0;
 }
 
+
+float max_elem(float a, float b, float c) {
+  float ans = 0;
+  if (a >= b && a >= c) {
+    ans = a;
+  } else if (b >= a && b >= c) {
+    ans = b;
+  } else {
+    ans = c;
+  }
+  return ans;
+}
 
 int ParseObj(const char* file_path, data_t** data) {
   FILE* obj = OpenFile(file_path);
@@ -66,6 +90,7 @@ int ParseObj(const char* file_path, data_t** data) {
       if (FormatCheck(line) == VERTICE) {
         int a = i, b=i+1, c=i+2;
         sscanf(line, "v %f %f %f", &vertexes[a], &vertexes[b], &vertexes[c]);
+        (*data)->max_vert = max_elem(vertexes[a], vertexes[b], vertexes[c]);
         i+=3;
       } else if (FormatCheck(line) == FACET) {
         facets_memory += FacetsAnalyzer(line);
@@ -91,6 +116,7 @@ FILE* OpenFile(const char* filename) {
   FILE* fp = fopen(filename, "r");
   if (!fp) {
     perror("File doesn't exist.");
+    fprintf(stderr, "%s\n", filename);
     exit(1);
   }
   return fp;

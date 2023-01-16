@@ -18,6 +18,7 @@ extern "C" {
   FILE* OpenFile(const char* filename);
   void RemoveObject(data_t* obj);
   int FormatCheck(const char* line);
+  int ScaleObj(data_t** object);
   int FacetsAnalyzer(const char* line);
   int FormatFacet(char* line, int facet_count);
 

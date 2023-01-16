@@ -81,12 +81,14 @@ int MyGLWidget::ModifyData(void) {
 int MyGLWidget::GetData() {
   int ret_code = 0;
   int debug = 1;
-  if (debug == 1 || filename.size() > 0) {
+  if (filename.size() > 0) {
     const char *c_str2 =  qPrintable(filename);
     if (c_str2 && strlen(c_str2) > 1 || debug == 1) { 
-      object = ParseCountObj("obj/cube.obj");
+      object = ParseCountObj(c_str2);
       vertex_count = object->vertices_count / 3;
       lines_count = object->facets_count;
+      qDebug() << vertex_count;
+      qDebug() << lines_count;
     }
   } else {
     ret_code = 1;

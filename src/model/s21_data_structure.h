@@ -15,6 +15,7 @@ typedef struct data {
   unsigned int* base_lines_array;
   unsigned int size_f;
   unsigned int size_v;
+  float max_vert;
 } data_t;
 
 typedef struct vertices {
