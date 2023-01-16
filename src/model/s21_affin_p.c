@@ -193,7 +193,8 @@ matrices_t* PackMatrices(matrix_t* m, matrix_t*p) {
 
 
 matrix_t* CreateMatrix(size_t row, size_t column) {
-  matrix_t* m = malloc(1*sizeof(*m));
+  matrix_t* m = malloc(1*sizeof(matrix_t));
+  if (!m) exit(1);
   if (m) s21_create_matrix(row, column, m);
   return m;
 }

@@ -137,7 +137,7 @@ int FormatCheck(const char* line) {
 
 int FacetsAnalyzer(const char* line) {
   int ret = 0;
-  char* number_char = calloc(strlen(line), sizeof(*number_char));
+  char* number_char = calloc(strlen(line) + 2, sizeof(*number_char));
   if (number_char) {
     strcpy(number_char, line);
     int num_count = 0;
