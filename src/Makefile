@@ -10,7 +10,7 @@ SRC     := $(shell find $(SRC_DIR) -name "s21*.c" | sed -e 's/\.\///')
 
 TEST_DIR    = tests
 TEST       := $(shell find $(TEST_DIR) -name "*.c" | sed -e 's/\.\///')
-TEST_FLAGS := --coverage -c -g
+TEST_FLAGS := --coverage -c -g $(CFLAGS)
 
 INC_DIRS   := $(shell find $(SRC_DIR) -type d)
 INC_FLAGS  := $(addprefix -I, $(INC_DIRS))
@@ -26,7 +26,7 @@ GCOV_OBJS := $(SRC:%.c=$(GCOV_OBJ_DIR)/%.o)
 DEC_TEST := model_test.c
 LIB      := libmodel.a
 
-all: launch
+all: test install
 
 test: test.out
 	./test.out

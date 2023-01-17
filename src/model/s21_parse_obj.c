@@ -1,16 +1,17 @@
 #include "s21_parse_obj.h"
-#include "s21_affin_p.h"
-#include "matrix_t/s21_matrix.h"
-#include "s21_data_structure.h"
+
 #include <ctype.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h>
 
+#include "matrix_t/s21_matrix.h"
+#include "s21_affin_p.h"
+#include "s21_data_structure.h"
 
 #define MAX_SIZE 512
 #define VERTICE 1
-#define FACET 2 
+#define FACET 2
 
 float max_elem(float a, float b, float c);
 float min_elem(float a, float b, float c);
@@ -45,7 +46,7 @@ int ScaleObj(data_t** object) {
     a->moveX = 0;
     a->moveY = 0;
     a->moveZ = 0;
-    a->scale = 1/(*object)->max_vert+(*object)->min_vert;
+    a->scale = 1 / (*object)->max_vert + (*object)->min_vert;
     MoveAndRotateModel(object, a);
   }
   free(a);
@@ -56,10 +57,11 @@ int CountObj(const char* file_path, data_t* data) {
   FILE* obj = OpenFile(file_path);
 
   size_t max_size = MAX_SIZE;
-  char* line = calloc(max_size, sizeof(*line));;
+  char* line = calloc(max_size, sizeof(*line));
+  ;
 
   if (line) {
-    while (fgets(line, MAX_SIZE-1, obj) != NULL && (!feof(obj))) {
+    while (fgets(line, MAX_SIZE - 1, obj) != NULL && (!feof(obj))) {
       if (FormatCheck(line) == 'v') {
         data->vertices_count += 3;
       } else if (FormatCheck(line) == 'f') {
@@ -73,13 +75,12 @@ int CountObj(const char* file_path, data_t* data) {
   return 0;
 }
 
-
-
 int ParseObj(const char* file_path, data_t** data) {
   FILE* obj = OpenFile(file_path);
 
   size_t max_size = MAX_SIZE;
-  char* line = calloc(max_size, sizeof(*line));;
+  char* line = calloc(max_size, sizeof(*line));
+  ;
 
   int mas = (*data)->vertices_count * 3;
   float* vertexes = calloc(mas, sizeof(float));
@@ -89,16 +90,16 @@ int ParseObj(const char* file_path, data_t** data) {
   if (vertexes) {
     while (fgets(line, MAX_SIZE, obj) != NULL && (!feof(obj))) {
       if (FormatCheck(line) == 'v') {
-        int a = i, b=i+1, c=i+2;
+        int a = i, b = i + 1, c = i + 2;
         sscanf(line, "v %f %f %f", &vertexes[a], &vertexes[b], &vertexes[c]);
         (*data)->max_vert = max_elem(vertexes[a], vertexes[b], vertexes[c]);
         (*data)->min_vert = min_elem(vertexes[a], vertexes[b], vertexes[c]);
-        i+=3;
+        i += 3;
       } else if (FormatCheck(line) == 'f') {
         ArrayFacetFactory(line, facets, &j);
       }
     }
-  } 
+  }
   (*data)->size_f = j;
   (*data)->base_vertex_array = vertexes;
   (*data)->base_lines_array = facets;
@@ -131,11 +132,11 @@ int FacetsAnalyzer(const char* line) {
   char* number_char = calloc(strlen(line) + 2, sizeof(*number_char));
   if (number_char) {
     strcpy(number_char, line);
-    char *num_pointer = strtok(number_char, " ");
+    char* num_pointer = strtok(number_char, " ");
     int i = 0;
     while (num_pointer != NULL) {
       if (isdigit(*num_pointer)) {
-        i++; 
+        i++;
       }
       num_pointer = strtok(NULL, " ");
     }
@@ -147,10 +148,9 @@ int FacetsAnalyzer(const char* line) {
   return ret;
 }
 
-
 int ArrayFacetFactory(const char* line, unsigned int* facet_row, int* ind) {
-  char* number_char = (char*) line;
-  char *num_pointer = strtok(number_char, " ");
+  char* number_char = (char*)line;
+  char* num_pointer = strtok(number_char, " ");
   int i = *ind;
   int ret = 0;
   int start = 0;
@@ -159,8 +159,10 @@ int ArrayFacetFactory(const char* line, unsigned int* facet_row, int* ind) {
     if (isdigit(*num_pointer)) {
       int facet = strtold(num_pointer, NULL) - 1;
       facet_row[i++] = facet;
-      if (start) facet_row[i++] = facet;
-      else first_facet_value = facet; 
+      if (start)
+        facet_row[i++] = facet;
+      else
+        first_facet_value = facet;
       start = 1;
     }
     num_pointer = strtok(NULL, " ");
@@ -170,13 +172,13 @@ int ArrayFacetFactory(const char* line, unsigned int* facet_row, int* ind) {
   return ret;
 }
 
-int DebugObj(const char* file_path, data_t *data) {
+int DebugObj(const char* file_path, data_t* data) {
   printf("%s = FILE\n", file_path);
   printf("%d = vertices_count\n", data->vertices_count);
   printf("%d = facets_count \n", data->facets_count);
   printf("VERTICES_MATRIX \n");
   int f = 0;
-  for (size_t i = 0; i < data->vertices_count/3; i++) {
+  for (size_t i = 0; i < data->vertices_count / 3; i++) {
     for (size_t j = 0; j < 3; j++) {
       printf("%f ", data->base_vertex_array[f++]);
     }

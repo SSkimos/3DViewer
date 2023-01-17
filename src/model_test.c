@@ -1,7 +1,7 @@
 #include <check.h>
-
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "tests/suites.h"
 
 int main() {
@@ -15,4 +15,3 @@ int main() {
   srunner_free(runner);
   return (no_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
-
