@@ -12,18 +12,29 @@
 #define VERTICE 1
 #define FACET 2 
 
+float max_elem(float a, float b, float c);
+float min_elem(float a, float b, float c);
+data_t* InitData();
 
 data_t* ParseCountObj(const char* file_path) {
-  data_t* data = calloc(1, sizeof(*data));
+  data_t* data = InitData();
   if (data) {
     CountObj(file_path, data);
     ParseObj(file_path, &data);
-    // DebugObj(file_path, data);
     ScaleObj(&data);
   }
   return data;
 }
 
+data_t* InitData() {
+  data_t* data = calloc(1, sizeof(*data));
+  if (data) {
+    data->vertices_count = 0;
+    data->facets_count = 0;
+    data->size_f = 0;
+  }
+  return data;
+}
 
 int ScaleObj(data_t** object) {
   affine_t* a = malloc(1 * sizeof(*a));
@@ -47,16 +58,11 @@ int CountObj(const char* file_path, data_t* data) {
   size_t max_size = MAX_SIZE;
   char* line = calloc(max_size, sizeof(*line));;
 
-  int f_analysis = 0;
-  data->vertices_count = 0;
-  data->facets_count = 0;
-  data->size_f = 0;
   if (line) {
     while (fgets(line, MAX_SIZE-1, obj) != NULL && (!feof(obj))) {
-      if (FormatCheck(line) == VERTICE) {
-        long double tmp1 = 0, tmp2 = 0, tmp3 = 0;
+      if (FormatCheck(line) == 'v') {
         data->vertices_count += 3;
-      } else if (FormatCheck(line) == FACET) {
+      } else if (FormatCheck(line) == 'f') {
         data->size_f += FacetsAnalyzer(line);
         (data->facets_count)++;
       }
@@ -68,29 +74,6 @@ int CountObj(const char* file_path, data_t* data) {
 }
 
 
-float max_elem(float a, float b, float c) {
-  float ans = 0;
-  if (a >= b && a >= c) {
-    ans = a;
-  } else if (b >= a && b >= c) {
-    ans = b;
-  } else {
-    ans = c;
-  }
-  return ans;
-}
-
-float min_elem(float a, float b, float c) {
-  float ans = 0;
-  if (a <= b && a <= c) {
-    ans = a;
-  } else if (b <= a && b <= c) {
-    ans = b;
-  } else {
-    ans = c;
-  }
-  return ans;
-}
 
 int ParseObj(const char* file_path, data_t** data) {
   FILE* obj = OpenFile(file_path);
@@ -98,26 +81,21 @@ int ParseObj(const char* file_path, data_t** data) {
   size_t max_size = MAX_SIZE;
   char* line = calloc(max_size, sizeof(*line));;
 
-  int f_analysis = 0;
   int mas = (*data)->vertices_count * 3;
-  int facets_memory = 1;
   float* vertexes = calloc(mas, sizeof(float));
   unsigned int* facets = calloc((*data)->size_f * 2, sizeof(unsigned int));
   int i = 0;
   int j = 0;
-  int start = 0;
-  int first_facet = 0;
   if (vertexes) {
     while (fgets(line, MAX_SIZE, obj) != NULL && (!feof(obj))) {
-      if (FormatCheck(line) == VERTICE) {
+      if (FormatCheck(line) == 'v') {
         int a = i, b=i+1, c=i+2;
         sscanf(line, "v %f %f %f", &vertexes[a], &vertexes[b], &vertexes[c]);
         (*data)->max_vert = max_elem(vertexes[a], vertexes[b], vertexes[c]);
         (*data)->min_vert = min_elem(vertexes[a], vertexes[b], vertexes[c]);
         i+=3;
-      } else if (FormatCheck(line) == FACET) {
+      } else if (FormatCheck(line) == 'f') {
         ArrayFacetFactory(line, facets, &j);
-        if (!start) first_facet = facets[0];
       }
     }
   } 
@@ -141,10 +119,10 @@ FILE* OpenFile(const char* filename) {
   return fp;
 }
 
-int FormatCheck(const char* line) {
-  int ret = 0;
-  if ((line[0] == 'v') && (line[1] == ' ' || isdigit(line[1]))) ret = 1; 
-  if (line[0] == 'f') ret = 2;
+char FormatCheck(const char* line) {
+  char ret = 0;
+  if ((line[0] == 'v') && (line[1] == ' ' || isdigit(line[1]))) ret = 'v';
+  if (line[0] == 'f') ret = 'f';
   return ret;
 }
 
@@ -153,7 +131,6 @@ int FacetsAnalyzer(const char* line) {
   char* number_char = calloc(strlen(line) + 2, sizeof(*number_char));
   if (number_char) {
     strcpy(number_char, line);
-    int num_count = 0;
     char *num_pointer = strtok(number_char, " ");
     int i = 0;
     while (num_pointer != NULL) {
@@ -199,14 +176,14 @@ int DebugObj(const char* file_path, data_t *data) {
   printf("%d = facets_count \n", data->facets_count);
   printf("VERTICES_MATRIX \n");
   int f = 0;
-  for (int i = 0; i < data->vertices_count/3; i++) {
-    for (int j = 0; j < 3; j++) {
+  for (size_t i = 0; i < data->vertices_count/3; i++) {
+    for (size_t j = 0; j < 3; j++) {
       printf("%f ", data->base_vertex_array[f++]);
     }
     printf("\n");
   }
   printf("FACET_DATA \n");
-  for (int i = 0; i < data->size_f; i++) {
+  for (size_t i = 0; i < data->size_f; i++) {
     printf("%d ", data->base_lines_array[i]);
   }
   return 0;
@@ -223,3 +200,26 @@ void RemoveObject(data_t* obj) {
   }
 }
 
+float max_elem(float a, float b, float c) {
+  float ans = 0;
+  if (a >= b && a >= c) {
+    ans = a;
+  } else if (b >= a && b >= c) {
+    ans = b;
+  } else {
+    ans = c;
+  }
+  return ans;
+}
+
+float min_elem(float a, float b, float c) {
+  float ans = 0;
+  if (a <= b && a <= c) {
+    ans = a;
+  } else if (b <= a && b <= c) {
+    ans = b;
+  } else {
+    ans = c;
+  }
+  return ans;
+}

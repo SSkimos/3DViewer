@@ -96,7 +96,7 @@ void AddScale(matrix_t** affine, affine_t* data) {
   RemoveMatrix(scale_matrix);
 }
 
-matrix_t* AddRotateX(matrix_t** affine, affine_t* data) {
+matrix_t* AddRotateX(affine_t* data) {
   matrix_t* rotateX = CreateMatrix(4, 4);
   if (rotateX) {
     FillDiagonalOnes(&rotateX);
@@ -112,7 +112,7 @@ matrix_t* AddRotateX(matrix_t** affine, affine_t* data) {
 }
 
 
-matrix_t* AddRotateY(matrix_t** affine, affine_t* data) {
+matrix_t* AddRotateY(affine_t* data) {
   matrix_t * rotateY = NULL;
   rotateY = CreateMatrix(4, 4);
   if (rotateY) {
@@ -128,7 +128,7 @@ matrix_t* AddRotateY(matrix_t** affine, affine_t* data) {
   return rotateY;
 }
 
-matrix_t* AddRotateZ(matrix_t** affine, affine_t* data) {
+matrix_t* AddRotateZ(affine_t* data) {
   matrix_t * rotateZ = NULL;
   rotateZ = CreateMatrix(4, 4);
   if (rotateZ) {
@@ -148,9 +148,9 @@ void AddRotateXYZ(matrix_t** affine, affine_t* data) {
   if (!data->rotateX && !data->rotateY && !data->rotateZ) {
     return;
   }
-  matrix_t* rotateX = AddRotateX(affine, data);
-  matrix_t* rotateY = AddRotateY(affine, data);
-  matrix_t* rotateZ = AddRotateZ(affine, data);
+  matrix_t* rotateX = AddRotateX(data);
+  matrix_t* rotateY = AddRotateY(data);
+  matrix_t* rotateZ = AddRotateZ(data);
   if (!rotateX || !rotateY || !rotateZ) return;
   matrix_t result = {0};
   matrix_t result2 = {0};
