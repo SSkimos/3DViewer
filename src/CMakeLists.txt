@@ -17,12 +17,6 @@ find_library (
     HINTS "${CMAKE_SOURCE_DIR}" # where to look
     NO_DEFAULT_PATH # do not search system default paths
 )
-find_library (
-  MATRIX_T
-    NAMES libs21_matrix.a matrix # what to look for
-    HINTS "${CMAKE_SOURCE_DIR}/model/matrix_t" # where to look
-    NO_DEFAULT_PATH # do not search system default paths
-)
 include_directories("gif/src/gifimage")
 include_directories("gif/src")
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
@@ -76,7 +70,6 @@ else()
 endif()
 
 
-target_link_libraries(3DViewer PRIVATE ${MATRIX_T})
 target_link_libraries(3DViewer PRIVATE ${HELLO_LIB})
 target_link_libraries(3DViewer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(3DViewer PRIVATE Qt6::OpenGLWidgets)

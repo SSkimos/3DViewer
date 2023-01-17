@@ -18,7 +18,6 @@ int MoveAndRotateModel(data_t **object, affine_t* vector) {
     for (size_t i = 0; i != (*object)->vertices_count / 3; ++i) {
       InputDot(data_with_point);
       TransformateDot(data_with_point);
-
     }
     FreeBufferData(data_with_point);
   }
