@@ -113,3 +113,40 @@ void Window::on_chooseFileButton_clicked()
       }
     }
 }
+
+void Window::on_makeGIFButton_clicked() {
+  check = 0;
+  timer_gif = new QTimer();
+  connect(timer_gif, SIGNAL(timeout()), this, SLOT(timer_grab()));
+  timer_gif->start(100);
+  ui->makeGIFButton->setEnabled(0);
+}
+
+void Window::timer_grab() {
+  if (check > 49) {
+    timer_gif->stop();
+    disconnect(timer_gif);
+    check = 0;
+    for (int i = 0; i < 50; gif.addFrame(mp[i++], 200)) {
+    }
+    QString str =
+        QFileDialog::getSaveFileName(0, "Сохранить файл как", "", "*.gif");
+    gif.save(str);
+    ui->makeGIFButton->setText("GIF");
+    ui->makeGIFButton->setEnabled(1);
+  } else {
+    mp[check] = ui->widget->grab().toImage();
+    check += 1;
+    ui->makeGIFButton->setText(QString::number(check / 10));
+  }
+}
+
+void Window::print_grab() {
+  if (check > 49) {
+    timer_gif->stop();
+    disconnect(timer_gif);
+  } else {
+    gif.addFrame(mp[check]);
+    check += 1;
+  }
+}
