@@ -7,19 +7,30 @@
 #define CREATE 1
 #define INPUT 2
 
+int MemoryAllocateCheck(data_t** object, transformation_t* data_with_point);
 
-void MoveAndRotateModel(data_t **object, affine_t* vector) {
 
+int MoveAndRotateModel(data_t **object, affine_t* vector) {
+  int err = 0;
   transformation_t* data_with_point = FactoryTransformation(object, vector);
-  if (!object || !data_with_point || !data_with_point->point || !data_with_point->pack || !data_with_point->vertex_ind) return;
+  err = MemoryAllocateCheck(object, data_with_point);
+  if (!err) {
+    for (size_t i = 0; i != (*object)->vertices_count / 3; ++i) {
+      InputDot(data_with_point);
+      TransformateDot(data_with_point);
 
-  for (size_t i = 0; i != (*object)->vertices_count / 3; ++i) {
-    InputDot(data_with_point);
-    TransformateDot(data_with_point);
-
+    }
+    FreeBufferData(data_with_point);
   }
-  FreeBufferData(data_with_point);
-  return;
+  return err;
+}
+
+int MemoryAllocateCheck(data_t** object, transformation_t* data_with_point) {
+  int err = 1;
+  if (object && data_with_point && data_with_point->point && data_with_point->pack && data_with_point->vertex_ind) {
+    err = 0;
+  }
+  return err;
 }
 
 transformation_t* FactoryTransformation(data_t** info, affine_t* vector) {

@@ -14,7 +14,7 @@ typedef enum {
   kZ
 } kCord;
 
-void MoveAndRotateModel(data_t **A, affine_t* vector);
+int MoveAndRotateModel(data_t **A, affine_t* vector);
 
 void AddScale(matrix_t** affine, affine_t* data);
 void AddMoveXYZ(matrix_t** affine, affine_t* data);
