@@ -59,7 +59,7 @@ void MyGLWidget::paintGL(void) {
 }
 
 int MyGLWidget::ModifyData(void) {
-  affine_t* v = (affine_t*) malloc(1*sizeof(*v));
+  affine_t* v = InitAffine();
   if (v) {
     v->rotateX = rotateX;
     v->rotateY = rotateY;

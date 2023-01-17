@@ -215,3 +215,17 @@ void FreeBufferData(transformation_t* data) {
   }
 }
 
+affine_t* InitAffine(void) {
+  affine_t* v = malloc(1*sizeof(*v));
+  if (v) {
+    v->moveX = 0;
+    v->moveY = 0;
+    v->moveZ = 0;
+    v->rotateX = 0;
+    v->rotateY = 0;
+    v->rotateZ = 0;
+    v->scale = 0;
+  }
+  return v;
+}
+

@@ -25,7 +25,7 @@ matrix_t* CreateMatrix(size_t row, size_t column);
 void FreeBufferData(transformation_t* data);
 void FillDiagonalOnes(matrix_t** m);
 
-matrix_t* CreateDot();
+matrix_t* CreateDot(void);
 void InputDot(transformation_t* data_with_point);
 void TransformateDot(transformation_t* dataset);
 
@@ -34,6 +34,7 @@ matrices_t* PackMatrices(matrix_t*m, matrix_t*p);
 
 transformation_t* FactoryTransformation(data_t** info, affine_t* vector);
 
+affine_t* InitAffine(void);
 
 #ifdef __cplusplus
 }
