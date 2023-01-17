@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(3DViewer VERSION 0.1 LANGUAGES CXX)
+project(3DViewer VERSION 0.1)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 

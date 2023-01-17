@@ -20,7 +20,7 @@ matrix_t_clean:
 # 	./test
 
 libmodel.a: model/s21_parse_obj.c model/s21_affin_p.c matrix_t
-	gcc -c model/s21_parse_obj.c model/s21_affin_p.c
+	cc -c model/s21_parse_obj.c model/s21_affin_p.c
 	ar rcs libmodel.a s21_parse_obj.o s21_affin_p.o
 	ranlib libmodel.a
 
