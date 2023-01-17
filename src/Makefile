@@ -1,4 +1,4 @@
-CC=gcc 
+CC=gcc -Wall -Werror -Wextra
 SRC=#back/stack.c back/polish.c back/parser.c back/credit.c
 OBJ= s21_affin_p.o s21_parse_obj.o
 SRC_T=#back/tests/s21_calc_tests.c
