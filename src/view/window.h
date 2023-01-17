@@ -7,6 +7,9 @@
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QSettings>
+#include <QApplication>
+
+#include "ima/qgifimage_p.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Window; }
@@ -22,6 +25,8 @@ public:
 
 private slots:
     void on_chooseFileButton_clicked();
+    void on_makeGIFButton_clicked();
+    void timer_grab();
     
 
 private:
@@ -39,13 +44,13 @@ private:
     void SetMoveY(QSettings *settings);
     void SetMoveZ(QSettings *settings);
 
-    void oneGif();
-    void createGif();
+    
+    void print_grab();
 
-    const int GifFps = 10, GifLength = 5;
-    QTimer *timer;
-    int startTime, tmpTime;
-    int counter = 1;
+    QTimer *timer_gif;
+    int check;
+    QGifImage gif;
+    QImage mp[50];
 
 };
 #endif // WINDOW_H
