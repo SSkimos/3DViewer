@@ -1,51 +1,54 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <QOpenGLWidget>
-#include <QtOpenGL>
-#include <QTimer>
-#include <QMainWindow>
+#include <QApplication>
 #include <QFileDialog>
+#include <QMainWindow>
+#include <QOpenGLWidget>
 #include <QSettings>
+#include <QTimer>
+#include <QtOpenGL>
+
+#include "ima/qgifimage_p.h"
 
 QT_BEGIN_NAMESPACE
-namespace Ui { class Window; }
+namespace Ui {
+class Window;
+}
 QT_END_NAMESPACE
 
-class Window : public QMainWindow
-{
-    Q_OBJECT
+class Window : public QMainWindow {
+  Q_OBJECT
 
-public:
-    Window(QWidget *parent = nullptr);
-    ~Window();
+ public:
+  Window(QWidget *parent = nullptr);
+  ~Window();
 
-private slots:
-    void on_chooseFileButton_clicked();
-    
+ private slots:
+  void on_chooseFileButton_clicked();
+  void on_makeGIFButton_clicked();
+  void timer_grab();
 
-private:
-    Ui::Window *ui;
-    void SaveSettings();
-    void SaveSldrGroupSettings(QSettings *settings);
-    void RestoreSettings();
-    void InitSldrGroupSettings(QSettings *settings);
+ private:
+  Ui::Window *ui;
+  void SaveSettings();
+  void SaveSldrGroupSettings(QSettings *settings);
+  void RestoreSettings();
+  void InitSldrGroupSettings(QSettings *settings);
 
-    void SetRotateX(QSettings *settings); //TODO: не нравится нейминг
-    void SetRotateY(QSettings *settings);
-    void SetRotateZ(QSettings *settings);
+  void SetRotateX(QSettings *settings);  // TODO: не нравится нейминг
+  void SetRotateY(QSettings *settings);
+  void SetRotateZ(QSettings *settings);
 
-    void SetMoveX(QSettings *settings); //TODO: не нравится нейминг
-    void SetMoveY(QSettings *settings);
-    void SetMoveZ(QSettings *settings);
+  void SetMoveX(QSettings *settings);  // TODO: не нравится нейминг
+  void SetMoveY(QSettings *settings);
+  void SetMoveZ(QSettings *settings);
 
-    void oneGif();
-    void createGif();
+  void print_grab();
 
-    const int GifFps = 10, GifLength = 5;
-    QTimer *timer;
-    int startTime, tmpTime;
-    int counter = 1;
-
+  QTimer *timer_gif;
+  int check;
+  QGifImage gif;
+  QImage mp[50];
 };
-#endif // WINDOW_H
+#endif  // WINDOW_H

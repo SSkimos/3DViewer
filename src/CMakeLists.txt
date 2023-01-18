@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(3DViewer VERSION 0.1 LANGUAGES CXX)
+project(3DViewer VERSION 0.1)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -17,12 +17,8 @@ find_library (
     HINTS "${CMAKE_SOURCE_DIR}" # where to look
     NO_DEFAULT_PATH # do not search system default paths
 )
-find_library (
-  MATRIX_T
-    NAMES libs21_matrix.a matrix # what to look for
-    HINTS "${CMAKE_SOURCE_DIR}/model/matrix_t" # where to look
-    NO_DEFAULT_PATH # do not search system default paths
-)
+include_directories("gif/src/gifimage")
+include_directories("gif/src")
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS OpenGLWidgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
@@ -33,6 +29,13 @@ message(STATUS "HELLO_LIB: [${HELLO_LIB}]")
 
 
 set(PROJECT_SOURCES
+        gif/src/3rdParty/giflib/dgif_lib.c
+        gif/src/3rdParty/giflib/egif_lib.c
+        gif/src/3rdParty/giflib/gif_err.c 
+        gif/src/3rdParty/giflib/gif_hash.c
+        gif/src/3rdParty/giflib/gifalloc.c
+        gif/src/3rdParty/giflib/quantize.c
+        gif/src/gifimage/qgifimage.cpp
         view/myglwidget.cpp
         view/myglwidget.h
         view/window.cpp
@@ -67,7 +70,6 @@ else()
 endif()
 
 
-target_link_libraries(3DViewer PRIVATE ${MATRIX_T})
 target_link_libraries(3DViewer PRIVATE ${HELLO_LIB})
 target_link_libraries(3DViewer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 target_link_libraries(3DViewer PRIVATE Qt6::OpenGLWidgets)
