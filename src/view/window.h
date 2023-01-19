@@ -31,10 +31,17 @@ class Window : public QMainWindow {
 
  private:
   Ui::Window *ui;
+  void ConnectSliders();
+  void ConnectLabels();
   void SaveSettings();
   void SaveSldrGroupSettings(QSettings *settings);
   void RestoreSettings();
   void InitSldrGroupSettings(QSettings *settings);
+
+  void xMoveSetText(double value);
+  void xMoveEdit(double value);
+  void xMoveSldr(double value);
+  void xRotateTextEdit();
 
   void SetRotateX(QSettings *settings);  // TODO: не нравится нейминг
   void SetRotateY(QSettings *settings);

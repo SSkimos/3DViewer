@@ -11,6 +11,36 @@ MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
     setGeometry(400, 200, 800, 600);
 }
 
+void MyGLWidget::setMoveX(int newValue) {
+  moveX = newValue;
+  update();
+}
+
+void MyGLWidget::setMoveY(int newValue) {
+  moveY = newValue;
+  update();
+}
+
+void MyGLWidget::setMoveZ(int newValue) {
+  moveZ = newValue;
+  update();
+}
+
+void MyGLWidget::setRotateX(int newValue) {
+  rotateX = newValue;
+  update();
+}
+
+void MyGLWidget::setRotateY(int newValue) {
+  rotateY = newValue;
+  update();
+}
+
+void MyGLWidget::setRotateZ(int newValue) {
+  rotateZ = newValue;
+  update();
+}
+
 void MyGLWidget::initializeGL(void) {
   glEnable(GL_DEPTH_TEST);
   prog = compileShaders();

@@ -6,20 +6,22 @@ Window::Window(QWidget *parent)
     , ui(new Ui::Window)
 {
     ui->setupUi(this);
-    connect(ui->xRotSldr, &QSlider::valueChanged,
-        [this](const int& val)->void{ui->xRotEdit->setText(locale().toString(val)); ui->widget->rotateX = val; ui->widget->update();});
-    connect(ui->yRotSldr, &QSlider::valueChanged,
-        [this](const int& val)->void{ui->yRotEdit->setText(locale().toString(val)); ui->widget->rotateY = val; ui->widget->update();});
-    connect(ui->zRotSldr, &QSlider::valueChanged,
-        [this](const int& val)->void{ui->zRotEdit->setText(locale().toString(val)); ui->widget->rotateZ = val; ui->widget->update();});
-    connect(ui->xMoveSldr, &QSlider::valueChanged,
-        [this](const int& val)->void{ui->xMoveEdit->setText(locale().toString(val)); ui->widget->moveX = val; ui->widget->update();});
-    connect(ui->yMoveSldr, &QSlider::valueChanged,
-        [this](const int& val)->void{ui->yMoveEdit->setText(locale().toString(val)); ui->widget->moveY = val; ui->widget->update();});
-    connect(ui->zMoveSldr, &QSlider::valueChanged,
-        [this](const int& val)->void{ui->zMoveEdit->setText(locale().toString(val)); ui->widget->moveZ = val; ui->widget->update();});
-    connect(ui->scaleSldr, &QSlider::valueChanged,
-        [this](const int& val)->void{ui->widget->scale_val = val; ui->widget->update();});
+    ConnectSliders();
+    ConnectLabels();
+    // connect(ui->xRotSldr, &QSlider::valueChanged,
+    //     [this](const int& val)->void{ui->xRotEdit->setText(locale().toString(val)); ui->widget->rotateX = val; ui->widget->update();});
+    // connect(ui->yRotSldr, &QSlider::valueChanged,
+    //     [this](const int& val)->void{ui->yRotEdit->setText(locale().toString(val)); ui->widget->rotateY = val; ui->widget->update();});
+    // connect(ui->zRotSldr, &QSlider::valueChanged,
+    //     [this](const int& val)->void{ui->zRotEdit->setText(locale().toString(val)); ui->widget->rotateZ = val; ui->widget->update();});
+    // connect(ui->xMoveSldr, &QSlider::valueChanged,
+    //     [this](const int& val)->void{ui->xMoveEdit->setText(locale().toString(val)); ui->widget->moveX = val; ui->widget->update();});
+    // connect(ui->yMoveSldr, &QSlider::valueChanged,
+    //     [this](const int& val)->void{ui->yMoveEdit->setText(locale().toString(val)); ui->widget->moveY = val; ui->widget->update();});
+    // connect(ui->zMoveSldr, &QSlider::valueChanged,
+    //     [this](const int& val)->void{ui->zMoveEdit->setText(locale().toString(val)); ui->widget->moveZ = val; ui->widget->update();});
+    // connect(ui->scaleSldr, &QSlider::valueChanged,
+    //     [this](const int& val)->void{ui->widget->scale_val = val; ui->widget->update();});
     RestoreSettings();
 }
 
@@ -27,6 +29,38 @@ Window::~Window()
 {
     SaveSettings();
     delete ui;
+}
+
+void Window::ConnectSliders() {
+  connect(ui->xMoveSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setMoveX);
+  connect(ui->yMoveSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setMoveY);
+  connect(ui->zMoveSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setMoveZ);
+  connect(ui->xRotSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setRotateX);
+  connect(ui->yRotSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setRotateY);
+  connect(ui->zRotSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setRotateZ);
+
+  connect(ui->xMoveEdit, SIGNAL(valueChanged(static QString)), ui->widget, SLOT(xRotateTextEdit()));
+}
+
+void Window::xMoveEdit(double value) {
+  ui->xMoveEdit->setText(QString::number(value));
+}
+
+void Window::xRotateTextEdit() {
+  int value = ui->xMoveSldr->value();
+  ui->xMoveSldr->setValue(value);
+}
+
+void Window::xMoveSldr(double value) {
+  ui->xMoveSldr->setValue(value);
+}
+
+void Window::ConnectLabels() {
+  // connect(ui->xMoveEdit, SIGNAL(valueChanged()), (this), SLOT(xMoveSetText()));
+}
+
+void Window::xMoveSetText(double value) {
+  ui->xMoveEdit->setText(locale().toString(value));
 }
 
 void Window::SaveSettings() {

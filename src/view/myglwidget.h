@@ -45,6 +45,13 @@ class MyGLWidget : public QOpenGLWidget {
   void clearIBO();
 
  public:
+  void setMoveX(int newValue);
+  void setMoveY(int newValue);
+  void setMoveZ(int newValue);
+  void setRotateX(int newValue);
+  void setRotateY(int newValue);
+  void setRotateZ(int newValue);
+
   void add_example();
   void clearBuffers();
   void initBuffers();
