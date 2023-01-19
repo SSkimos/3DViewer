@@ -28,6 +28,8 @@ class Window : public QMainWindow {
   void on_chooseFileButton_clicked();
   void on_makeGIFButton_clicked();
   void timer_grab();
+  void xRotateTextEdit(const QString & val);
+  // void xRotateTextEdit();
 
  private:
   Ui::Window *ui;
@@ -41,7 +43,6 @@ class Window : public QMainWindow {
   void xMoveSetText(double value);
   void xMoveEdit(double value);
   void xMoveSldr(double value);
-  void xRotateTextEdit();
 
   void SetRotateX(QSettings *settings);  // TODO: не нравится нейминг
   void SetRotateY(QSettings *settings);

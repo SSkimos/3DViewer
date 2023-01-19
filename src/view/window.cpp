@@ -39,15 +39,17 @@ void Window::ConnectSliders() {
   connect(ui->yRotSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setRotateY);
   connect(ui->zRotSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setRotateZ);
 
-  connect(ui->xMoveEdit, SIGNAL(valueChanged(static QString)), ui->widget, SLOT(xRotateTextEdit()));
+  connect(ui->xMoveEdit, &QLineEdit::textChanged, this, &Window::xRotateTextEdit);
+  // connect(ui->xMoveEdit, SIGNAL(textChanged(const QString &text)), ui->widget, SLOT(xRotateTextEdit()));
 }
 
 void Window::xMoveEdit(double value) {
+  qDebug() << value;
   ui->xMoveEdit->setText(QString::number(value));
 }
 
-void Window::xRotateTextEdit() {
-  int value = ui->xMoveSldr->value();
+void Window::xRotateTextEdit(const QString & val) {
+  int value = val.toInt();
   ui->xMoveSldr->setValue(value);
 }
 
