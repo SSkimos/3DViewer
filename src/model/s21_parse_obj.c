@@ -17,7 +17,7 @@ float max_elem(float a, float b, float c);
 float min_elem(float a, float b, float c);
 data_t* InitData();
 
-data_t* ParseCountObj(const char* file_path) {
+data_t* LoadObjFile(const char* file_path) {
   data_t* data = InitData();
   if (data) {
     CountObj(file_path, data);

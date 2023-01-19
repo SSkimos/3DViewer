@@ -7,7 +7,7 @@ extern "C" {
 #include <stdlib.h>
 
 #include "s21_data_structure.h"
-data_t* ParseCountObj(const char* file_path);
+data_t* LoadObjFile(const char* file_path);
 int ParseObj(const char* file_path, data_t** data);
 int CountObj(const char* file_path, data_t* data);
 long double* RemakeMatrix(data_t* data);

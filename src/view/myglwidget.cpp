@@ -87,7 +87,7 @@ int MyGLWidget::GetData() {
   if (filename.size() > 0) {
     const char *c_str2 =  qPrintable(filename);
     if (c_str2 && strlen(c_str2) > 1 || debug == 1) { 
-      object = ParseCountObj(c_str2);
+      object = LoadObjFile(c_str2);
       if (object) {
         vertex_count = object->vertices_count / 3;
         lines_count = object->facets_count;
