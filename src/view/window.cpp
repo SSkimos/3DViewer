@@ -83,7 +83,6 @@ void Window::setRotateZ(int newValue) {
 }
 
 void Window::xMoveEdit(double value) {
-  qDebug() << value;
   ui->xMoveEdit->setText(QString::number(value));
 }
 
@@ -187,15 +186,18 @@ void Window::on_chooseFileButton_clicked()
       "Desktop",
       "Object files (*.obj)"
       );
-  char* filesave = (char*) calloc(ui->widget->filename.size() + 1, *filesave);
-  int i = 0;
-  for (auto c: ui->widget->filename) {
-    filesave[i++] = c.toLatin1();
-  }
-  if (ui->widget->filename_const) free(ui->widget->filename_const);
-  ui->widget->filename_const = filesave;
   if (ui->widget->filename.size() > 0) {
-    ui->statusbar->showMessage(ui->widget->filename);
+    int size = 256; 
+    char* filesave = (char*) calloc(size + 1, sizeof(*filesave));
+    int i = 0;
+    if (filesave) {
+      for (auto c: ui->widget->filename) {
+        filesave[i++] = c.toLatin1();
+      }
+      if (ui->widget->filename_const) free(ui->widget->filename_const);
+      ui->widget->filename_const = filesave;
+      ui->statusbar->showMessage(ui->widget->filename);
+    }
     if (old_filename != ui->widget->filename) {
       ui->widget->file_load = 1;
     }
