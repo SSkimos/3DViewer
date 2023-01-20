@@ -34,6 +34,7 @@ class Window : public QMainWindow {
  private:
   Ui::Window *ui;
   void ConnectSliders();
+  void ScaleChange(int val);
   void ConnectLabels();
   void SaveSettings();
   void SaveSldrGroupSettings(QSettings *settings);

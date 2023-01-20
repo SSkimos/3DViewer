@@ -34,6 +34,11 @@ Window::~Window()
     delete ui;
 }
 
+void Window::ScaleChange(int val) {
+  ui->widget->scale_val = val;
+  ui->widget->update();
+}
+
 void Window::ConnectSliders() {
   connect(ui->xMoveSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setMoveX);
   connect(ui->yMoveSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setMoveY);
@@ -41,6 +46,7 @@ void Window::ConnectSliders() {
   connect(ui->xRotSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setRotateX);
   connect(ui->yRotSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setRotateY);
   connect(ui->zRotSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setRotateZ);
+  connect(ui->scaleSldr, &QSlider::valueChanged, this, &Window::ScaleChange);
 
   connect(ui->xMoveEdit, &QLineEdit::textChanged, this, &Window::xRotateTextEdit);
   // connect(ui->xMoveEdit, SIGNAL(textChanged(const QString &text)), ui->widget, SLOT(xRotateTextEdit()));
@@ -69,95 +75,95 @@ void Window::xMoveSetText(double value) {
 }
 
 void Window::SaveSettings() {
-    QSettings settings("settings.conf", QSettings::IniFormat);
-    SaveSldrGroupSettings(&settings);
+  QSettings settings("settings.conf", QSettings::IniFormat);
+  SaveSldrGroupSettings(&settings);
 }
 
 void Window::SaveSldrGroupSettings(QSettings *settings) {
-    settings->beginGroup("sldrs");
-    settings->setValue("rotateX", ui->xRotSldr->value());
-    settings->setValue("rotateY", ui->yRotSldr->value());
-    settings->setValue("rotateZ", ui->zRotSldr->value());
-    settings->setValue("moveX", ui->xMoveSldr->value());
-    settings->setValue("moveY", ui->yMoveSldr->value());
-    settings->setValue("moveZ", ui->zMoveSldr->value());
-    settings->endGroup();
+  settings->beginGroup("sldrs");
+  settings->setValue("rotateX", ui->xRotSldr->value());
+  settings->setValue("rotateY", ui->yRotSldr->value());
+  settings->setValue("rotateZ", ui->zRotSldr->value());
+  settings->setValue("moveX", ui->xMoveSldr->value());
+  settings->setValue("moveY", ui->yMoveSldr->value());
+  settings->setValue("moveZ", ui->zMoveSldr->value());
+  settings->endGroup();
 }
 
 void Window::RestoreSettings() {
-    QSettings settings("settings.conf", QSettings::IniFormat);
-    InitSldrGroupSettings(&settings);
+  QSettings settings("settings.conf", QSettings::IniFormat);
+  InitSldrGroupSettings(&settings);
 }
 
 void Window::InitSldrGroupSettings(QSettings *settings) {
-    settings->beginGroup("sldrs");
-    SetRotateX(settings);
-    SetRotateY(settings);
-    SetRotateZ(settings);
+  settings->beginGroup("sldrs");
+  SetRotateX(settings);
+  SetRotateY(settings);
+  SetRotateZ(settings);
 
-    SetMoveX(settings);
-    SetMoveY(settings);
-    SetMoveZ(settings);
-    settings->endGroup();
+  SetMoveX(settings);
+  SetMoveY(settings);
+  SetMoveZ(settings);
+  settings->endGroup();
 }
 
 void Window::SetRotateX(QSettings *settings) {
-    int rotateX = settings->value("rotateX").toInt();
-    ui->xRotSldr->setValue(rotateX);
-    ui->xRotEdit->setText(locale().toString(rotateX));
+  int rotateX = settings->value("rotateX").toInt();
+  ui->xRotSldr->setValue(rotateX);
+  ui->xRotEdit->setText(locale().toString(rotateX));
 }
 
 void Window::SetRotateY(QSettings *settings) {
-    int rotateY = settings->value("rotateY").toInt();
-    ui->yRotSldr->setValue(rotateY);
-    ui->yRotEdit->setText(locale().toString(rotateY));
+  int rotateY = settings->value("rotateY").toInt();
+  ui->yRotSldr->setValue(rotateY);
+  ui->yRotEdit->setText(locale().toString(rotateY));
 }
 
 void Window::SetRotateZ(QSettings *settings) {
-    int rotateZ = settings->value("rotateZ").toInt();
-    ui->zRotSldr->setValue(rotateZ);
-    ui->zRotEdit->setText(locale().toString(rotateZ));
+  int rotateZ = settings->value("rotateZ").toInt();
+  ui->zRotSldr->setValue(rotateZ);
+  ui->zRotEdit->setText(locale().toString(rotateZ));
 }
 
 void Window::SetMoveX(QSettings *settings) {
-    int moveX = settings->value("moveX").toInt();
-    ui->xMoveSldr->setValue(moveX);
-    ui->xMoveEdit->setText(locale().toString(moveX));
+  int moveX = settings->value("moveX").toInt();
+  ui->xMoveSldr->setValue(moveX);
+  ui->xMoveEdit->setText(locale().toString(moveX));
 }
 
 void Window::SetMoveY(QSettings *settings) {
-    int moveY = settings->value("moveY").toInt();
-    ui->yMoveSldr->setValue(moveY);
-    ui->yMoveEdit->setText(locale().toString(moveY));
+  int moveY = settings->value("moveY").toInt();
+  ui->yMoveSldr->setValue(moveY);
+  ui->yMoveEdit->setText(locale().toString(moveY));
 }
 
 void Window::SetMoveZ(QSettings *settings) {
-    int moveZ = settings->value("moveZ").toInt();
-    ui->zMoveSldr->setValue(moveZ);
-    ui->zMoveEdit->setText(locale().toString(moveZ));
+  int moveZ = settings->value("moveZ").toInt();
+  ui->zMoveSldr->setValue(moveZ);
+  ui->zMoveEdit->setText(locale().toString(moveZ));
 }
 
 void Window::on_chooseFileButton_clicked()
 {
-    QString old_filename = ui->widget->filename;
-    ui->widget->filename = QFileDialog::getOpenFileName(
-        this, tr("Choose File"),
-        "Desktop",
-        "Object files (*.obj)"
-        );
-    char* filesave = (char*) calloc(ui->widget->filename.size() + 1, *filesave);
-    int i = 0;
-    for (auto c: ui->widget->filename) {
-      filesave[i++] = c.toLatin1();
+  QString old_filename = ui->widget->filename;
+  ui->widget->filename = QFileDialog::getOpenFileName(
+      this, tr("Choose File"),
+      "Desktop",
+      "Object files (*.obj)"
+      );
+  char* filesave = (char*) calloc(ui->widget->filename.size() + 1, *filesave);
+  int i = 0;
+  for (auto c: ui->widget->filename) {
+    filesave[i++] = c.toLatin1();
+  }
+  if (ui->widget->filename_const) free(ui->widget->filename_const);
+  ui->widget->filename_const = filesave;
+  if (ui->widget->filename.size() > 0) {
+    ui->statusbar->showMessage(ui->widget->filename);
+    if (old_filename != ui->widget->filename) {
+      ui->widget->file_load = 1;
     }
-    if (ui->widget->filename_const) free(ui->widget->filename_const);
-    ui->widget->filename_const = filesave;
-    if (ui->widget->filename.size() > 0) {
-      ui->statusbar->showMessage(ui->widget->filename);
-      if (old_filename != ui->widget->filename) {
-        ui->widget->file_load = 1;
-      }
-    }
+  }
 }
 
 void Window::on_makeGIFButton_clicked() {
@@ -176,7 +182,7 @@ void Window::timer_grab() {
     for (int i = 0; i < 50; gif.addFrame(mp[i++], 200)) {
     }
     QString str =
-        QFileDialog::getSaveFileName(0, "Сохранить файл как", "", "*.gif");
+      QFileDialog::getSaveFileName(0, "Сохранить файл как", "", "*.gif");
     gif.save(str);
     ui->makeGIFButton->setText("GIF");
     ui->makeGIFButton->setEnabled(1);
