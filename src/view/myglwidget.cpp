@@ -118,7 +118,7 @@ int MyGLWidget::GetData() {
   if (filename.size() > 0) {
     if (filename_const && open_code == 0) { 
       object = LoadObjFile(filename_const);
-      if (object && object->base_lines_array && object->base_vertex_array) {
+      if (object) {
         vertex_count = object->vertices_count / 3;
         lines_count = object->facets_count;
       }
