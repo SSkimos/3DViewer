@@ -40,16 +40,46 @@ void Window::ScaleChange(int val) {
 }
 
 void Window::ConnectSliders() {
-  connect(ui->xMoveSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setMoveX);
-  connect(ui->yMoveSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setMoveY);
-  connect(ui->zMoveSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setMoveZ);
-  connect(ui->xRotSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setRotateX);
-  connect(ui->yRotSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setRotateY);
-  connect(ui->zRotSldr, &QSlider::valueChanged, ui->widget, &MyGLWidget::setRotateZ);
+  connect(ui->xMoveSldr, &QSlider::valueChanged, this,  &Window::setMoveX);
+  connect(ui->yMoveSldr, &QSlider::valueChanged, this,  &Window::setMoveY);
+  connect(ui->zMoveSldr, &QSlider::valueChanged, this,  &Window::setMoveZ);
+  connect(ui->xRotSldr, &QSlider::valueChanged,  this,  &Window::setRotateX);
+  connect(ui->yRotSldr, &QSlider::valueChanged,  this, &Window::setRotateY);
+  connect(ui->zRotSldr, &QSlider::valueChanged,  this, &Window::setRotateZ);
   connect(ui->scaleSldr, &QSlider::valueChanged, this, &Window::ScaleChange);
 
   connect(ui->xMoveEdit, &QLineEdit::textChanged, this, &Window::xRotateTextEdit);
   // connect(ui->xMoveEdit, SIGNAL(textChanged(const QString &text)), ui->widget, SLOT(xRotateTextEdit()));
+}
+
+void Window::setMoveX(int newValue) {
+  ui->widget->moveX = newValue;
+  ui->widget->update();
+}
+
+void Window::setMoveY(int newValue) {
+  ui->widget->moveY = newValue;
+  ui->widget->update();
+}
+
+void Window::setMoveZ(int newValue) {
+  ui->widget->moveZ = newValue;
+  ui->widget->update();
+}
+
+void Window::setRotateX(int newValue) {
+  ui->widget->rotateX = newValue;
+  ui->widget->update();
+}
+
+void Window::setRotateY(int newValue) {
+  ui->widget->rotateY = newValue;
+  ui->widget->update();
+}
+
+void Window::setRotateZ(int newValue) {
+  ui->widget->rotateZ = newValue;
+  ui->widget->update();
 }
 
 void Window::xMoveEdit(double value) {
@@ -109,36 +139,42 @@ void Window::InitSldrGroupSettings(QSettings *settings) {
 
 void Window::SetRotateX(QSettings *settings) {
   int rotateX = settings->value("rotateX").toInt();
+  setRotateX(rotateX);
   ui->xRotSldr->setValue(rotateX);
   ui->xRotEdit->setText(locale().toString(rotateX));
 }
 
 void Window::SetRotateY(QSettings *settings) {
   int rotateY = settings->value("rotateY").toInt();
+  setRotateY(rotateY);
   ui->yRotSldr->setValue(rotateY);
   ui->yRotEdit->setText(locale().toString(rotateY));
 }
 
 void Window::SetRotateZ(QSettings *settings) {
   int rotateZ = settings->value("rotateZ").toInt();
+  setRotateZ(rotateZ);
   ui->zRotSldr->setValue(rotateZ);
   ui->zRotEdit->setText(locale().toString(rotateZ));
 }
 
 void Window::SetMoveX(QSettings *settings) {
   int moveX = settings->value("moveX").toInt();
+  setMoveX(moveX);
   ui->xMoveSldr->setValue(moveX);
   ui->xMoveEdit->setText(locale().toString(moveX));
 }
 
 void Window::SetMoveY(QSettings *settings) {
   int moveY = settings->value("moveY").toInt();
+  setMoveY(moveY);
   ui->yMoveSldr->setValue(moveY);
   ui->yMoveEdit->setText(locale().toString(moveY));
 }
 
 void Window::SetMoveZ(QSettings *settings) {
   int moveZ = settings->value("moveZ").toInt();
+  setMoveZ(moveZ);
   ui->zMoveSldr->setValue(moveZ);
   ui->zMoveEdit->setText(locale().toString(moveZ));
 }

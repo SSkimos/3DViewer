@@ -45,6 +45,14 @@ class Window : public QMainWindow {
   void xMoveEdit(double value);
   void xMoveSldr(double value);
 
+  void setRotateX(int newValue);  // TODO: не нравится нейминг
+  void setRotateY(int newValue);
+  void setRotateZ(int newValue);
+
+  void setMoveX(int newValue);  // TODO: не нравится нейминг
+  void setMoveY(int newValue);
+  void setMoveZ(int newValue);
+
   void SetRotateX(QSettings *settings);  // TODO: не нравится нейминг
   void SetRotateY(QSettings *settings);
   void SetRotateZ(QSettings *settings);
