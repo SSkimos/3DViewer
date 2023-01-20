@@ -4,7 +4,7 @@
 #include "../model/s21_parse_obj.h"
 
 START_TEST(basic_load) {
-  data_t *obj = ParseCountObj("obj/lamp.obj");
+  data_t *obj = LoadObjFile("obj/lamp.obj");
   ck_assert_ptr_nonnull(obj);
   RemoveObject(obj);
 }

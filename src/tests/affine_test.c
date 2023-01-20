@@ -4,7 +4,7 @@
 #include "../model/s21_parse_obj.h"
 
 START_TEST(affine_no_job) {
-  data_t* obj = ParseCountObj("obj/cube.obj");
+  data_t* obj = LoadObjFile("obj/cube.obj");
   affine_t* vector = InitAffine();
   int expected_code = 0;
   int my_code = -1;
@@ -17,7 +17,7 @@ START_TEST(affine_no_job) {
 END_TEST
 
 START_TEST(affine_basic_scale) {
-  data_t* obj = ParseCountObj("obj/lamp.obj");
+  data_t* obj = LoadObjFile("obj/lamp.obj");
   affine_t* vector = InitAffine();
   int expected_code = 0;
   int my_code = -1;
@@ -30,7 +30,7 @@ START_TEST(affine_basic_scale) {
 END_TEST
 
 START_TEST(affine_rotate_xyz) {
-  data_t* obj = ParseCountObj("obj/lamp.obj");
+  data_t* obj = LoadObjFile("obj/lamp.obj");
   affine_t* vector = InitAffine();
   int expected_code = 0;
   int my_code = -1;
