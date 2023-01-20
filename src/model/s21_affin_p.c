@@ -44,7 +44,7 @@ transformation_t* FactoryTransformation(data_t** info, affine_t* vector) {
 
 matrix_t* FactoryAffine(affine_t* data) {
   matrix_t* modificator_dot = CreateMatrix(4, 4);
-  if (modificator_dot) {
+  if (modificator_dot && modificator_dot->rows == 4 && modificator_dot->columns == 4) {
     FillDiagonalOnes(&modificator_dot);
     AddRotateXYZ(&modificator_dot, data);
     AddMoveXYZ(&modificator_dot, data);
@@ -182,7 +182,7 @@ void AddMoveXYZ(matrix_t** affine, affine_t* data) {
 }
 
 void FillDiagonalOnes(matrix_t** m) {
-  if (m)
+  if (m && *m && (*m)->columns == 4 && (*m)->rows == 4)
     for (size_t i = 0; i != 4; ++i) (*m)->matrix[i][i] = 1.0;
 }
 
@@ -197,8 +197,7 @@ matrices_t* PackMatrices(matrix_t* m, matrix_t* p) {
 
 matrix_t* CreateMatrix(size_t row, size_t column) {
   matrix_t* m = malloc(1 * sizeof(matrix_t));
-  if (!m) exit(1);
-  if (m) s21_create_matrix(row, column, m);
+  s21_create_matrix(row, column, m);
   return m;
 }
 

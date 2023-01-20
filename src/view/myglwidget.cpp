@@ -109,15 +109,23 @@ int MyGLWidget::ModifyData(void) {
     lines_array = object->lines_array;
     free(v);
   }
+  return 0;
 }
 
 int MyGLWidget::GetData() {
   int ret_code = 0;
-  int debug = 1;
+  int open_code = 0;
   if (filename.size() > 0) {
+    if (filename.back() == '"') filename.chop(1);
+    if (filename[0] == '"') filename.remove(0, 1);
     const char *c_str2 =  qPrintable(filename);
-    if (c_str2 && strlen(c_str2) > 1 || debug == 1) { 
-      object = ParseCountObj(c_str2);
+    FILE* fp = fopen(c_str2, "r");
+    if (fp) open_code = 1;
+    fclose(fp);
+    qDebug() << filename;
+    if (c_str2 && strlen(c_str2) > 1 && open_code == 1) { 
+      object = LoadObjFile(c_str2);
+      qDebug() << 1;
       if (object) {
         vertex_count = object->vertices_count / 3;
         lines_count = object->facets_count;
