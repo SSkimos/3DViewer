@@ -1,11 +1,14 @@
 #include "window.h"
 #include "ui_window.h"
+#include "../model/s21_parse_obj.h"
 
 Window::Window(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::Window)
 {
     ui->setupUi(this);
+    ui->widget->filename.clear();
+    ui->widget->filename_const = NULL;
     ConnectSliders();
     ConnectLabels();
     // connect(ui->xRotSldr, &QSlider::valueChanged,
@@ -140,8 +143,15 @@ void Window::on_chooseFileButton_clicked()
     ui->widget->filename = QFileDialog::getOpenFileName(
         this, tr("Choose File"),
         "Desktop",
-        "All files (*.*)"
+        "Object files (*.obj)"
         );
+    char* filesave = (char*) calloc(ui->widget->filename.size() + 1, *filesave);
+    int i = 0;
+    for (auto c: ui->widget->filename) {
+      filesave[i++] = c.toLatin1();
+    }
+    if (ui->widget->filename_const) free(ui->widget->filename_const);
+    ui->widget->filename_const = filesave;
     if (ui->widget->filename.size() > 0) {
       ui->statusbar->showMessage(ui->widget->filename);
       if (old_filename != ui->widget->filename) {

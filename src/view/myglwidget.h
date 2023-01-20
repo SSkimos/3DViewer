@@ -61,6 +61,7 @@ class MyGLWidget : public QOpenGLWidget {
   int ModifyData();
   int DrawData();
   data_t *object;
+  char* filename_const;
   int file_load;
   int vertex_count;
   int lines_count;

@@ -58,7 +58,6 @@ int CountObj(const char* file_path, data_t* data) {
 
   size_t max_size = MAX_SIZE;
   char* line = calloc(max_size, sizeof(*line));
-  ;
 
   if (line) {
     while (fgets(line, MAX_SIZE - 1, obj) != NULL && (!feof(obj))) {
@@ -80,7 +79,6 @@ int ParseObj(const char* file_path, data_t** data) {
 
   size_t max_size = MAX_SIZE;
   char* line = calloc(max_size, sizeof(*line));
-  ;
 
   int mas = (*data)->vertices_count * 3;
   float* vertexes = calloc(mas, sizeof(float));
@@ -114,7 +112,7 @@ FILE* OpenFile(const char* filename) {
   FILE* fp = fopen(filename, "r");
   if (!fp) {
     perror("File doesn't exist.");
-    fprintf(stderr, "%s\n", filename);
+    fprintf(stderr, "Filename = %s\n", filename);
     exit(1);
   }
   return fp;
