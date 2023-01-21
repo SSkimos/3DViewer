@@ -43,6 +43,7 @@ class MyGLWidget : public QOpenGLWidget {
   void clearVAO(QOpenGLVertexArrayObject &vao);
   void clearVBO(QOpenGLBuffer &vbo);
   void clearIBO(QOpenGLBuffer &ibo);
+  affine_t* LoadAffineData(affine_t* v);
 
  public:
   void clearBuffers(QOpenGLVertexArrayObject &vao, QOpenGLBuffer &vbo,
