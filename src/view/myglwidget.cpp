@@ -81,21 +81,35 @@ affine_t* MyGLWidget::LoadAffineData(affine_t* v) {
   v->moveZ = moveZ / 100.0;
   return v;
 }
+void MyGLWidget::CopyVertexFromBase(data_t** object) {
+  for (int i = 0; i != (*object)->vertices_count; ++i) {
+    (*object)->vertex_array[i] = (*object)->base_vertex_array[i];
+  }
+}
+void MyGLWidget::CopyIndexFromBase(data_t** object) {
+  for (int i = 0; i != (*object)->size_f; ++i) {
+    (*object)->lines_array[i] = (*object)->base_lines_array[i];
+  }
+}
+
+void MyGLWidget::SaveNewVertexArray(data_t* object) {
+  vertex_array = object->vertex_array;
+}
+
+void MyGLWidget::SaveNewIndexArray(data_t* object) {
+  lines_array = object->lines_array;
+}
 
 int MyGLWidget::ModifyData(void) {
-  affine_t* v = InitAffine();
-  if (v) {
-    v = LoadAffineData(v);
-    for (int i = 0; i != object->vertices_count; ++i) {
-      object->vertex_array[i] = object->base_vertex_array[i];
-    }
-    for (int i = 0; i != object->size_f; ++i) {
-      object->lines_array[i] = object->base_lines_array[i];
-    }
-    MoveAndRotateModel(&object, v);
-    vertex_array = object->vertex_array;
-    lines_array = object->lines_array;
-    free(v);
+  affine_t* ui_data = InitAffine();
+  if (ui_data) {
+    LoadAffineData(ui_data);
+    CopyVertexFromBase(&object);
+    CopyIndexFromBase(&object);
+    MoveAndRotateModel(&object, ui_data);
+    SaveNewIndexArray(object);
+    SaveNewVertexArray(object);
+    free(ui_data);
   }
   return 0;
 }

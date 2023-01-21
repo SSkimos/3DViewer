@@ -36,18 +36,22 @@ class MyGLWidget : public QOpenGLWidget {
   QPoint mPos;
   QTimer tmr;
   void drawCube(float a);
-  QOpenGLShaderProgram *compileShaders();
+  QOpenGLShaderProgram *compileShaders(void);
   QOpenGLVertexArrayObject vao;
-  QOpenGLBuffer InitVertexBuffer();
+  QOpenGLBuffer InitVertexBuffer(void);
   QOpenGLBuffer InitIndexBuffer(data_t *object);
   void clearVAO(QOpenGLVertexArrayObject &vao);
   void clearVBO(QOpenGLBuffer &vbo);
   void clearIBO(QOpenGLBuffer &ibo);
+  void CopyVertexFromBase(data_t** object);
+  void CopyIndexFromBase(data_t** object);
   affine_t* LoadAffineData(affine_t* v);
+  void SaveNewVertexArray(data_t* object);
+  void SaveNewIndexArray(data_t* object);
 
  public:
   void clearBuffers(QOpenGLVertexArrayObject &vao, QOpenGLBuffer &vbo,
-                    QOpenGLBuffer &ibo);
+      QOpenGLBuffer &ibo);
   void initBuffers();
   QOpenGLShaderProgram *prog = nullptr;
   int GetData();
