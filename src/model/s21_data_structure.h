@@ -35,6 +35,7 @@ typedef struct affine {
   double moveY;
   double moveZ;
   double scale;
+  double modMove;
 } affine_t;
 
 typedef struct matrices {

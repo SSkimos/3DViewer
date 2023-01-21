@@ -97,7 +97,8 @@ int MyGLWidget::ModifyData(void) {
     v->rotateX = rotateX;
     v->rotateY = rotateY;
     v->rotateZ = rotateZ;
-    v->scale = scale_val;
+    v->scale = scale_val * 10;
+    v->modMove = moveMod;
     v->moveX = moveX / 100.0;
     v->moveY = moveY / 100.0;
     v->moveZ = moveZ / 100.0;
@@ -180,7 +181,7 @@ void MyGLWidget::InitProjection(int w, int h) {
   }
   camera.setToIdentity();
   projection.setToIdentity();
-  if (!projectionNeeded) {
+  if (projectionNeeded) {
     projection.perspective(45.0f, GLfloat(w) / h, 0.01f, 100.0f);
     camera.translate(0, 0, -25);
     moveMod = 1;

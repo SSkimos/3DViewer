@@ -22,7 +22,7 @@ data_t* LoadObjFile(const char* file_path) {
   if (data) {
     CountObj(file_path, data);
     ParseObj(file_path, &data);
-    // ScaleObj(&data);
+    ScaleObj(&data);
   }
   return data;
 }
@@ -38,15 +38,9 @@ data_t* InitData() {
 }
 
 int ScaleObj(data_t** object) {
-  affine_t* a = malloc(1 * sizeof(*a));
+  affine_t* a = InitAffine();
   if (a && object) {
-    a->rotateX = 0;
-    a->rotateY = 0;
-    a->rotateZ = 0;
-    a->moveX = 0;
-    a->moveY = 0;
-    a->moveZ = 0;
-    a->scale = 1 / (*object)->max_vert + (*object)->min_vert;
+    a->scale = 1 / (*object)->max_vert;
     MoveAndRotateModel(object, a);
   }
   free(a);

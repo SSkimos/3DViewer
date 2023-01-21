@@ -175,9 +175,9 @@ void AddRotateXYZ(matrix_t** affine, affine_t* data) {
 
 void AddMoveXYZ(matrix_t** affine, affine_t* data) {
   if (affine) {
-    (*affine)->matrix[kX][3] = data->moveX;
-    (*affine)->matrix[kY][3] = data->moveY;
-    (*affine)->matrix[kZ][3] = data->moveZ;
+    (*affine)->matrix[kX][3] = data->moveX*data->modMove;
+    (*affine)->matrix[kY][3] = data->moveY*data->modMove;
+    (*affine)->matrix[kZ][3] = data->moveZ*data->modMove;
   }
 }
 
@@ -227,6 +227,7 @@ affine_t* InitAffine(void) {
     v->rotateY = 0;
     v->rotateZ = 0;
     v->scale = 0;
+    v->modMove = 1;
   }
   return v;
 }
