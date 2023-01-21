@@ -113,25 +113,30 @@ QOpenGLBuffer MyGLWidget::InitVertexBuffer() {
   return vbo;
 }
 
-void MyGLWidget::initBuffers() {
-  clearBuffers();
-
-  vao.create();
-  vao.bind();
-  InitProjection(0, 0);
-
-  QOpenGLBuffer vbo;
-  vbo = InitVertexBuffer();
-
-  prog->setAttributeBuffer(0, GL_FLOAT, 0, 3, 0);
-  prog->enableAttributeArray(0);
-  prog->setUniformValue(m_coeffMatrixLoc, projection*camera);
-
+QOpenGLBuffer MyGLWidget::InitIndexBuffer(data_t* object) {
   QOpenGLBuffer ibo(QOpenGLBuffer::IndexBuffer);
   ibo.create();
   ibo.bind();
   ibo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
   ibo.allocate(lines_array, sizeof(unsigned int) * object->size_f);
+  return ibo;
+}
+
+void MyGLWidget::initBuffers() {
+
+  vao.create();
+  vao.bind();
+
+  QOpenGLBuffer vbo;
+  QOpenGLBuffer ibo;
+  vbo = InitVertexBuffer();
+  ibo = InitIndexBuffer(object);
+  InitProjection(0, 0);
+
+  prog->setAttributeBuffer(0, GL_FLOAT, 0, 3, 0);
+  prog->enableAttributeArray(0);
+  prog->setUniformValue(m_coeffMatrixLoc, projection*camera);
+
 
   glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_TEST);
 
@@ -143,12 +148,13 @@ void MyGLWidget::initBuffers() {
   glDrawElementsBaseVertex(GL_LINES, object->size_f, GL_UNSIGNED_INT, 0, 0);
 
   vao.release();
+  clearBuffers(vao, vbo, ibo);
 }
 
-void MyGLWidget::clearBuffers() {
-  clearVAO();
-  // clearVBO();
-  // clearIBO();
+void MyGLWidget::clearBuffers(QOpenGLVertexArrayObject &vao, QOpenGLBuffer &vbo, QOpenGLBuffer &ibo) {
+  clearVAO(vao);
+  clearVBO(vbo);
+  clearIBO(ibo);
 }
 
 void MyGLWidget::InitProjection(int w, int h) {
@@ -181,22 +187,22 @@ void MyGLWidget::InitProjection(int w, int h) {
   }
 }
 
-void MyGLWidget::clearVAO() {
+void MyGLWidget::clearVAO(QOpenGLVertexArrayObject &vao) {
   if (vao.isCreated()) {
     vao.destroy();
   }
 }
 
-void MyGLWidget::clearVBO() {
-  // if (vbo->isCreated()) {
-  //   vbo->destroy();
-  // }
+void MyGLWidget::clearVBO(QOpenGLBuffer &vbo){
+  if (vbo.isCreated()) {
+    vbo.destroy();
+  }
 }
 
-void MyGLWidget::clearIBO() {
-  // if (ibo->isCreated()) {
-  //   ibo->destroy();
-  // }
+void MyGLWidget::clearIBO(QOpenGLBuffer &ibo){
+  if (ibo.isCreated()) {
+    ibo.destroy();
+  }
 }
 
 void MyGLWidget::resizeGL(int width, int height) {
