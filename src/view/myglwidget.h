@@ -27,9 +27,8 @@ class MyGLWidget : public QOpenGLWidget {
   void initializeGL() override;
   void paintGL() override;
   void resizeGL(int width, int height) override;
-
-  void mousePressEvent(QMouseEvent *) override;  // вызывается при нажатии мышки
-  void mouseMoveEvent(QMouseEvent *) override;  // вызывается при движении мышки
+  void mousePressEvent(QMouseEvent *) override;
+  void mouseMoveEvent(QMouseEvent *) override;
 
  private:
   float xRot, yRot, zRot;
@@ -54,7 +53,7 @@ class MyGLWidget : public QOpenGLWidget {
       QOpenGLBuffer &ibo);
   void initBuffers();
   QOpenGLShaderProgram *prog = nullptr;
-  int GetData();
+  int GetData(const char* filename_const);
   int ModifyData();
   int DrawData();
   data_t *object;

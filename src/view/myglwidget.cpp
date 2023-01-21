@@ -29,7 +29,7 @@ void MyGLWidget::paintGL(void) {
   prog->bind();
   if (file_load == 1) {
     RemoveObject(object);
-    GetData();
+    GetData(filename_const);
     file_load = 0;
   }
   if (object) {
@@ -81,6 +81,35 @@ affine_t* MyGLWidget::LoadAffineData(affine_t* v) {
   v->moveZ = moveZ / 100.0;
   return v;
 }
+
+int MyGLWidget::ModifyData(void) {
+  affine_t* ui_data = InitAffine();
+  if (ui_data) {
+    LoadAffineData(ui_data);
+    CopyVertexFromBase(&object);
+    CopyIndexFromBase(&object);
+    MoveAndRotateModel(&object, ui_data);
+    SaveNewIndexArray(object);
+    SaveNewVertexArray(object);
+    free(ui_data);
+  }
+  return 0;
+}
+
+int MyGLWidget::GetData(const char* filename_const) {
+  int ret_code = 0;
+  if (filename_const) {
+    object = LoadObjFile(filename_const);
+    if (object) {
+      vertex_count = object->vertices_count / 3;
+      lines_count = object->facets_count;
+    }
+  } else {
+    ret_code = 1;
+  }
+  return ret_code;
+}
+
 void MyGLWidget::CopyVertexFromBase(data_t** object) {
   for (int i = 0; i != (*object)->vertices_count; ++i) {
     (*object)->vertex_array[i] = (*object)->base_vertex_array[i];
@@ -100,36 +129,6 @@ void MyGLWidget::SaveNewIndexArray(data_t* object) {
   lines_array = object->lines_array;
 }
 
-int MyGLWidget::ModifyData(void) {
-  affine_t* ui_data = InitAffine();
-  if (ui_data) {
-    LoadAffineData(ui_data);
-    CopyVertexFromBase(&object);
-    CopyIndexFromBase(&object);
-    MoveAndRotateModel(&object, ui_data);
-    SaveNewIndexArray(object);
-    SaveNewVertexArray(object);
-    free(ui_data);
-  }
-  return 0;
-}
-
-int MyGLWidget::GetData() {
-  int ret_code = 0;
-  int open_code = 0;
-  if (filename.size() > 0) {
-    if (filename_const && open_code == 0) { 
-      object = LoadObjFile(filename_const);
-      if (object) {
-        vertex_count = object->vertices_count / 3;
-        lines_count = object->facets_count;
-      }
-    }
-  } else {
-    ret_code = 1;
-  }
-  return ret_code;
-}
 
 QOpenGLBuffer MyGLWidget::InitVertexBuffer() {
   QOpenGLBuffer vbo(QOpenGLBuffer::VertexBuffer);
@@ -215,23 +214,16 @@ void MyGLWidget::InitProjection(int w, int h) {
 }
 
 void MyGLWidget::clearVAO(QOpenGLVertexArrayObject &vao) {
-  if (vao.isCreated()) {
-    vao.destroy();
-  }
+  if (vao.isCreated()) vao.destroy();
 }
 
 void MyGLWidget::clearVBO(QOpenGLBuffer &vbo){
-  if (vbo.isCreated()) {
-    vbo.destroy();
-  }
+  if (vbo.isCreated()) vbo.destroy();
 }
 
 void MyGLWidget::clearIBO(QOpenGLBuffer &ibo){
-  if (ibo.isCreated()) {
-    ibo.destroy();
-  }
+  if (ibo.isCreated()) ibo.destroy();
 }
-
 
 void MyGLWidget::mousePressEvent(QMouseEvent * mo) {
   mPos = mo->pos();
