@@ -22,7 +22,7 @@ data_t* LoadObjFile(const char* file_path) {
   if (data) {
     CountObj(file_path, data);
     ParseObj(file_path, &data);
-    ScaleObj(&data);
+    // ScaleObj(&data);
   }
   return data;
 }

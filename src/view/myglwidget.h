@@ -71,7 +71,11 @@ class MyGLWidget : public QOpenGLWidget {
   unsigned int *base_lines_array;
   QVector3D lineColorV = {1, 1, 1};
   QVector3D verticleColorV = {1, 0, 0};
+  QMatrix4x4 camera;
+  QMatrix4x4 projection;
   int m_coeffMatrixLoc = 0;
+  void InitProjection(int width, int height);
+  int projectionNeeded = 1;
 
   double rotateX;
   double rotateY;
@@ -81,7 +85,8 @@ class MyGLWidget : public QOpenGLWidget {
   double moveY;
   double moveZ;
 
-  double scale_val;  // ???
+  double scale_val;
+  double moveMod;
 
   QString filename;
 };

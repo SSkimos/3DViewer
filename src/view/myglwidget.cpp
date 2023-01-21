@@ -1,5 +1,6 @@
 #include "myglwidget.h"
-#include <QDebug>
+#include <QDebug> 
+#include <QSize>
 #include <string>
 #include "../model/s21_data_structure.h"
 #include "../model/s21_parse_obj.h"
@@ -46,14 +47,16 @@ void MyGLWidget::initializeGL(void) {
   prog = compileShaders();
   file_load = 1;
   object = NULL;
+  m_coeffMatrixLoc = prog->uniformLocation("coeffMatrix");
 }
 
 QOpenGLShaderProgram *MyGLWidget::compileShaders() {
     const char *vertexShaderSource =
         "attribute vec3 position;\n"
+        "uniform mat4 coeffMatrix;\n" 
         "void main()\n"
         "{\n"
-        "gl_Position = vec4(position.x, position.y, "
+        "gl_Position = coeffMatrix * vec4(position.x, position.y, "
         "position.z, "
         "1.0);\n"
         "}\0";
@@ -132,11 +135,10 @@ int MyGLWidget::GetData() {
 void MyGLWidget::initBuffers() {
   clearBuffers();
 
-  // TODO: попробовать вынести VAO 
   vao.create();
   vao.bind();
+  InitProjection(0, 0);
 
-  // TODO: вынести? createVBO()
   QOpenGLBuffer vbo(QOpenGLBuffer::VertexBuffer);
   vbo.create();
   vbo.bind();
@@ -145,8 +147,8 @@ void MyGLWidget::initBuffers() {
 
   prog->setAttributeBuffer(0, GL_FLOAT, 0, 3, 0);
   prog->enableAttributeArray(0);
+  prog->setUniformValue(m_coeffMatrixLoc, projection*camera);
 
-  // TODO: вынести? createIBO()
   QOpenGLBuffer ibo(QOpenGLBuffer::IndexBuffer);
   ibo.create();
   ibo.bind();
@@ -171,6 +173,36 @@ void MyGLWidget::clearBuffers() {
   // clearIBO();
 }
 
+void MyGLWidget::InitProjection(int w, int h) {
+  if (w < 1 || h < 1) {
+    w = width();
+    h = height();
+  }
+  camera.setToIdentity();
+  projection.setToIdentity();
+  if (!projectionNeeded) {
+    projection.perspective(45.0f, GLfloat(w) / h, 0.01f, 100.0f);
+    camera.translate(0, 0, -25);
+    moveMod = 1;
+  } else {
+    float top, bottom, right,left, aspect;
+    aspect = (GLfloat)w/h;
+    if (w > h) {
+      top = 1.5f;
+      bottom = -top;
+      right = top * aspect;
+      left = -right;
+    } else {
+      right = 1.5f;
+      left = -right;
+      top = right/aspect;
+      bottom = -top;
+    }
+    camera.ortho(left*10, right*10, bottom*10, top*10, -100.0f, 100.0f);
+    moveMod = 10;
+  }
+}
+
 void MyGLWidget::clearVAO() {
   if (vao.isCreated()) {
     vao.destroy();
@@ -190,7 +222,7 @@ void MyGLWidget::clearIBO() {
 }
 
 void MyGLWidget::resizeGL(int width, int height) {
-
+  InitProjection(width, height);
 }
 
 void MyGLWidget::mousePressEvent(QMouseEvent * mo) {
