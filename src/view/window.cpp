@@ -11,20 +11,6 @@ Window::Window(QWidget *parent)
     ui->widget->filename_const = NULL;
     ConnectSliders();
     ConnectLabels();
-    // connect(ui->xRotSldr, &QSlider::valueChanged,
-    //     [this](const int& val)->void{ui->xRotEdit->setText(locale().toString(val)); ui->widget->rotateX = val; ui->widget->update();});
-    // connect(ui->yRotSldr, &QSlider::valueChanged,
-    //     [this](const int& val)->void{ui->yRotEdit->setText(locale().toString(val)); ui->widget->rotateY = val; ui->widget->update();});
-    // connect(ui->zRotSldr, &QSlider::valueChanged,
-    //     [this](const int& val)->void{ui->zRotEdit->setText(locale().toString(val)); ui->widget->rotateZ = val; ui->widget->update();});
-    // connect(ui->xMoveSldr, &QSlider::valueChanged,
-    //     [this](const int& val)->void{ui->xMoveEdit->setText(locale().toString(val)); ui->widget->moveX = val; ui->widget->update();});
-    // connect(ui->yMoveSldr, &QSlider::valueChanged,
-    //     [this](const int& val)->void{ui->yMoveEdit->setText(locale().toString(val)); ui->widget->moveY = val; ui->widget->update();});
-    // connect(ui->zMoveSldr, &QSlider::valueChanged,
-    //     [this](const int& val)->void{ui->zMoveEdit->setText(locale().toString(val)); ui->widget->moveZ = val; ui->widget->update();});
-    // connect(ui->scaleSldr, &QSlider::valueChanged,
-    //     [this](const int& val)->void{ui->widget->scale_val = val; ui->widget->update();});
     RestoreSettings();
 }
 
@@ -48,38 +34,48 @@ void Window::ConnectSliders() {
   connect(ui->zRotSldr, &QSlider::valueChanged,  this, &Window::setRotateZ);
   connect(ui->scaleSldr, &QSlider::valueChanged, this, &Window::ScaleChange);
 
-  connect(ui->xMoveEdit, &QLineEdit::textChanged, this, &Window::xRotateTextEdit);
-  // connect(ui->xMoveEdit, SIGNAL(textChanged(const QString &text)), ui->widget, SLOT(xRotateTextEdit()));
+  connect(ui->xRotEdit, &QLineEdit::textChanged, this, &Window::xRotateTextEdit);
+  connect(ui->yRotEdit, &QLineEdit::textChanged, this, &Window::yRotateTextEdit);
+  connect(ui->zRotEdit, &QLineEdit::textChanged, this, &Window::zRotateTextEdit);
+  connect(ui->xMoveEdit, &QLineEdit::textChanged, this, &Window::xMoveTextEdit);
+  connect(ui->yMoveEdit, &QLineEdit::textChanged, this, &Window::yMoveTextEdit);
+  connect(ui->zMoveEdit, &QLineEdit::textChanged, this, &Window::zMoveTextEdit);
 }
 
 void Window::setMoveX(int newValue) {
   ui->widget->moveX = newValue;
   ui->widget->update();
+  ui->xMoveEdit->setText(locale().toString(newValue));
 }
 
 void Window::setMoveY(int newValue) {
   ui->widget->moveY = newValue;
   ui->widget->update();
+  ui->yMoveEdit->setText(locale().toString(newValue));
 }
 
 void Window::setMoveZ(int newValue) {
   ui->widget->moveZ = newValue;
   ui->widget->update();
+  ui->zMoveEdit->setText(locale().toString(newValue));
 }
 
 void Window::setRotateX(int newValue) {
   ui->widget->rotateX = newValue;
   ui->widget->update();
+  ui->xRotEdit->setText(locale().toString(newValue));
 }
 
 void Window::setRotateY(int newValue) {
   ui->widget->rotateY = newValue;
   ui->widget->update();
+  ui->yRotEdit->setText(locale().toString(newValue));
 }
 
 void Window::setRotateZ(int newValue) {
   ui->widget->rotateZ = newValue;
   ui->widget->update();
+  ui->zRotEdit->setText(locale().toString(newValue));
 }
 
 void Window::xMoveEdit(double value) {
@@ -88,7 +84,32 @@ void Window::xMoveEdit(double value) {
 
 void Window::xRotateTextEdit(const QString & val) {
   int value = val.toInt();
+  ui->xRotSldr->setValue(value);
+}
+
+void Window::yRotateTextEdit(const QString & val) {
+  int value = val.toInt();
+  ui->yRotSldr->setValue(value);
+}
+
+void Window::zRotateTextEdit(const QString & val) {
+  int value = val.toInt();
+  ui->zRotSldr->setValue(value);
+}
+
+void Window::xMoveTextEdit(const QString & val) {
+  int value = val.toInt();
   ui->xMoveSldr->setValue(value);
+}
+
+void Window::yMoveTextEdit(const QString & val) {
+  int value = val.toInt();
+  ui->yMoveSldr->setValue(value);
+}
+
+void Window::zMoveTextEdit(const QString & val) {
+  int value = val.toInt();
+  ui->zMoveSldr->setValue(value);
 }
 
 void Window::xMoveSldr(double value) {
