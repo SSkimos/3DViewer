@@ -12,35 +12,6 @@ MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
     setGeometry(400, 200, 800, 600);
 }
 
-void MyGLWidget::setMoveX(int newValue) {
-  moveX = newValue;
-  update();
-}
-
-void MyGLWidget::setMoveY(int newValue) {
-  moveY = newValue;
-  update();
-}
-
-void MyGLWidget::setMoveZ(int newValue) {
-  moveZ = newValue;
-  update();
-}
-
-void MyGLWidget::setRotateX(int newValue) {
-  rotateX = newValue;
-  update();
-}
-
-void MyGLWidget::setRotateY(int newValue) {
-  rotateY = newValue;
-  update();
-}
-
-void MyGLWidget::setRotateZ(int newValue) {
-  rotateZ = newValue;
-  update();
-}
 
 void MyGLWidget::initializeGL(void) {
   glEnable(GL_DEPTH_TEST);
@@ -133,6 +104,15 @@ int MyGLWidget::GetData() {
   return ret_code;
 }
 
+QOpenGLBuffer MyGLWidget::InitVertexBuffer() {
+  QOpenGLBuffer vbo(QOpenGLBuffer::VertexBuffer);
+  vbo.create();
+  vbo.bind();
+  vbo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
+  vbo.allocate(vertex_array, vertex_count * 3 * sizeof(float));
+  return vbo;
+}
+
 void MyGLWidget::initBuffers() {
   clearBuffers();
 
@@ -140,11 +120,8 @@ void MyGLWidget::initBuffers() {
   vao.bind();
   InitProjection(0, 0);
 
-  QOpenGLBuffer vbo(QOpenGLBuffer::VertexBuffer);
-  vbo.create();
-  vbo.bind();
-  vbo.setUsagePattern(QOpenGLBuffer::DynamicDraw);
-  vbo.allocate(vertex_array, vertex_count * 3 * sizeof(float));
+  QOpenGLBuffer vbo;
+  vbo = InitVertexBuffer();
 
   prog->setAttributeBuffer(0, GL_FLOAT, 0, 3, 0);
   prog->enableAttributeArray(0);

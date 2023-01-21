@@ -40,22 +40,14 @@ class MyGLWidget : public QOpenGLWidget {
   QOpenGLVertexArrayObject vao;
   //  QOpenGLVertexArrayObject *ibo;
   //  QOpenGLVertexArrayObject *vbo;
+  QOpenGLBuffer InitVertexBuffer();
   void clearVAO();
   void clearVBO();
   void clearIBO();
 
  public:
-  void setMoveX(int newValue);
-  void setMoveY(int newValue);
-  void setMoveZ(int newValue);
-  void setRotateX(int newValue);
-  void setRotateY(int newValue);
-  void setRotateZ(int newValue);
-
-  void add_example();
   void clearBuffers();
   void initBuffers();
-  double scale;
   QOpenGLShaderProgram *prog = nullptr;
   int GetData();
   int ModifyData();
