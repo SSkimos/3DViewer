@@ -9,9 +9,8 @@
 
 MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
-    setGeometry(400, 200, 800, 600);
+  setGeometry(400, 200, 800, 600);
 }
-
 
 void MyGLWidget::initializeGL(void) {
   glEnable(GL_DEPTH_TEST);
@@ -22,30 +21,30 @@ void MyGLWidget::initializeGL(void) {
 }
 
 QOpenGLShaderProgram *MyGLWidget::compileShaders() {
-    const char *vertexShaderSource =
-        "attribute vec3 position;\n"
-        "uniform mat4 coeffMatrix;\n" 
-        "void main()\n"
-        "{\n"
-        "gl_Position = coeffMatrix * vec4(position.x, position.y, "
-        "position.z, "
-        "1.0);\n"
-        "}\0";
+  const char *vertexShaderSource =
+    "attribute vec3 position;\n"
+    "uniform mat4 coeffMatrix;\n" 
+    "void main()\n"
+    "{\n"
+    "gl_Position = coeffMatrix * vec4(position.x, position.y, "
+    "position.z, "
+    "1.0);\n"
+    "}\0";
 
-    const char *fragmentShaderSource =
-        "uniform vec3 color;\n"
-        "void main()\n"
-        "{\n"
-        "gl_FragColor = vec4(color.x, color.y, color.z, 1);\n"
-        "}\n\0";
+  const char *fragmentShaderSource =
+    "uniform vec3 color;\n"
+    "void main()\n"
+    "{\n"
+    "gl_FragColor = vec4(color.x, color.y, color.z, 1);\n"
+    "}\n\0";
 
-    QOpenGLShaderProgram *prog = new QOpenGLShaderProgram;
-    prog->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
-    prog->addShaderFromSourceCode(QOpenGLShader::Fragment,
-                                  fragmentShaderSource);
-    prog->bindAttributeLocation("position", 0);
-    prog->link();
-    return prog;
+  QOpenGLShaderProgram *prog = new QOpenGLShaderProgram;
+  prog->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShaderSource);
+  prog->addShaderFromSourceCode(QOpenGLShader::Fragment,
+      fragmentShaderSource);
+  prog->bindAttributeLocation("position", 0);
+  prog->link();
+  return prog;
 }
 
 void MyGLWidget::paintGL(void) {

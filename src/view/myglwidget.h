@@ -39,20 +39,21 @@ class MyGLWidget : public QOpenGLWidget {
   QOpenGLShaderProgram *compileShaders();
   QOpenGLVertexArrayObject vao;
   QOpenGLBuffer InitVertexBuffer();
-  QOpenGLBuffer InitIndexBuffer(data_t* object);
+  QOpenGLBuffer InitIndexBuffer(data_t *object);
   void clearVAO(QOpenGLVertexArrayObject &vao);
   void clearVBO(QOpenGLBuffer &vbo);
   void clearIBO(QOpenGLBuffer &ibo);
 
  public:
-  void clearBuffers(QOpenGLVertexArrayObject &vao, QOpenGLBuffer &vbo, QOpenGLBuffer &ibo);
+  void clearBuffers(QOpenGLVertexArrayObject &vao, QOpenGLBuffer &vbo,
+                    QOpenGLBuffer &ibo);
   void initBuffers();
   QOpenGLShaderProgram *prog = nullptr;
   int GetData();
   int ModifyData();
   int DrawData();
   data_t *object;
-  char* filename_const;
+  char *filename_const;
   int file_load;
   int vertex_count;
   int lines_count;

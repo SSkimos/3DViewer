@@ -44,7 +44,8 @@ transformation_t* FactoryTransformation(data_t** info, affine_t* vector) {
 
 matrix_t* FactoryAffine(affine_t* data) {
   matrix_t* modificator_dot = CreateMatrix(4, 4);
-  if (modificator_dot && modificator_dot->rows == 4 && modificator_dot->columns == 4) {
+  if (modificator_dot && modificator_dot->rows == 4 &&
+      modificator_dot->columns == 4) {
     FillDiagonalOnes(&modificator_dot);
     AddRotateXYZ(&modificator_dot, data);
     AddMoveXYZ(&modificator_dot, data);
@@ -175,9 +176,9 @@ void AddRotateXYZ(matrix_t** affine, affine_t* data) {
 
 void AddMoveXYZ(matrix_t** affine, affine_t* data) {
   if (affine) {
-    (*affine)->matrix[kX][3] = data->moveX*data->modMove;
-    (*affine)->matrix[kY][3] = data->moveY*data->modMove;
-    (*affine)->matrix[kZ][3] = data->moveZ*data->modMove;
+    (*affine)->matrix[kX][3] = data->moveX * data->modMove;
+    (*affine)->matrix[kY][3] = data->moveY * data->modMove;
+    (*affine)->matrix[kZ][3] = data->moveZ * data->modMove;
   }
 }
 

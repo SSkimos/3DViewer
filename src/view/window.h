@@ -28,12 +28,12 @@ class Window : public QMainWindow {
   void on_chooseFileButton_clicked();
   void on_makeGIFButton_clicked();
   void timer_grab();
-  void xRotateTextEdit(const QString & val);
-  void yRotateTextEdit(const QString & val);
-  void zRotateTextEdit(const QString & val);
-  void xMoveTextEdit(const QString & val);
-  void yMoveTextEdit(const QString & val);
-  void zMoveTextEdit(const QString & val);
+  void xRotateTextEdit(const QString &val);
+  void yRotateTextEdit(const QString &val);
+  void zRotateTextEdit(const QString &val);
+  void xMoveTextEdit(const QString &val);
+  void yMoveTextEdit(const QString &val);
+  void zMoveTextEdit(const QString &val);
 
  private:
   Ui::Window *ui;
