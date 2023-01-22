@@ -185,7 +185,7 @@ int DebugObj(const char* file_path, data_t* data) {
 
 void RemoveObject(data_t* obj) {
   if (obj) {
-    printf("Null Down\n");
+    printf("Removed object\n");
     free(obj->lines_array);
     free(obj->vertex_array);
     free(obj->base_lines_array);

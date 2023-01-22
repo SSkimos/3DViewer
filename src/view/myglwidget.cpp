@@ -12,38 +12,14 @@ MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
   setGeometry(400, 200, 800, 600);
 }
 
-
-/* Overrided functions */ 
-
 void MyGLWidget::initializeGL(void) {
   glEnable(GL_DEPTH_TEST);
   prog = compileShaders();
   file_load = 1;
   object = NULL;
-  m_coeffMatrixLoc = prog->uniformLocation("coeffMatrix");
+  ProjectionViewMatrix= prog->uniformLocation("coeffMatrix");
 }
 
-
-void MyGLWidget::paintGL(void) {
-  glClearColor(0, 0, 0, 1);
-  prog->bind();
-  if (file_load == 1) {
-    RemoveObject(object);
-    GetData(filename_const);
-    file_load = 0;
-  }
-  if (object) {
-    ModifyData();
-    initBuffers();
-  }
-}
-
-void MyGLWidget::resizeGL(int width, int height) {
-  InitProjection(width, height);
-}
-
-/* End of overrided functions */
- 
 QOpenGLShaderProgram *MyGLWidget::compileShaders() {
   const char *vertexShaderSource =
     "attribute vec3 position;\n"
@@ -70,17 +46,26 @@ QOpenGLShaderProgram *MyGLWidget::compileShaders() {
   prog->link();
   return prog;
 }
-affine_t* MyGLWidget::LoadAffineData(affine_t* v) {
-  v->rotateX = rotateX;
-  v->rotateY = rotateY;
-  v->rotateZ = rotateZ;
-  v->scale = scale_val * 10;
-  v->modMove = moveMod;
-  v->moveX = moveX / 100.0;
-  v->moveY = moveY / 100.0;
-  v->moveZ = moveZ / 100.0;
-  return v;
+
+
+void MyGLWidget::paintGL(void) {
+  glClearColor(0, 0, 0, 1);
+  prog->bind();
+  if (file_load == 1) {
+    RemoveObject(object);
+    GetData(filename_const);
+    file_load = 0;
+  }
+  if (object) {
+    ModifyData();
+    initBuffers();
+  }
 }
+
+void MyGLWidget::resizeGL(int width, int height) {
+  InitProjection(width, height);
+}
+
 
 int MyGLWidget::ModifyData(void) {
   affine_t* ui_data = InitAffine();
@@ -108,6 +93,18 @@ int MyGLWidget::GetData(const char* filename_const) {
     ret_code = 1;
   }
   return ret_code;
+}
+
+affine_t* MyGLWidget::LoadAffineData(affine_t* v) {
+  v->rotateX = rotateX;
+  v->rotateY = rotateY;
+  v->rotateZ = rotateZ;
+  v->scale = scale_val * 10;
+  v->modMove = moveMod;
+  v->moveX = moveX / 100.0;
+  v->moveY = moveY / 100.0;
+  v->moveZ = moveZ / 100.0;
+  return v;
 }
 
 void MyGLWidget::CopyVertexFromBase(data_t** object) {
@@ -161,7 +158,8 @@ void MyGLWidget::initBuffers() {
 
   prog->setAttributeBuffer(0, GL_FLOAT, 0, 3, 0);
   prog->enableAttributeArray(0);
-  prog->setUniformValue(m_coeffMatrixLoc, projection*camera);
+  prog->setUniformValue(ProjectionViewMatrix
+, projection*camera);
 
 
   glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_TEST);
