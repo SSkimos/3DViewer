@@ -140,7 +140,7 @@ matrix_t* AddRotateZ(affine_t* data) {
   if (rotateZ) {
     FillDiagonalOnes(&rotateZ);
     if (data->rotateZ) {
-      double rotate = data->rotateY / 10;
+      double rotate = data->rotateZ / 10;
       rotateZ->matrix[0][0] = cos(rotate);
       rotateZ->matrix[0][1] = -sin(rotate);
       rotateZ->matrix[1][0] = sin(rotate);

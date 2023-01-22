@@ -49,6 +49,7 @@ void Window::ConnectSliders() {
 void Window::on_chooseBackgroundColour_clicked() {
   ui->widget->backgroundColor =
       QColorDialog::getColor(Qt::white, this, tr("Select Color"));
+  ui->widget->update();
 }
 
 void Window::test() {
@@ -259,7 +260,7 @@ void Window::timer_grab() {
     for (int i = 0; i < 50; gif.addFrame(mp[i++], 200)) {
     }
     QString str =
-      QFileDialog::getSaveFileName(0, "Сохранить файл как", "", "*.gif");
+      QFileDialog::getSaveFileName(0, "Save file as ", "", "*.gif");
     gif.save(str);
     ui->makeGIFButton->setText("GIF");
     ui->makeGIFButton->setEnabled(1);

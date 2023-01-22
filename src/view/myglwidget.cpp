@@ -51,7 +51,15 @@ QOpenGLShaderProgram *MyGLWidget::compileShaders() {
 
 
 void MyGLWidget::paintGL(void) {
-  glClearColor(0, 0, 0, 1);
+  if (backgroundColor.isValid()) {
+    int r = backgroundColor.redF();
+    int g = backgroundColor.greenF();
+    int b = backgroundColor.blueF();
+    int a = backgroundColor.alphaF();
+    glClearColor(r, g, b, a);
+  } else {
+    glClearColor(0, 0, 0, 1);
+  }
   prog->bind();
   if (file_load == 1) {
     RemoveObject(object);
@@ -161,7 +169,7 @@ void MyGLWidget::initBuffers() {
   prog->setAttributeBuffer(0, GL_FLOAT, 0, 3, 0);
   prog->enableAttributeArray(0);
   prog->setUniformValue(ProjectionViewMatrix
-, projection*camera);
+      , projection*camera);
 
 
   glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_TEST);
