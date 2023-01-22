@@ -40,6 +40,19 @@ void Window::ConnectSliders() {
   connect(ui->xMoveEdit, &QLineEdit::textChanged, this, &Window::xMoveTextEdit);
   connect(ui->yMoveEdit, &QLineEdit::textChanged, this, &Window::yMoveTextEdit);
   connect(ui->zMoveEdit, &QLineEdit::textChanged, this, &Window::zMoveTextEdit);
+
+  connect(ui->projComboBox,SIGNAL(currentIndexChanged(int)), this, SLOT(switchProjType(int)));
+
+  test();
+}
+
+void Window::test() {
+  ui->projComboBox->addItem("central");
+  ui->projComboBox->addItem("parallels");
+}
+
+void Window::switchProjType(int newValue) {
+  ui->widget->projType = newValue;
 }
 
 void Window::setMoveX(int newValue) {

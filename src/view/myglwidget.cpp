@@ -10,6 +10,8 @@
 MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent)
 {
   setGeometry(400, 200, 800, 600);
+  projType = 0;
+  scale_val = 1;
 }
 
 
