@@ -23,6 +23,10 @@ int ScaleObj(data_t** object);
 int FacetsAnalyzer(const char* line);
 int FormatFacet(char* line, int facet_count);
 
+float max_elem(float a, float b, float c);
+float min_elem(float a, float b, float c);
+data_t* InitData();
+
 #ifdef __cplusplus
 }
 #endif
