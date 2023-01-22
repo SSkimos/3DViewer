@@ -89,6 +89,8 @@ class MyGLWidget : public QOpenGLWidget {
 
   QString filename;
   QColor backgroundColor = QColorConstants::White;
+  QColor peaksColor = QColorConstants::White;
+  QColor linesColor = QColorConstants::White;
 };
 
 #endif  // MYGLWIDGET_H_

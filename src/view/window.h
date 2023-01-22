@@ -28,6 +28,8 @@ class Window : public QMainWindow {
  private slots:
   void on_chooseFileButton_clicked();
   void on_chooseBackgroundColour_clicked();
+  void on_choosePeaksColour_clicked();
+  void on_chooseLinesColour_clicked();
   void on_makeGIFButton_clicked();
   void timer_grab();
   void xRotateTextEdit(const QString &val);

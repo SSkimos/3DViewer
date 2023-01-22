@@ -52,6 +52,18 @@ void Window::on_chooseBackgroundColour_clicked() {
   ui->widget->update();
 }
 
+void Window::on_choosePeaksColour_clicked() {
+  ui->widget->peaksColor =
+      QColorDialog::getColor(Qt::white, this, tr("Select Color"));
+  ui->widget->update();
+}
+
+void Window::on_chooseLinesColour_clicked() {
+  ui->widget->linesColor =
+      QColorDialog::getColor(Qt::white, this, tr("Select Color"));
+  ui->widget->update();
+}
+
 void Window::test() {
   ui->projComboBox->addItem("central");
   ui->projComboBox->addItem("parallels");
