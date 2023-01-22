@@ -81,6 +81,8 @@ class MyGLWidget : public QOpenGLWidget {
   double moveY;
   double moveZ;
 
+  int projType;
+
   double scale_val;
   double moveMod;
 

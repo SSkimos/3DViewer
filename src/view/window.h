@@ -35,6 +35,8 @@ class Window : public QMainWindow {
   void yMoveTextEdit(const QString &val);
   void zMoveTextEdit(const QString &val);
 
+  void switchProjType(int newValue);
+
  private:
   Ui::Window *ui;
   void ConnectSliders();
@@ -66,6 +68,7 @@ class Window : public QMainWindow {
   void SetMoveZ(QSettings *settings);
 
   void print_grab();
+  void test();
 
   QTimer *timer_gif;
   int check;
