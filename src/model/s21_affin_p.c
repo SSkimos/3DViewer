@@ -176,9 +176,9 @@ void AddRotateXYZ(matrix_t** affine, affine_t* data) {
 
 void AddMoveXYZ(matrix_t** affine, affine_t* data) {
   if (affine) {
-    (*affine)->matrix[kX][3] = data->moveX * data->modMove;
-    (*affine)->matrix[kY][3] = data->moveY * data->modMove;
-    (*affine)->matrix[kZ][3] = data->moveZ * data->modMove;
+    (*affine)->matrix[kX][3] = data->moveX * data->modMove * 10;
+    (*affine)->matrix[kY][3] = data->moveY * data->modMove * 10;
+    (*affine)->matrix[kZ][3] = data->moveZ * data->modMove * 10;
   }
 }
 
