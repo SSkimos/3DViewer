@@ -14,6 +14,7 @@
 #include <QtOpenGL>
 #include <fstream>
 #include <iostream>
+#include <QColorDialog>
 
 #include "../model/s21_data_structure.h"
 // #include <glu.h>
@@ -87,6 +88,7 @@ class MyGLWidget : public QOpenGLWidget {
   double moveMod;
 
   QString filename;
+  QColor backgroundColor = QColorConstants::White;
 };
 
 #endif  // MYGLWIDGET_H_

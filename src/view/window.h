@@ -8,6 +8,7 @@
 #include <QSettings>
 #include <QTimer>
 #include <QtOpenGL>
+#include <QColorDialog>
 
 #include "ima/qgifimage_p.h"
 
@@ -26,6 +27,7 @@ class Window : public QMainWindow {
 
  private slots:
   void on_chooseFileButton_clicked();
+  void on_chooseBackgroundColour_clicked();
   void on_makeGIFButton_clicked();
   void timer_grab();
   void xRotateTextEdit(const QString &val);

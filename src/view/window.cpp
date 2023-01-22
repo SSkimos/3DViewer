@@ -46,6 +46,11 @@ void Window::ConnectSliders() {
   test();
 }
 
+void Window::on_chooseBackgroundColour_clicked() {
+  ui->widget->backgroundColor =
+      QColorDialog::getColor(Qt::white, this, tr("Select Color"));
+}
+
 void Window::test() {
   ui->projComboBox->addItem("central");
   ui->projComboBox->addItem("parallels");
