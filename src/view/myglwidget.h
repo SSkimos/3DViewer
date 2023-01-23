@@ -48,6 +48,7 @@ class MyGLWidget : public QOpenGLWidget {
   affine_t* LoadAffineData(affine_t* v);
   void SaveNewVertexArray(data_t* object);
   void SaveNewIndexArray(data_t* object);
+  void InitProjection(int width, int height);
 
  public:
   void clearBuffers(QOpenGLVertexArrayObject &vao, QOpenGLBuffer &vbo,
@@ -71,7 +72,6 @@ class MyGLWidget : public QOpenGLWidget {
   QMatrix4x4 camera;
   QMatrix4x4 projection;
   int ProjectionViewMatrix= 0;
-  void InitProjection(int width, int height);
   int projectionNeeded = 1;
 
   double rotateX;

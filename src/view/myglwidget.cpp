@@ -173,8 +173,15 @@ void MyGLWidget::initBuffers() {
 
 
   glClear(GL_COLOR_BUFFER_BIT| GL_DEPTH_TEST);
-
-  lineColorV = {1, 0, 0};
+  float r = linesColor.redF();
+  float g = linesColor.greenF();
+  float b = linesColor.blueF();
+ if (linesColor.isValid() || (r && g && b)) {
+   lineColorV.setX(r);
+   lineColorV.setY(g);
+   lineColorV.setZ(b);
+  // lineColorV = {r, g, b};
+ }
 
   prog->setUniformValue(prog->uniformLocation("color"), lineColorV);
 
@@ -198,7 +205,7 @@ void MyGLWidget::InitProjection(int w, int h) {
   }
   camera.setToIdentity();
   projection.setToIdentity();
-  if (projectionNeeded) {
+  if (projType) {
     projection.perspective(45.0f, GLfloat(w) / h, 0.01f, 100.0f);
     camera.translate(0, 0, -25);
     moveMod = 1;

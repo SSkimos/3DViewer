@@ -41,7 +41,7 @@ void Window::ConnectSliders() {
   connect(ui->yMoveEdit, &QLineEdit::textChanged, this, &Window::yMoveTextEdit);
   connect(ui->zMoveEdit, &QLineEdit::textChanged, this, &Window::zMoveTextEdit);
 
-  connect(ui->projComboBox,SIGNAL(currentIndexChanged(int)), this, SLOT(switchProjType(int)));
+  connect(ui->projComboBox,SIGNAL(activated(int)), this, SLOT(switchProjType(int)));
 
   test();
 }
@@ -71,6 +71,8 @@ void Window::test() {
 
 void Window::switchProjType(int newValue) {
   ui->widget->projType = newValue;
+  qDebug() << newValue;
+  ui->widget->update();
 }
 
 void Window::setMoveX(int newValue) {
